@@ -33,7 +33,6 @@
       <a href="#manifesto">Manifesto</a>
       <a href="#personagens">Personagens</a>
       <a href="#ficha">Ficha artística</a>
-      <!-- 1. NO SEU NAV DO HEADER (topbar): -->
       <a href="#julgamento" id="nav-julgamento">Julgamento</a>
     </nav>
 
@@ -64,30 +63,29 @@
           SE SALVAR<span class="period">?</span>
         </h1>
 
-        <div class="hero-stamp">
+        <div class="hero-stamp" data-story-clue="seal" style="cursor: pointer;" title="Investigar selo">
           UMA PEÇA<br>
           CHAMADA
         </div>
+        <div class="logo-band">
+          <img class="main-logo" src="logo-misantropia.png" alt="Misantropia — logotipo da peça" />
+
+          <p>
+            O FIM NÃO COMEÇA<br>
+            QUANDO TUDO ACABA.<br>
+            <b>COMEÇA QUANDO<br>NINGUÉM MAIS CONFIA.</b>
+          </p>
+        </div>
+
+        <div class="hero-bottom">
+          <a href="#sobre">ENTRE POR SUA CONTA <span>↓</span></a>
+          <span class="classification">CLASSIFICAÇÃO INDICATIVA: 16 ANOS</span>
+        </div>
+
+        <button class="hidden-mark" id="deathMark" aria-label="Marca misteriosa">
+          †
+        </button>
       </div>
-
-      <div class="logo-band">
-        <img class="main-logo" src="logo-misantropia.png" alt="Misantropia — logotipo da peça" />
-
-        <p>
-          O FIM NÃO COMEÇA<br>
-          QUANDO TUDO ACABA.<br>
-          <b>COMEÇA QUANDO<br>NINGUÉM MAIS CONFIA.</b>
-        </p>
-      </div>
-
-      <div class="hero-bottom">
-        <a href="#sobre">ENTRE POR SUA CONTA <span>↓</span></a>
-        <span class="classification">CLASSIFICAÇÃO INDICATIVA: 16 ANOS</span>
-      </div>
-
-      <button class="hidden-mark" id="deathMark" aria-label="Marca misteriosa">
-        †
-      </button>
     </section>
 
     <!-- CONTEXTO -->
@@ -394,7 +392,8 @@
         <span>VOCÊ FOI AVISADO.</span>
       </p>
     </section>
-    <!-- COLOQUE A CAIXA DE SENHA AQUI (FORA DO HEADER, DENTRO DO MAIN): -->
+
+    <!-- CAIXA DE SENHA DO JULGAMENTO (ARQUIVO 017) -->
     <div id="julgamento-lock" class="judgment-lock-container">
       <div class="judgment-lock-card">
         <span class="file-label">ARQUIVO 017 / ACESSO RESTRITO</span>
@@ -408,6 +407,7 @@
         <p id="julgamento-erro" class="lock-error" hidden>CHAVE INCORRETA. ACESSO NEGADO.</p>
       </div>
     </div>
+
     <!-- EXPERIÊNCIA INTERATIVA: O JULGAMENTO -->
     <section class="judgment section-pad" id="julgamento">
       <div class="judgment-top">

@@ -141,7 +141,7 @@ if (redline) {
 
   try {
     record = Number(localStorage.getItem(RECORD_KEY)) || 0;
-  } catch (_) {}
+  } catch (_) { }
 
   if (recordDisplay) recordDisplay.textContent = String(record).padStart(2, "0");
 
@@ -186,15 +186,15 @@ if (redline) {
     hideTarget();
 
     if (result) result.hidden = false;
-    
+
     const resTitle = $("#result-title");
     const resDesc = $("#result-description");
 
     if (resTitle) {
       resTitle.textContent =
         score >= 15 ? "VOCÊ VIU DEMAIS." :
-        score >= 7 ? "ELA AINDA ESTÁ AQUI." :
-        "ELA VIU VOCÊ.";
+          score >= 7 ? "ELA AINDA ESTÁ AQUI." :
+            "ELA VIU VOCÊ.";
     }
 
     if (resDesc) {
@@ -223,7 +223,7 @@ if (redline) {
     if (intro) intro.hidden = true;
     if (startButton) startButton.hidden = true;
     if (message) message.textContent = "PROCURANDO SINAL...";
-    
+
     showTarget();
 
     countdown = setInterval(() => {
@@ -247,7 +247,7 @@ if (redline) {
 
         try {
           localStorage.setItem(RECORD_KEY, String(record));
-        } catch (_) {}
+        } catch (_) { }
       }
 
       hideTarget();
@@ -385,6 +385,23 @@ if (redline) {
       selector: ".hidden-mark"
     }
   };
+
+  // Garante a criação do elemento de aviso visual na tela
+  toastElement = document.createElement("div");
+  toastElement.className = "story-toast";
+  toastElement.setAttribute("role", "status");
+  toastElement.setAttribute("aria-live", "polite");
+  document.body.appendChild(toastElement);
+
+  function notify(message) {
+    toastElement.textContent = message;
+    toastElement.classList.add("visible");
+
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toastElement.classList.remove("visible");
+    }, 3000);
+  }
 
   const scenes = {
     letter: {
@@ -841,22 +858,6 @@ if (redline) {
     }
   };
 
-  toastElement = document.createElement("div");
-  toastElement.className = "story-toast";
-  toastElement.setAttribute("role", "status");
-  toastElement.setAttribute("aria-live", "polite");
-  document.body.appendChild(toastElement);
-
-  function notify(message) {
-    toastElement.textContent = message;
-    toastElement.classList.add("visible");
-
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => {
-      toastElement.classList.remove("visible");
-    }, 3000);
-  }
-
   function hasClue(id) {
     return state.clues.includes(id);
   }
@@ -1143,19 +1144,17 @@ if (redline) {
 
   function installClues() {
     Object.entries(clueData).forEach(([id, clue]) => {
-      const element = $(clue.selector);
+      const elements = document.querySelectorAll(clue.selector);
+      elements.forEach((element) => {
+        element.dataset.storyClue = id;
+        element.style.cursor = "pointer";
+        element.title = "Há algo escondido neste elemento.";
+        element.setAttribute("aria-label", `Investigar pista: ${clue.title}`);
 
-      if (!element) return;
-
-      element.dataset.storyClue = id;
-      element.title = "Há algo escondido neste elemento.";
-      element.setAttribute("aria-label", "Investigar pista escondida");
-
-      if (!element.matches(
-        "button, a, input, select, textarea, [tabindex]"
-      )) {
-        element.tabIndex = 0;
-      }
+        if (!element.matches("button, a, input, select, textarea, [tabindex]")) {
+          element.tabIndex = 0;
+        }
+      });
     });
   }
 
@@ -1177,21 +1176,44 @@ if (redline) {
     notify(`EVIDÊNCIA REGISTRADA: ${clue.title}`);
   }
 
+  // Ouvinte global robusto de alta prioridade para apanhar as pistas independentemente do layout
   document.addEventListener("click", (event) => {
-    const target = event.target.closest("[data-story-clue]");
+    const target = event.target.closest(".hero-stamp, .character-note, .finale-small, .hidden-mark, [data-story-clue]");
     if (!target) return;
 
-    collectClue(target.dataset.storyClue);
-  });
+    let clueId = target.dataset.storyClue;
+    if (!clueId) {
+      if (target.matches(".hero-stamp")) clueId = "seal";
+      else if (target.matches(".character-note")) clueId = "margin";
+      else if (target.matches(".finale-small")) clueId = "witness";
+      else if (target.matches(".hidden-mark")) clueId = "mark";
+    }
+
+    if (clueId) {
+      event.preventDefault();
+      event.stopPropagation();
+      collectClue(clueId);
+    }
+  }, true);
 
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Enter" && event.key !== " ") return;
 
-    const target = event.target.closest("[data-story-clue]");
+    const target = event.target.closest(".hero-stamp, .character-note, .finale-small, .hidden-mark, [data-story-clue]");
     if (!target || target.matches("button, a")) return;
 
-    event.preventDefault();
-    collectClue(target.dataset.storyClue);
+    let clueId = target.dataset.storyClue;
+    if (!clueId) {
+      if (target.matches(".hero-stamp")) clueId = "seal";
+      else if (target.matches(".character-note")) clueId = "margin";
+      else if (target.matches(".finale-small")) clueId = "witness";
+      else if (target.matches(".hidden-mark")) clueId = "mark";
+    }
+
+    if (clueId) {
+      event.preventDefault();
+      collectClue(clueId);
+    }
   });
 
   inventoryButton.addEventListener("click", () => {
@@ -1284,6 +1306,7 @@ if (redline) {
   updateSidebar();
   renderInventory();
 })();
+
 // =========================================
 // CONTROLE DO EASTER EGG DE ACESSO (P4INFORMATICA)
 // =========================================
@@ -1311,7 +1334,7 @@ if (redline) {
   // 2. Valida a senha ao enviar o formulário
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    
+
     // Converte para minúsculas para aceitar p4informatica, P4INFORMATICA, P4Informatica, etc.
     const senhaDigitada = input.value.trim().toLowerCase();
 
@@ -1329,7 +1352,7 @@ if (redline) {
       erroMsg.hidden = false;
       input.value = "";
       input.focus();
-      
+
       setTimeout(() => {
         erroMsg.hidden = true;
       }, 3000);
