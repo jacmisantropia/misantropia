@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -34,7 +33,7 @@
       <a href="#manifesto">Manifesto</a>
       <a href="#personagens">Personagens</a>
       <a href="#ficha">Ficha artística</a>
-      <a href="#morte-game">A Vigília</a>
+      <a href="#arquivo-017">Arquivo 017</a>
     </nav>
 
     <a class="ticket-link" href="#sobre">A peça <span>↘</span></a>
@@ -227,7 +226,7 @@
 
         <article class="character">
           <span class="char-no">05</span>
-          <div class="char-symbol" id="death-easter-egg">†</div>
+          <div class="char-symbol" id="death-easter-egg" style="cursor: pointer;">†</div>
 
           <div class="char-info">
             <h3>MORTE</h3>
@@ -327,7 +326,7 @@
       </p>
     </section>
 
-    <!-- NOVA SEÇÃO: JOGO -->
+    <!-- SEÇÃO JOGO DA MORTE (OCULTA ATÉ O EASTER EGG DOS 3 CLIQUES) -->
     <section id="morte-game" aria-labelledby="game-title">
       <div class="game-heading">
         <span class="game-index">05 / ARQUIVO 004 — INTERFERÊNCIA</span>
@@ -403,6 +402,84 @@
         <span>VOCÊ FOI AVISADO.</span>
       </p>
     </section>
+
+    <!-- MINIJOGO: ARQUIVO 017 -->
+    <section class="mystery-game section-pad" id="arquivo-017">
+      <div class="game-topline">
+        <span class="section-index">ARQUIVO Nº 017</span>
+        <span class="game-status">
+          <span class="red-dot"></span> CASO NÃO RESOLVIDO
+        </span>
+      </div>
+
+      <div class="game-heading">
+        <div>
+          <p class="eyebrow">UMA INVESTIGAÇÃO INTERATIVA</p>
+          <h2>QUEM ESTÁ<br><span>MINTINDO?</span></h2>
+        </div>
+
+        <p class="game-intro">
+          Um depoimento foi apagado. Três versões continuam de pé.
+          Procure as pistas espalhadas pela página antes de decidir
+          em quem acreditar.
+        </p>
+      </div>
+
+      <div class="game-layout">
+        <aside class="case-file">
+          <p class="case-label">DOCUMENTO CONFIDENCIAL</p>
+          <div class="case-number">017</div>
+          <div class="case-stamp">ACESSO<br>RESTRITO</div>
+
+          <p class="case-description">
+            O caso não será resolvido apenas com aquilo que está escrito.
+            Observe também o que foi deixado de fora.
+          </p>
+
+          <div class="evidence-counter">
+            <span>PISTAS ENCONTRADAS</span>
+            <strong id="clue-count">00 / 03</strong>
+          </div>
+
+          <div class="evidence-track">
+            <span id="clue-track"></span>
+          </div>
+
+          <p class="case-hint">
+            DICA: alguns elementos da página escondem informações.
+          </p>
+        </aside>
+
+        <div class="game-console">
+          <div class="console-header">
+            <span id="game-stage">AGUARDANDO INÍCIO</span>
+            <span>● REGISTRO ATIVO</span>
+          </div>
+
+          <div id="game-content" aria-live="polite">
+            <p class="game-overline">O ARQUIVO ESTÁ ABERTO.</p>
+            <h3>Você aceita investigar?</h3>
+            <p>
+              Leia os depoimentos, procure as evidências e tome cuidado:
+              uma escolha precipitada pode mudar o final do caso.
+            </p>
+            <button class="game-button" id="game-start">
+              INICIAR INVESTIGAÇÃO <span>↗</span>
+            </button>
+          </div>
+
+          <div class="console-footer">
+            <span>JAC · 2026</span>
+            <span>VERDADE É UMA QUESTÃO DE PONTO DE VISTA.</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="game-disclaimer">
+        NENHUMA DECLARAÇÃO DEVE SER ACEITA SEM INVESTIGAÇÃO.
+      </p>
+    </section>
+    <!-- FIM DO MINIJOGO -->
 
     <!-- ENCERRAMENTO -->
     <section class="finale">
