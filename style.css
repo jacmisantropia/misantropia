@@ -30,7 +30,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Efeito de Granulação (Overlay) */
 .grain {
   position: fixed;
   inset: 0;
@@ -807,310 +806,390 @@ body {
 }
 
 /* ==========================================================================
-   9. MINIJOGO DE INVESTIGAÇÃO — ARQUIVO 017
+   9. O JULGAMENTO — MISANTROPIA (INTERFACE NARRATIVA / ARQUIVO 017)
    ========================================================================== */
-.mystery-game {
-  background: var(--ink);
-  color: var(--paper);
+.judgment {
   position: relative;
   overflow: hidden;
+  background: var(--ink);
+  color: var(--paper);
 }
 
-.game-topline {
+.judgment-top,
+.judgment-console-top,
+.judgment-console-bottom,
+.story-dialog-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+  font: 10px var(--mono);
+  letter-spacing: .07em;
+}
+
+.judgment-top {
   padding-bottom: 18px;
   border-bottom: 1px solid #514b43;
 }
 
-.game-status,
-.case-label,
-.evidence-counter span,
-.case-hint,
-.game-overline,
-.console-header,
-.console-footer,
-.game-disclaimer {
-  font: 10px var(--mono);
-  letter-spacing: .08em;
-}
-
-.game-status {
+.judgment-status {
   color: #c6bcad;
 }
 
-.game-heading {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  align-items: end;
-  gap: 8vw;
-  padding: 55px 0 45px;
+.judgment-status i {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 7px;
+  background: var(--red);
+  border-radius: 50%;
 }
 
-.game-heading h2 {
-  font: 900 clamp(65px, 10vw, 135px)/.78 var(--display);
-  letter-spacing: -.04em;
-  margin: 20px 0 0;
+.judgment-heading {
+  padding: 65px 0 48px;
 }
 
-.game-heading h2 span {
+.judgment-heading h2 {
+  max-width: 1100px;
+  font: 900 clamp(58px, 10vw, 135px)/.79 var(--display);
+  letter-spacing: 0.01em; /* Ajustado para impedir sobreposição de letras */
+  margin: 22px 0;
+}
+
+.judgment-heading h2 span {
   color: var(--red);
+  display: block;
 }
 
-.game-intro {
-  max-width: 390px;
-  font-size: 13px;
-  line-height: 1.9;
+.judgment-heading > p:last-child {
+  max-width: 430px;
   color: #c6bcad;
+  font-size: 13px;
+  line-height: 1.8;
 }
 
-.game-layout {
+.judgment-layout {
   display: grid;
-  grid-template-columns: minmax(200px, .75fr) minmax(0, 1.6fr);
+  grid-template-columns: minmax(210px, .72fr) minmax(0, 1.7fr);
   gap: 24px;
+  align-items: stretch;
 }
 
-.case-file {
-  background: var(--paper);
-  color: var(--ink);
-  padding: 25px;
+.judgment-file {
   position: relative;
-  min-height: 360px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  padding: 25px;
+  background: var(--paper);
+  color: var(--ink);
 }
 
-.case-label {
+.file-label,
+.file-stat span,
+.file-inventory,
+.file-stamp,
+.story-kicker,
+.judgment-footnote {
+  font: 10px var(--mono);
+  letter-spacing: .07em;
+}
+
+.file-label {
   margin: 0;
   color: var(--muted);
 }
 
-.case-number {
-  font: 900 clamp(90px, 12vw, 150px)/.95 var(--display);
-  letter-spacing: -.06em;
-  margin: 30px 0 18px;
+.file-number {
+  margin: 24px 0 12px;
+  font: 900 clamp(85px, 11vw, 135px)/.9 var(--display);
+  letter-spacing: 0.02em; /* Corrigido para espaçamento correto */
 }
 
-.case-stamp {
+.file-stamp {
   position: absolute;
+  top: 72px;
   right: 18px;
-  top: 70px;
+  padding: 9px;
   border: 2px solid var(--red);
   color: var(--red);
-  padding: 8px;
-  font: 700 11px/1.3 var(--mono);
   text-align: center;
-  transform: rotate(9deg);
+  transform: rotate(8deg);
 }
 
-.case-description {
-  font: 12px/1.8 var(--mono);
-  border-top: 1px solid var(--line);
-  padding-top: 18px;
-}
-
-.evidence-counter {
+.file-rule {
   width: 100%;
+  border-top: 1px solid var(--line);
+  margin: 14px 0;
+}
+
+.file-description {
+  font: 12px/1.8 var(--mono);
+}
+
+.file-stat {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-  margin-top: auto;
-  padding-top: 25px;
+  width: 100%;
+  margin-top: 22px;
 }
 
-.evidence-counter span {
+.file-stat span {
   color: var(--muted);
   font-size: 9px;
 }
 
-.evidence-counter strong {
+.file-stat strong {
   color: var(--red);
-  font: 700 13px var(--mono);
+  font: 700 12px var(--mono);
 }
 
-.evidence-track {
+.file-progress {
   width: 100%;
   height: 4px;
-  background: #c8bdac;
-  margin-top: 12px;
+  margin-top: 10px;
+  background: #c9bead;
 }
 
-.evidence-track span {
+.file-progress span {
   display: block;
   width: 0;
   height: 100%;
   background: var(--red);
-  transition: width .3s ease;
+  transition: width .25s ease;
 }
 
-.case-hint {
-  margin: 18px 0 0;
-  color: var(--muted);
-  font-size: 9px;
-  line-height: 1.7;
+.file-inventory {
+  width: 100%;
+  margin-top: auto;
+  padding: 15px 0 0;
+  border: 0;
+  background: none;
+  color: var(--red);
+  text-align: left;
+  cursor: pointer;
 }
 
-.game-console {
-  border: 1px solid #514b43;
-  min-width: 0;
+.judgment-console {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  border: 1px solid #514b43;
 }
 
-.console-header,
-.console-footer {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
+.judgment-console-top,
+.judgment-console-bottom {
   padding: 15px 18px;
   color: #a69c8e;
   font-size: 9px;
 }
 
-.console-header {
+.judgment-console-top {
   border-bottom: 1px solid #514b43;
 }
 
-.console-header span:last-child {
+.judgment-console-bottom {
+  margin-top: auto;
+  border-top: 1px solid #514b43;
+}
+
+#story-save-label {
   color: var(--red);
 }
 
-#game-content {
-  flex: 1;
-  padding: clamp(22px, 4vw, 42px);
+#story-content {
+  min-height: 350px;
+  padding: clamp(24px, 4vw, 44px);
 }
 
-.game-overline {
-  color: var(--red);
-  margin: 0 0 18px;
-}
-
-#game-content h3 {
-  font: 800 clamp(32px, 4vw, 52px)/.95 var(--display);
+.story-kicker {
   margin: 0 0 20px;
+  color: var(--red);
+}
+
+#story-content h3 {
+  margin: 0 0 22px;
+  font: 800 clamp(32px, 4vw, 53px)/.95 var(--display);
   text-transform: uppercase;
 }
 
-#game-content > p:not(.game-overline) {
+#story-content p:not(.story-kicker) {
+  max-width: 600px;
   color: #c6bcad;
   font-size: 12px;
   line-height: 1.9;
-  max-width: 560px;
 }
 
-.game-choices {
-  display: grid;
-  gap: 10px;
-  margin-top: 28px;
-}
-
-.game-choice {
+.story-action,
+.story-choice {
+  display: block;
   width: 100%;
-  text-align: left;
-  border: 1px solid #514b43;
   padding: 16px;
+  border: 1px solid #514b43;
   background: transparent;
   color: var(--paper);
+  text-align: left;
   font: 11px/1.7 var(--mono);
   cursor: pointer;
   transition: border-color .2s, background .2s;
 }
 
-.game-choice:hover,
-.game-choice:focus-visible {
+.story-action {
+  width: auto;
+  margin-top: 28px;
   border-color: var(--red);
-  background: rgba(200, 23, 23, .1);
-  outline: none;
-}
-
-.game-choice span {
-  color: var(--red);
-  margin-right: 10px;
-}
-
-.game-button {
-  margin-top: 24px;
-  padding: 15px 18px;
-  border: 1px solid var(--red);
   background: var(--red);
   color: white;
-  font: 700 10px var(--mono);
-  letter-spacing: .05em;
-  cursor: pointer;
-  transition: background .2s, color .2s;
 }
 
-.game-button:hover {
+.story-action span {
+  margin-left: 12px;
+}
+
+.story-action:hover {
   background: transparent;
   color: var(--paper);
 }
 
-.game-button span {
-  margin-left: 14px;
+.story-choices {
+  display: grid;
+  gap: 10px;
+  margin-top: 26px;
 }
 
-.game-result {
-  border-left: 3px solid var(--red);
-  padding-left: 18px;
-  margin-top: 25px;
+.story-choice:hover:not(:disabled),
+.story-choice:focus-visible:not(:disabled) {
+  border-color: var(--red);
+  background: #c8171718;
+  outline: none;
 }
 
-.game-result strong {
+.story-choice:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-color: #332f2a;
+}
+
+.story-choice .choice-number {
+  margin-right: 10px;
+  color: var(--red);
+}
+
+.story-choice small {
   display: block;
-  font: 800 30px var(--display);
-  text-transform: uppercase;
-}
-
-.game-result p {
-  font-size: 12px;
-  line-height: 1.8;
-  color: #c6bcad;
-}
-
-.console-footer {
-  border-top: 1px solid #514b43;
-}
-
-.game-disclaimer {
+  padding: 6px 0 0 28px;
   color: #a69c8e;
-  margin: 22px 0 0;
+  font: 10px/1.6 var(--mono);
+}
+
+.story-note {
+  margin-top: 24px;
+  padding: 12px 14px;
+  border-left: 2px solid var(--red);
+  background: #ffffff08;
+  color: #c6bcad;
+  font: 11px/1.7 var(--mono);
+}
+
+.story-ending {
+  margin-top: 28px;
+  padding: 20px;
+  border: 1px solid #514b43;
+}
+
+.story-ending strong {
+  display: block;
+  color: var(--red);
+  font: 800 35px/.95 var(--display);
+}
+
+.story-ending p {
+  margin-bottom: 0;
+}
+
+.judgment-footnote {
+  margin: 25px 0 0;
+  color: #a69c8e;
   font-size: 9px;
 }
 
-/* Elementos da página que escondem pistas */
-[data-mystery-clue] {
+.story-dialog {
+  width: min(520px, calc(100% - 30px));
+  max-height: min(75vh, 650px);
+  overflow: auto;
+  padding: 26px;
+  border: 1px solid var(--red);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.story-dialog::backdrop {
+  background: #000b;
+}
+
+.story-dialog-top {
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.story-dialog-top button {
+  border: 0;
+  background: none;
+  color: var(--red);
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.story-dialog h3 {
+  font: 800 35px var(--display);
+}
+
+#story-evidence-list {
+  padding-left: 20px;
+}
+
+#story-evidence-list li {
+  margin-bottom: 16px;
+  font: 12px/1.8 var(--mono);
+}
+
+#story-inventory-empty {
+  font: 12px/1.8 var(--mono);
+  color: var(--muted);
+}
+
+[data-story-clue] {
   cursor: help;
 }
 
-[data-mystery-clue]::selection {
-  background: var(--red);
-  color: white;
+[data-story-clue]:focus-visible {
+  outline: 2px dashed var(--red);
+  outline-offset: 4px;
 }
 
-.mystery-toast {
+.story-toast {
   position: fixed;
   left: 50%;
   bottom: 25px;
-  z-index: 80;
+  z-index: 100;
   width: max-content;
   max-width: calc(100% - 32px);
   padding: 14px 18px;
-  background: var(--paper);
   border-left: 4px solid var(--red);
+  background: var(--paper);
   color: var(--ink);
+  box-shadow: 0 8px 30px #0005;
   font: 11px/1.7 var(--mono);
-  box-shadow: 0 8px 30px #0004;
-  transform: translate(-50%, 15px);
   opacity: 0;
   pointer-events: none;
+  transform: translate(-50%, 12px);
   transition: opacity .2s, transform .2s;
 }
 
-.mystery-toast.show {
+.story-toast.visible {
   opacity: 1;
   transform: translate(-50%, 0);
 }
@@ -1514,49 +1593,42 @@ footer button {
     padding: 35px 25px;
   }
 
-  /* Ajustes do Arquivo 017 no mobile */
-  .game-heading {
-    grid-template-columns: 1fr;
-    gap: 18px;
-    padding: 40px 0 30px;
+  /* Responsividade do Julgamento */
+  .judgment-heading {
+    padding: 45px 0 30px;
   }
 
-  .game-heading h2 {
-    font-size: clamp(65px, 16vw, 100px);
+  .judgment-heading h2 {
+    font-size: clamp(55px, 14vw, 90px);
   }
 
-  .game-layout {
+  .judgment-layout {
     grid-template-columns: 1fr;
   }
 
-  .case-file {
-    min-height: 290px;
+  .judgment-file {
+    min-height: 320px;
   }
 
-  .case-number {
+  .file-number {
     font-size: 105px;
   }
 
-  .case-stamp {
-    top: 65px;
-  }
-
-  .console-header,
-  .console-footer {
-    flex-wrap: wrap;
-    font-size: 8px;
-  }
-
-  #game-content {
+  #story-content {
+    min-height: 300px;
     padding: 24px 18px;
   }
 
-  .game-choice {
+  .judgment-console-top,
+  .judgment-console-bottom {
+    font-size: 8px;
+  }
+
+  .story-choice {
     padding: 14px 12px;
   }
 }
 
-/* Ajustes de telas pequenas para o Jogo da Morte */
 @media (max-width: 600px) {
   #morte-game {
     padding: 50px 5%;
@@ -1600,10 +1672,97 @@ footer button {
   }
 
   *,
-  .evidence-track span,
-  .game-choice,
-  .game-button,
-  .mystery-toast {
+  .file-progress span,
+  .story-action,
+  .story-choice,
+  .story-toast {
     transition: none !important;
   }
+}
+/* ==========================================================================
+   SISTEMA DE DESBLOQUEIO DE EASTER EGG (ARQUIVO 017)
+   ========================================================================== */
+
+/* A seção do jogo e a caixa de senha ficam ocultas por padrão */
+.judgment,
+.judgment-lock-container {
+  display: none;
+}
+
+/* Mostra a caixa de senha ao clicar no menu 'Julgamento' */
+.judgment-lock-container.ativo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 5vw;
+  background: var(--ink);
+  color: var(--paper);
+  border-top: 1px solid var(--line);
+}
+
+.judgment-lock-card {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 35px;
+  max-width: 480px;
+  width: 100%;
+  border-top: 5px solid var(--red);
+  text-align: center;
+}
+
+.judgment-lock-card h3 {
+  font: 800 28px var(--display);
+  margin: 15px 0 10px;
+}
+
+.judgment-lock-card p {
+  font: 11px/1.6 var(--mono);
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+#julgamento-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+#julgamento-input {
+  flex: 1;
+  padding: 12px 14px;
+  background: transparent;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  font: 700 12px var(--mono);
+  text-transform: uppercase;
+}
+
+#julgamento-input:focus {
+  outline: 2px solid var(--red);
+}
+
+#julgamento-form button {
+  padding: 12px 18px;
+  background: var(--red);
+  color: white;
+  border: 1px solid var(--red);
+  font: 700 10px var(--mono);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#julgamento-form button:hover {
+  background: transparent;
+  color: var(--red);
+}
+
+.lock-error {
+  color: var(--red) !important;
+  margin-top: 15px !important;
+  font-weight: 700;
+}
+
+/* Revela o jogo completo após acertar a senha */
+.judgment.revelado {
+  display: block !important;
 }

@@ -33,7 +33,8 @@
       <a href="#manifesto">Manifesto</a>
       <a href="#personagens">Personagens</a>
       <a href="#ficha">Ficha artística</a>
-      <a href="#arquivo-017">Arquivo 017</a>
+      <!-- 1. NO SEU NAV DO HEADER (topbar): -->
+      <a href="#julgamento" id="nav-julgamento">Julgamento</a>
     </nav>
 
     <a class="ticket-link" href="#sobre">A peça <span>↘</span></a>
@@ -70,11 +71,7 @@
       </div>
 
       <div class="logo-band">
-        <img
-          class="main-logo"
-          src="logo-misantropia.png"
-          alt="Misantropia — logotipo da peça"
-        />
+        <img class="main-logo" src="logo-misantropia.png" alt="Misantropia — logotipo da peça" />
 
         <p>
           O FIM NÃO COMEÇA<br>
@@ -355,12 +352,7 @@
         <span class="arena-label">OBSERVAÇÃO Nº 001</span>
         <span class="arena-coordinate">LOCAL DESCONHECIDO</span>
 
-        <button
-          id="death-target"
-          type="button"
-          aria-label="Encontrar a Morte"
-          hidden
-        >†</button>
+        <button id="death-target" type="button" aria-label="Encontrar a Morte" hidden>†</button>
 
         <p id="game-message" aria-live="polite">
           AGUARDANDO O INÍCIO...
@@ -402,84 +394,114 @@
         <span>VOCÊ FOI AVISADO.</span>
       </p>
     </section>
+    <!-- COLOQUE A CAIXA DE SENHA AQUI (FORA DO HEADER, DENTRO DO MAIN): -->
+    <div id="julgamento-lock" class="judgment-lock-container">
+      <div class="judgment-lock-card">
+        <span class="file-label">ARQUIVO 017 / ACESSO RESTRITO</span>
+        <h3>INSIRA A CHAVE DE SEGURANÇA</h3>
+        <p>Este documento requer autorização especial para ser desbloqueado.</p>
 
-    <!-- MINIJOGO: ARQUIVO 017 -->
-    <section class="mystery-game section-pad" id="arquivo-017">
-      <div class="game-topline">
-        <span class="section-index">ARQUIVO Nº 017</span>
-        <span class="game-status">
-          <span class="red-dot"></span> CASO NÃO RESOLVIDO
+        <form id="julgamento-form" autocomplete="off">
+          <input type="password" id="julgamento-input" placeholder="DIGITE A SENHA..." required />
+          <button type="submit">DESBLOQUEAR ↗</button>
+        </form>
+        <p id="julgamento-erro" class="lock-error" hidden>CHAVE INCORRETA. ACESSO NEGADO.</p>
+      </div>
+    </div>
+    <!-- EXPERIÊNCIA INTERATIVA: O JULGAMENTO -->
+    <section class="judgment section-pad" id="julgamento">
+      <div class="judgment-top">
+        <span class="section-index">ARQUIVO 017 / EXPERIÊNCIA INTERATIVA</span>
+        <span class="judgment-status">
+          <span class="red-dot"></span> DOCUMENTO CONFIDENCIAL
         </span>
       </div>
 
-      <div class="game-heading">
-        <div>
-          <p class="eyebrow">UMA INVESTIGAÇÃO INTERATIVA</p>
-          <h2>QUEM ESTÁ<br><span>MINTINDO?</span></h2>
-        </div>
-
-        <p class="game-intro">
-          Um depoimento foi apagado. Três versões continuam de pé.
-          Procure as pistas espalhadas pela página antes de decidir
-          em quem acreditar.
+      <div class="judgment-heading">
+        <p class="eyebrow">NÃO CONFIE NA PRIMEIRA VERSÃO.</p>
+        <h2>O JULGAMENTO<br><span>DE UM MISANTROPO.</span></h2>
+        <p>
+          Três depoimentos. Uma verdade incompleta.
+          E uma decisão que não poderá ser desfeita.
         </p>
       </div>
 
-      <div class="game-layout">
-        <aside class="case-file">
-          <p class="case-label">DOCUMENTO CONFIDENCIAL</p>
-          <div class="case-number">017</div>
-          <div class="case-stamp">ACESSO<br>RESTRITO</div>
+      <div class="judgment-layout">
+        <aside class="judgment-file">
+          <p class="file-label">REGISTRO DE INVESTIGAÇÃO</p>
+          <strong class="file-number">017</strong>
+          <span class="file-stamp">ACESSO<br>RESTRITO</span>
 
-          <p class="case-description">
-            O caso não será resolvido apenas com aquilo que está escrito.
-            Observe também o que foi deixado de fora.
+          <div class="file-rule"></div>
+
+          <p class="file-description">
+            O arquivo registra suas decisões.
+            Nem tudo o que você descobrir será revelado no final.
           </p>
 
-          <div class="evidence-counter">
-            <span>PISTAS ENCONTRADAS</span>
-            <strong id="clue-count">00 / 03</strong>
+          <div class="file-stat">
+            <span>PISTAS</span>
+            <strong id="story-clues">00 / 04</strong>
+          </div>
+          <div class="file-progress">
+            <span id="story-progress"></span>
           </div>
 
-          <div class="evidence-track">
-            <span id="clue-track"></span>
+          <div class="file-stat">
+            <span>CAPÍTULO</span>
+            <strong id="story-chapter">00</strong>
           </div>
 
-          <p class="case-hint">
-            DICA: alguns elementos da página escondem informações.
-          </p>
+          <button class="file-inventory" id="story-inventory" type="button">
+            CONSULTAR EVIDÊNCIAS ↗
+          </button>
         </aside>
 
-        <div class="game-console">
-          <div class="console-header">
-            <span id="game-stage">AGUARDANDO INÍCIO</span>
-            <span>● REGISTRO ATIVO</span>
+        <div class="judgment-console">
+          <div class="judgment-console-top">
+            <span id="story-scene-label">PRÓLOGO</span>
+            <span id="story-save-label">SESSÃO LOCAL</span>
           </div>
 
-          <div id="game-content" aria-live="polite">
-            <p class="game-overline">O ARQUIVO ESTÁ ABERTO.</p>
-            <h3>Você aceita investigar?</h3>
+          <div id="story-content" aria-live="polite">
+            <p class="story-kicker">UMA HISTÓRIA EM TRÊS ATOS</p>
+            <h3>A carta chegou sem remetente.</h3>
             <p>
-              Leia os depoimentos, procure as evidências e tome cuidado:
-              uma escolha precipitada pode mudar o final do caso.
+              Dentro do envelope, uma única frase:
+              "Amanhã, alguém será condenado por uma verdade que ninguém
+              teve coragem de contar."
             </p>
-            <button class="game-button" id="game-start">
-              INICIAR INVESTIGAÇÃO <span>↗</span>
+            <p>
+              Você pode abrir o arquivo. Mas, a partir daí,
+              cada escolha fará parte do julgamento.
+            </p>
+            <button class="story-action" id="story-begin" type="button">
+              ABRIR O ARQUIVO <span>↗</span>
             </button>
           </div>
 
-          <div class="console-footer">
-            <span>JAC · 2026</span>
-            <span>VERDADE É UMA QUESTÃO DE PONTO DE VISTA.</span>
+          <div class="judgment-console-bottom">
+            <span>MISANTROPIA / JAC 2026</span>
+            <span id="story-footer-code">REGISTRO 000</span>
           </div>
         </div>
       </div>
 
-      <p class="game-disclaimer">
-        NENHUMA DECLARAÇÃO DEVE SER ACEITA SEM INVESTIGAÇÃO.
+      <p class="judgment-footnote">
+        O QUE VOCÊ ESCOLHE ACREDITAR TAMBÉM É UMA EVIDÊNCIA.
       </p>
+
+      <dialog class="story-dialog" id="story-evidence-dialog">
+        <div class="story-dialog-top">
+          <span>ARQUIVO DE EVIDÊNCIAS</span>
+          <button id="story-close-inventory" type="button" aria-label="Fechar evidências">×</button>
+        </div>
+        <h3>O que você descobriu.</h3>
+        <ul id="story-evidence-list"></ul>
+        <p id="story-inventory-empty">Nenhuma evidência registrada.</p>
+      </dialog>
     </section>
-    <!-- FIM DO MINIJOGO -->
+    <!-- FIM DA EXPERIÊNCIA -->
 
     <!-- ENCERRAMENTO -->
     <section class="finale">
