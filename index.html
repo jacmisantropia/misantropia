@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -7,201 +8,470 @@
   <meta name="theme-color" content="#e8dfcf" />
   <meta name="description"
     content="Misantropia — peça teatral da Semana Esportiva e Cultural do IFCE Campus Fortaleza." />
+
   <title>MISANTROPIA — JAC 2026</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   <link
     href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
     rel="stylesheet">
+
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/png" href="favicon.png">
 </head>
 
 <body>
   <div class="grain" aria-hidden="true"></div>
+
   <header class="topbar">
-    <a class="wordmark" href="#inicio" aria-label="Misantropia, início">JAC <span>26</span><i> / TEATRO</i></a>
+    <a class="wordmark" href="#inicio" aria-label="Misantropia, início">
+      JAC <span>26</span><i> / TEATRO</i>
+    </a>
+
     <nav aria-label="Navegação principal">
-      <a href="#manifesto">Manifesto</a><a href="#personagens">Personagens</a><a href="#ficha">Ficha artística</a>
+      <a href="#manifesto">Manifesto</a>
+      <a href="#personagens">Personagens</a>
+      <a href="#ficha">Ficha artística</a>
+      <a href="#morte-game">A Vigília</a>
     </nav>
+
     <a class="ticket-link" href="#sobre">A peça <span>↘</span></a>
-    <button class="menu-toggle" aria-label="Abrir menu" aria-expanded="false">☰</button>
+
+    <button class="menu-toggle" aria-label="Abrir menu" aria-expanded="false">
+      ☰
+    </button>
   </header>
 
   <main>
+    <!-- ABERTURA -->
     <section class="hero" id="inicio">
-      <div class="hero-meta"><span>SEMANA ESPORTIVA E CULTURAL</span><span>IFCE · CAMPUS FORTALEZA · 2026</span></div>
-      <div class="hero-title-wrap">
-        <p class="eyebrow"><span class="red-dot"></span> UMA TRAGÉDIA EM TRÊS ATOS</p>
-        <h1>QUEM<br><em>MERECE</em><br>SE SALVAR<span class="period">?</span></h1>
-        <div class="hero-stamp">UMA PEÇA<br>CHAMADA</div>
+      <div class="hero-meta">
+        <span>SEMANA ESPORTIVA E CULTURAL</span>
+        <span>IFCE · CAMPUS FORTALEZA · 2026</span>
       </div>
-      <div class="logo-band">
-        <img class="main-logo" src="logo-misantropia.png" alt="Misantropia — logotipo da peça" />
-        <p>O FIM NÃO COMEÇA<br>QUANDO TUDO ACABA.<br><b>COMEÇA QUANDO<br>NINGUÉM MAIS CONFIA.</b></p>
-      </div>
-      <div class="hero-bottom"><a href="#sobre">ENTRE POR SUA CONTA <span>↓</span></a><span
-          class="classification">CLASSIFICAÇÃO INDICATIVA: 16 ANOS</span></div>
-      <button class="hidden-mark" id="deathMark" aria-label="Marca misteriosa">†</button>
-    </section>
 
-    <section class="intro section-pad" id="sobre">
-      <div class="section-index">01 / CONTEXTO</div>
-      <div class="intro-copy">
-        <p class="eyebrow">O MUNDO ESTÁ EM RUÍNAS</p>
-        <h2>Quando a esperança<br>ganha um rosto, <span>quem<br>paga o preço?</span></h2>
-      </div>
-      <div class="intro-text">
-        <p>Em um mundo marcado pela dor, pela escassez e pela guerra, uma jovem se torna o símbolo de salvação de uma
-          humanidade à beira do fim.</p>
-        <p>Mas fé também pode virar controle. E, quando todos procuram alguém para culpar, a verdade talvez seja a
-          primeira vítima.</p>
-        <div class="quote-mark">“</div>
-        <blockquote>Em quem confiar quando nada parece ter salvação?</blockquote>
-        <div class="quote-mark" style="padding-left: 300px;">”
+      <div class="hero-title-wrap">
+        <p class="eyebrow">
+          <span class="red-dot"></span>
+          UMA TRAGÉDIA EM TRÊS ATOS
+        </p>
+
+        <h1>
+          QUEM<br>
+          <em>MERECE</em><br>
+          SE SALVAR<span class="period">?</span>
+        </h1>
+
+        <div class="hero-stamp">
+          UMA PEÇA<br>
+          CHAMADA
         </div>
       </div>
+
+      <div class="logo-band">
+        <img
+          class="main-logo"
+          src="logo-misantropia.png"
+          alt="Misantropia — logotipo da peça"
+        />
+
+        <p>
+          O FIM NÃO COMEÇA<br>
+          QUANDO TUDO ACABA.<br>
+          <b>COMEÇA QUANDO<br>NINGUÉM MAIS CONFIA.</b>
+        </p>
+      </div>
+
+      <div class="hero-bottom">
+        <a href="#sobre">ENTRE POR SUA CONTA <span>↓</span></a>
+        <span class="classification">CLASSIFICAÇÃO INDICATIVA: 16 ANOS</span>
+      </div>
+
+      <button class="hidden-mark" id="deathMark" aria-label="Marca misteriosa">
+        †
+      </button>
     </section>
 
+    <!-- CONTEXTO -->
+    <section class="intro section-pad" id="sobre">
+      <div class="section-index">01 / CONTEXTO</div>
+
+      <div class="intro-copy">
+        <p class="eyebrow">O MUNDO ESTÁ EM RUÍNAS</p>
+
+        <h2>
+          Quando a esperança<br>
+          ganha um rosto, <span>quem<br>paga o preço?</span>
+        </h2>
+      </div>
+
+      <div class="intro-text">
+        <p>
+          Em um mundo marcado pela dor, pela escassez e pela guerra,
+          uma jovem se torna o símbolo de salvação de uma humanidade
+          à beira do fim.
+        </p>
+
+        <p>
+          Mas fé também pode virar controle. E, quando todos procuram
+          alguém para culpar, a verdade talvez seja a primeira vítima.
+        </p>
+
+        <div class="quote-mark">“</div>
+
+        <blockquote>
+          Em quem confiar quando nada parece ter salvação?
+        </blockquote>
+
+        <div class="quote-mark" style="padding-left: 300px;">”</div>
+      </div>
+    </section>
+
+    <!-- MANIFESTO -->
     <section class="manifesto" id="manifesto">
-      <div class="manifesto-top"><span>02 / MANIFESTO</span><span>LEIA COM ATENÇÃO</span></div>
+      <div class="manifesto-top">
+        <span>02 / MANIFESTO</span>
+        <span>LEIA COM ATENÇÃO</span>
+      </div>
+
       <p class="manifesto-line">O ÓDIO</p>
       <p class="manifesto-line indent">VEM DE</p>
       <p class="manifesto-line redline">DENTRO<span>.</span></p>
+
       <div class="manifesto-foot">
-        <p>Não é só sobre o fim do mundo.<br>É sobre aquilo que fazemos uns com os outros antes dele.</p><span>DESCONFIE
-          DAS RESPOSTAS FÁCEIS.</span>
+        <p>
+          Não é só sobre o fim do mundo.<br>
+          É sobre aquilo que fazemos uns com os outros antes dele.
+        </p>
+
+        <span>DESCONFIE DAS RESPOSTAS FÁCEIS.</span>
       </div>
     </section>
 
+    <!-- PERSONAGENS -->
     <section class="characters section-pad" id="personagens">
       <div class="section-heading">
         <div>
           <div class="section-index">03 / NO PALCO</div>
           <h2>ROSTOS DE<br><span>UM COLAPSO.</span></h2>
         </div>
-        <p>Salvadores, sobreviventes e aqueles que aprenderam a transformar o medo em poder. Ninguém está completamente
-          a salvo de si mesmo.</p>
+
+        <p>
+          Salvadores, sobreviventes e aqueles que aprenderam a transformar
+          o medo em poder. Ninguém está completamente a salvo de si mesmo.
+        </p>
       </div>
+
       <div class="character-list">
-        <article class="character"><span class="char-no">01</span>
+        <article class="character">
+          <span class="char-no">01</span>
           <div class="char-symbol">N.</div>
+
           <div class="char-info">
             <h3>NADINE</h3>
-            <p>A esperança de todos. Uma jovem que tenta sustentar um mundo inteiro enquanto luta contra as próprias
-              dúvidas.</p>
-          </div><span class="char-tag">A ESCOLHIDA</span>
+            <p>
+              A esperança de todos. Uma jovem que tenta sustentar um mundo
+              inteiro enquanto luta contra as próprias dúvidas.
+            </p>
+          </div>
+
+          <span class="char-tag">A ESCOLHIDA</span>
         </article>
-        <article class="character"><span class="char-no">02</span>
+
+        <article class="character">
+          <span class="char-no">02</span>
           <div class="char-symbol">A.</div>
+
           <div class="char-info">
             <h3>AMÉRICO</h3>
-            <p>Banqueiro, manipulador e sedento por influência. Para ele, ser amado talvez seja apenas outra forma de
-              dominar.</p>
-          </div><span class="char-tag">O SALVADOR?</span>
+            <p>
+              Banqueiro, manipulador e sedento por influência. Para ele,
+              ser amado talvez seja apenas outra forma de dominar.
+            </p>
+          </div>
+
+          <span class="char-tag">O SALVADOR?</span>
         </article>
-        <article class="character"><span class="char-no">03</span>
+
+        <article class="character">
+          <span class="char-no">03</span>
           <div class="char-symbol">M.</div>
+
           <div class="char-info">
             <h3>MAIA</h3>
-            <p>Conselheira de Nadine. Tenta enxergar a pessoa por trás do símbolo, mesmo quando o mundo deixa de
-              fazê-lo.</p>
-          </div><span class="char-tag">A CONSELHEIRA</span>
+            <p>
+              Conselheira de Nadine. Tenta enxergar a pessoa por trás
+              do símbolo, mesmo quando o mundo deixa de fazê-lo.
+            </p>
+          </div>
+
+          <span class="char-tag">A CONSELHEIRA</span>
         </article>
-        <article class="character"><span class="char-no">04</span>
+
+        <article class="character">
+          <span class="char-no">04</span>
           <div class="char-symbol">V.</div>
+
           <div class="char-info">
             <h3>VERGUEIRO</h3>
-            <p>Um presidente que ocupa o poder, mas talvez nunca tenha sido dono das próprias decisões.</p>
-          </div><span class="char-tag">O PRESIDENTE</span>
+            <p>
+              Um presidente que ocupa o poder, mas talvez nunca tenha
+              sido dono das próprias decisões.
+            </p>
+          </div>
+
+          <span class="char-tag">O PRESIDENTE</span>
         </article>
-        <article class="character"><span class="char-no">05</span>
+
+        <article class="character">
+          <span class="char-no">05</span>
           <div class="char-symbol">†</div>
+
           <div class="char-info">
             <h3>MORTE</h3>
-            <p>Uma presença silenciosa. Está sempre por perto — e parece conhecer uma verdade que ninguém quer ouvir.
+            <p>
+              Uma presença silenciosa. Está sempre por perto — e parece
+              conhecer uma verdade que ninguém quer ouvir.
             </p>
-          </div><span class="char-tag">A TESTEMUNHA</span>
+          </div>
+
+          <span class="char-tag">A TESTEMUNHA</span>
         </article>
       </div>
-      <p class="character-note">OS PERSONAGENS SÃO MAIS DO QUE PARECEM. <span>OU MENOS.</span></p>
+
+      <p class="character-note">
+        OS PERSONAGENS SÃO MAIS DO QUE PARECEM. <span>OU MENOS.</span>
+      </p>
     </section>
 
+    <!-- ELENCO -->
     <section class="cast section-pad" id="ficha">
       <div class="cast-heading">
         <div class="section-index">04 / QUEM DÁ VIDA À HISTÓRIA</div>
         <h2>POR TRÁS<br>DAS <span>MÁSCARAS.</span></h2>
         <p>Conheça o elenco e a equipe de Misantropia.</p>
       </div>
+
       <div class="cast-grid">
         <article class="cast-member">
-          <div class="photo-slot"><span>FOTO 01</span><span class="photo-cross">＋</span></div>
+          <div class="photo-slot">
+            <span>FOTO 01</span>
+            <span class="photo-cross">＋</span>
+          </div>
           <div class="cast-caption">
             <h3>Nome do ator / atriz</h3>
             <p>Nadine</p>
           </div>
         </article>
+
         <article class="cast-member">
-          <div class="photo-slot"><span>FOTO 02</span><span class="photo-cross">＋</span></div>
+          <div class="photo-slot">
+            <span>FOTO 02</span>
+            <span class="photo-cross">＋</span>
+          </div>
           <div class="cast-caption">
             <h3>Nome do ator / atriz</h3>
             <p>Morte</p>
           </div>
         </article>
+
         <article class="cast-member">
-          <div class="photo-slot"><span>FOTO 03</span><span class="photo-cross">＋</span></div>
+          <div class="photo-slot">
+            <span>FOTO 03</span>
+            <span class="photo-cross">＋</span>
+          </div>
           <div class="cast-caption">
             <h3>Nome do ator / atriz</h3>
-            <p>Americo</p>
+            <p>Américo</p>
           </div>
         </article>
+
         <article class="cast-member">
-          <div class="photo-slot"><span>FOTO 04</span><span class="photo-cross">＋</span></div>
+          <div class="photo-slot">
+            <span>FOTO 04</span>
+            <span class="photo-cross">＋</span>
+          </div>
           <div class="cast-caption">
             <h3>Nome do ator / atriz</h3>
             <p>Maia</p>
           </div>
         </article>
+
         <article class="cast-member">
-          <div class="photo-slot"><span>FOTO 05</span><span class="photo-cross">＋</span></div>
+          <div class="photo-slot">
+            <span>FOTO 05</span>
+            <span class="photo-cross">＋</span>
+          </div>
           <div class="cast-caption">
             <h3>Nome do ator / atriz</h3>
             <p>Vergueiro</p>
           </div>
         </article>
+
         <article class="cast-member">
-          <div class="photo-slot"><span>FOTO 06</span><span class="photo-cross">＋</span></div>
+          <div class="photo-slot">
+            <span>FOTO 06</span>
+            <span class="photo-cross">＋</span>
+          </div>
           <div class="cast-caption">
             <h3>Nome do ator / atriz</h3>
             <p>Jorge Junior</p>
           </div>
         </article>
       </div>
-      <p class="cast-instruction">ESPAÇO RESERVADO PARA AS FOTOS DO ELENCO</p>
+
+      <p class="cast-instruction">
+        ESPAÇO RESERVADO PARA AS FOTOS DO ELENCO
+      </p>
     </section>
 
+    <!-- NOVA SEÇÃO: JOGO -->
+    <section id="morte-game" aria-labelledby="game-title">
+      <div class="game-heading">
+        <span class="game-index">05 / ARQUIVO 004 — INTERFERÊNCIA</span>
+        <span class="game-warning">NÃO DESVIE O OLHAR</span>
+      </div>
+
+      <div class="game-intro" id="game-intro">
+        <p class="game-kicker">UM JOGO DE ATENÇÃO</p>
+
+        <h2 id="game-title">
+          A MORTE ESTÁ<br>
+          <span>OBSERVANDO.</span>
+        </h2>
+
+        <p>
+          Ela vai aparecer. Você terá poucos segundos para encontrá-la.
+          Não confie no que seus olhos deixam de ver.
+        </p>
+
+        <button id="game-start" type="button">
+          INICIAR VIGÍLIA ↗
+        </button>
+      </div>
+
+      <div class="game-arena" id="game-arena" aria-label="Área do jogo">
+        <span class="arena-label">OBSERVAÇÃO Nº 001</span>
+        <span class="arena-coordinate">LOCAL DESCONHECIDO</span>
+
+        <button
+          id="death-target"
+          type="button"
+          aria-label="Encontrar a Morte"
+          hidden
+        >†</button>
+
+        <p id="game-message" aria-live="polite">
+          AGUARDANDO O INÍCIO...
+        </p>
+      </div>
+
+      <div class="game-scoreboard">
+        <div>
+          <span class="score-label">TEMPO RESTANTE</span>
+          <strong id="game-time">20</strong>
+          <span class="score-unit">SEGUNDOS</span>
+        </div>
+
+        <div>
+          <span class="score-label">APARIÇÕES ENCONTRADAS</span>
+          <strong id="game-score">00</strong>
+        </div>
+
+        <div>
+          <span class="score-label">SEU RECORDE</span>
+          <strong id="game-record">00</strong>
+        </div>
+      </div>
+
+      <div class="game-result" id="game-result" hidden>
+        <span class="game-kicker">FIM DA VIGÍLIA</span>
+
+        <h3 id="result-title">ELA VIU VOCÊ.</h3>
+
+        <p id="result-description"></p>
+
+        <button id="game-restart" type="button">
+          TENTAR NOVAMENTE ↗
+        </button>
+      </div>
+
+      <p class="game-footnote">
+        <span>20 SEGUNDOS. NENHUMA SEGUNDA CHANCE.</span>
+        <span>VOCÊ FOI AVISADO.</span>
+      </p>
+    </section>
+
+    <!-- ENCERRAMENTO -->
     <section class="finale">
-      <div class="finale-small">ÚLTIMA PERGUNTA / SEM RESPOSTA FÁCIL</div>
-      <h2>E SE O<br>MONSTRO<br><span>FOR VOCÊ?</span></h2>
-      <p>Algumas histórias terminam quando as cortinas se fecham.<br>Outras continuam depois que você vai embora.</p>
-      <div class="finale-bottom"><span>MISANTROPIA · JAC 2026</span><span>DESCONFIE DO SILÊNCIO.</span></div>
+      <div class="finale-small">
+        ÚLTIMA PERGUNTA / SEM RESPOSTA FÁCIL
+      </div>
+
+      <h2>
+        E SE O<br>
+        MONSTRO<br>
+        <span>FOR VOCÊ?</span>
+      </h2>
+
+      <p>
+        Algumas histórias terminam quando as cortinas se fecham.<br>
+        Outras continuam depois que você vai embora.
+      </p>
+
+      <div class="finale-bottom">
+        <span>MISANTROPIA · JAC 2026</span>
+        <span>DESCONFIE DO SILÊNCIO.</span>
+      </div>
     </section>
   </main>
 
-  <footer><a href="#inicio" class="footer-logo">MISANTROPIA<span>®</span></a>
-    <p>Uma peça da Semana Esportiva e Cultural<br>IFCE — Campus Fortaleza · 2026</p><button id="secretButton"
-      aria-label="Abrir mensagem escondida">?</button>
+  <!-- RODAPÉ -->
+  <footer>
+    <a href="#inicio" class="footer-logo">
+      MISANTROPIA<span>®</span>
+    </a>
+
+    <p>
+      Uma peça da Semana Esportiva e Cultural<br>
+      IFCE — Campus Fortaleza · 2026
+    </p>
+
+    <button id="secretButton" aria-label="Abrir mensagem escondida">
+      ?
+    </button>
   </footer>
 
+  <!-- EASTER EGG EXISTENTE -->
   <div class="secret-overlay" id="secretOverlay" aria-hidden="true">
-    <div class="secret-paper"><button class="secret-close" id="closeSecret" aria-label="Fechar">×</button><span
-        class="eyebrow">ARQUIVO NÃO CATALOGADO</span>
-      <p class="secret-big">NÃO CONFIE<br>NA PRIMEIRA<br>VERSÃO.</p>
-      <p>Todo mundo tem uma história para contar.<br>Nem todo mundo conta a mesma história.</p><span
-        class="secret-code">REGISTRO Nº 000 — FIM DO ARQUIVO</span>
+    <div class="secret-paper">
+      <button class="secret-close" id="closeSecret" aria-label="Fechar">
+        ×
+      </button>
+
+      <span class="eyebrow">ARQUIVO NÃO CATALOGADO</span>
+
+      <p class="secret-big">
+        NÃO CONFIE<br>
+        NA PRIMEIRA<br>
+        VERSÃO.
+      </p>
+
+      <p>
+        Todo mundo tem uma história para contar.<br>
+        Nem todo mundo conta a mesma história.
+      </p>
+
+      <span class="secret-code">
+        REGISTRO Nº 000 — FIM DO ARQUIVO
+      </span>
     </div>
   </div>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
   <script src="script.js"></script>
 </body>
 
