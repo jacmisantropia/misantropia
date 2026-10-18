@@ -1248,3 +1248,11 @@ footer button {
     transition: none !important;
   }
 }
+/* Torna o alvo (a cruz) menor em celulares para aumentar a dificuldade */
+@media (max-width: 600px) {
+  #morte-game #death-target {
+    width: 36px;  /* Reduz a largura do botão */
+    height: 44px; /* Reduz a altura do botão */
+    font-size: 32px; /* Diminui o tamanho do símbolo da cruz (†) */
+  }
+}
