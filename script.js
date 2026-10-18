@@ -47,6 +47,7 @@ document.querySelector('.redline').addEventListener('click', () => {
   if (manifestoClicks >= 3) { manifestoClicks = 0; showToast('A CULPA NUNCA FICA ONDE VOCÊ DEIXOU.'); }
 });
 
+// Lógica do Minigame (Misantropia)
 (() => {
   const root = document.querySelector("#morte-game");
   if (!root || root.dataset.initialized) return;
@@ -188,7 +189,7 @@ document.querySelector('.redline').addEventListener('click', () => {
   restartButton.addEventListener("click", startGame);
 })();
 
-
+// Easter Egg: Revelar o minigame ao clicar 3 vezes na cruz designada (#death-easter-egg)
 (() => {
   const trigger = document.querySelector("#death-easter-egg");
   const game = document.querySelector("#morte-game");
@@ -204,6 +205,11 @@ document.querySelector('.redline').addEventListener('click', () => {
 
     if (clicks >= 3) {
       clicks = 0;
+      
+      // Adiciona a classe '.ativo' para exibir o minigame que estava oculto no CSS
+      game.classList.add("ativo");
+      
+      // Rola a página suavemente até o minigame
       game.scrollIntoView({ behavior: "smooth" });
 
       const message = game.querySelector("#game-message");
@@ -217,4 +223,3 @@ document.querySelector('.redline').addEventListener('click', () => {
     }
   });
 })();
-
