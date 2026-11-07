@@ -2434,6 +2434,42 @@ footer button {
     grid-template-columns: 1fr;
   }
 }
+/* ==========================================================================
+   CANAL 05 — CONTAGEM REGRESSIVA NA TV
+   ========================================================================== */
+.tv-countdown {
+  margin-top: 15px;
+}
+
+.tv-countdown-timer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+  font-family: var(--mono);
+}
+
+.tv-countdown-timer div {
+  text-align: center;
+}
+
+.tv-countdown-timer strong {
+  display: block;
+  color: var(--red);
+  font-size: clamp(24px, 4vw, 36px);
+  line-height: 1;
+}
+
+.tv-countdown-timer span:not(:last-child) {
+  font-size: 9px;
+  color: var(--paper-mute);
+}
+
+.tv-countdown-timer > span {
+  font-size: 20px;
+  color: var(--red);
+  font-weight: bold;
+}
 /*===============================
 ================================*/
 /*CODIGO PARA ESCONDER ABAS*/
