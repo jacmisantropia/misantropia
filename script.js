@@ -155,7 +155,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     05. EMISSORA — TROCA DE CANAIS
+     05. EMISSORA — TROCA DE CANAIS (COM CANAL 05 CONTAGEM REGRESSIVA)
      ------------------------------------------------------------------------ */
   function initBroadcast() {
     const body = $('#tv-body');
@@ -166,6 +166,10 @@
     const buttons = $$('.tv-channel-btn');
 
     if (!body || !channelLabel || !kicker || !headline || !text || !buttons.length) return;
+
+    // Defina aqui a data exata da peça: Ano, Mês-1 (ex: Junho = 5), Dia, Hora, Minuto
+    const targetDate = new Date(2026, 11, 3, 7, 30, 0).getTime();
+    const dateFormatted = '03 DE DEZEMBRO DE 2026 ÀS 07:30H · AUDITORIO NILO PEÇANHA';
 
     const channels = [
       {
@@ -190,28 +194,93 @@
         headline: 'POR ONDE ANDA NADINE?',
         text: 'A pergunta que não quer calar. Se a salvação falhou, o que será de nós? ' +
               'Algo deve ser feito.'
+      },
+      {
+        isCountdown: true,
+        kicker: 'TRANSMISSÃO ESPECIAL · CONTAGEM REGRESSIVA',
+        headline: 'A HORA DO JULGAMENTO SE APROXIMA.',
+        dateText: dateFormatted
       }
     ];
 
     let current = 0;
+    let countdownInterval = null;
+
+    function updateTVCountdown() {
+      const dDays = $('#tv-cd-days');
+      const dHours = $('#tv-cd-hours');
+      const dMins = $('#tv-cd-mins');
+      const dSecs = $('#tv-cd-secs');
+      if (!dDays) return;
+
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance < 0) {
+        dDays.textContent = '00';
+        dHours.textContent = '00';
+        dMins.textContent = '00';
+        dSecs.textContent = '00';
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((distance % (1000 * 60)) / 1000);
+
+      dDays.textContent = pad(days);
+      dHours.textContent = pad(hours);
+      dMins.textContent = pad(mins);
+      dSecs.textContent = pad(secs);
+    }
 
     function setChannel(index) {
       const data = channels[index];
       if (!data) return;
 
       current = index;
+      clearInterval(countdownInterval);
+
       channelLabel.textContent = `CANAL ${pad(index + 1)}`;
       kicker.textContent = data.kicker;
       headline.textContent = data.headline;
-      text.textContent = data.text;
+
+      if (data.isCountdown) {
+        body.innerHTML = `
+          <p class="tv-kicker">${data.kicker}</p>
+          <h3>${data.headline}</h3>
+          <p style="color: var(--red); font-weight: bold; margin-bottom: 10px;">
+            📍 DATA: ${data.dateText}
+          </p>
+          <div class="tv-countdown">
+            <div class="tv-countdown-timer">
+              <div><strong id="tv-cd-days">00</strong><span>DIAS</span></div>
+              <span>:</span>
+              <div><strong id="tv-cd-hours">00</strong><span>HORAS</span></div>
+              <span>:</span>
+              <div><strong id="tv-cd-mins">00</strong><span>MIN</span></div>
+              <span>:</span>
+              <div><strong id="tv-cd-secs">00</strong><span>SEG</span></div>
+            </div>
+          </div>
+        `;
+        updateTVCountdown();
+        countdownInterval = setInterval(updateTVCountdown, 1000);
+        showToast('TRANSMISSÃO AO VIVO DA CONTAGEM REGRESSIVA.');
+      } else {
+        body.innerHTML = `
+          <p class="tv-kicker">${data.kicker}</p>
+          <h3>${data.headline}</h3>
+          <p>${data.text}</p>
+        `;
+      }
 
       buttons.forEach((button, i) => button.classList.toggle('active', i === index));
 
       body.classList.remove('switching');
       void body.offsetWidth;
       body.classList.add('switching');
-
-      if (index === channels.length - 1) showToast('A PERGUNTA JÁ ESTAVA ESCRITA.');
     }
 
     buttons.forEach((button) => {
@@ -1477,6 +1546,7 @@
       }
     }
   }
+  
 
   /* ------------------------------------------------------------------------
      INICIALIZAÇÃO
