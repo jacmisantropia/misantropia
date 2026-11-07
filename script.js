@@ -181,19 +181,19 @@
         kicker: 'URGENTE',
         headline: 'REBELDES CRESCEM. A EMISSORA AVISA.',
         text: 'Grupos contrários a Nadine ganham força, mas o governo garante: tudo sob controle. ' +
-              'Quem garante o governo? Não perguntamos.'
+          'Quem garante o governo? Não perguntamos.'
       },
       {
         kicker: 'ENTREVISTA EXCLUSIVA',
         headline: 'NADINE, AO VIVO COM JORGE JR.',
         text: 'Uma conversa franca com a garota que carrega nossa esperança. ' +
-              'Perguntas selecionadas. Respostas esperadas.'
+          'Perguntas selecionadas. Respostas esperadas.'
       },
       {
         kicker: 'SINAL INTERROMPIDO',
-        headline: 'POR ONDE ANDA NADINE?',
-        text: 'A pergunta que não quer calar. Se a salvação falhou, o que será de nós? ' +
-              'Algo deve ser feito.'
+        headline: '[ERRO 0x004E4144]P_O_R_ O_N_D_E A_N_D_A N_A_D_I_N_E?',
+        text: 'A s@lv@ç#0 f@lh0... N0 C#R3$ P0R_T_4_L_1_S_T_0... ' +
+          '[ERRO DE LEITURA DO SETOR 404] [DADOS PERDIDOS] [CHECKSUM FALHOU]' + ' Mensagem Corrompida'
       },
       {
         isCountdown: true,
@@ -370,8 +370,8 @@
 
       resultTitle.textContent =
         score >= 15 ? 'VOCÊ VIU DEMAIS.' :
-        score >= 7 ? 'ELA AINDA ESTÁ AQUI.' :
-        'ELA VIU VOCÊ.';
+          score >= 7 ? 'ELA AINDA ESTÁ AQUI.' :
+            'ELA VIU VOCÊ.';
 
       resultDescription.textContent =
         `Você encontrou a Morte ${score} ${score === 1 ? 'vez' : 'vezes'}. ` +
@@ -467,7 +467,7 @@
       margin: {
         title: 'A anotação na margem',
         description: 'Uma nota sugere que o que foi dito diante das câmeras não corresponde ' +
-                     'ao que foi combinado nos bastidores.'
+          'ao que foi combinado nos bastidores.'
       },
       witness: {
         title: 'A última declaração',
@@ -807,7 +807,7 @@
             next: 'endingAccusation',
             requires: { clueCount: 2, flag: 'readEvidence' },
             lockedText: 'Você precisa de pelo menos duas pistas e de registrar ' +
-                        'as contradições antes de sustentar essa acusação.'
+              'as contradições antes de sustentar essa acusação.'
           }
         ]
       },
@@ -912,13 +912,13 @@
 
       if (clueCount === CLUE_TOTAL) {
         analysis = 'Você encontrou todas as pistas. Sua versão dos fatos considerou detalhes ' +
-                   'que as testemunhas tentaram deixar de fora.';
+          'que as testemunhas tentaram deixar de fora.';
       } else if (clueCount >= 2) {
         analysis = 'Você reuniu evidências importantes, mas algumas partes da história ' +
-                   'permaneceram fora do seu alcance.';
+          'permaneceram fora do seu alcance.';
       } else {
         analysis = 'Você tomou decisões com informações limitadas. O resultado mostra ' +
-                   'o risco de julgar antes de conhecer o processo.';
+          'o risco de julgar antes de conhecer o processo.';
       }
 
       const [[topName, topValue], [, secondValue]] =
@@ -1079,7 +1079,7 @@
           const note = document.createElement('div');
           note.className = 'story-note';
           note.textContent = `Você reuniu ${state.clues.length} de ${CLUE_TOTAL} pistas. ` +
-                             'Consulte o arquivo para revisar as evidências.';
+            'Consulte o arquivo para revisar as evidências.';
           content.appendChild(note);
         }
       }
@@ -1546,7 +1546,7 @@
       }
     }
   }
-  
+
 
   /* ------------------------------------------------------------------------
      INICIALIZAÇÃO
