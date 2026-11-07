@@ -1,1361 +1,1493 @@
-// =========================================
-// 1. MENU & INTERFACE BASE
-// =========================================
-const menuToggle = document.querySelector('.menu-toggle');
-const nav = document.querySelector('.topbar nav');
+/* ==========================================================================
+   MISANTROPIA — JAC 2026
+   Índice
+   00. Utilitários
+   01. Toast
+   02. Menu mobile
+   03. Overlay secreto
+   04. Easter eggs
+   05. Emissora (troca de canais)
+   06. Jogo da Morte
+   07. O Julgamento (motor narrativo + pistas)
+   08. Acesso ao Arquivo 017 (senha)
+   09. Minigame do Américo (Edição da Emissora)
+   10. O Templo de Nadine (Interação do Altar)
+   11. Minigame da Nadine (O Peso da Fé)
+   ========================================================================== */
+'use strict';
 
-if (menuToggle && nav) {
-  menuToggle.addEventListener('click', () => {
-    const opened = nav.classList.toggle('open');
-    menuToggle.setAttribute('aria-expanded', String(opened));
-    menuToggle.textContent = opened ? '×' : '☰';
-  });
-
-  nav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
-    nav.classList.remove('open');
-    menuToggle.setAttribute('aria-expanded', 'false');
-    menuToggle.textContent = '☰';
-  }));
-}
-
-const overlay = document.getElementById('secretOverlay');
-const toast = document.getElementById('toast');
-let toastTimer;
-
-function showToast(message) {
-  if (!toast) return;
-  toast.textContent = message;
-  toast.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
-}
-
-function openSecret() {
-  if (overlay) {
-    overlay.classList.add('open');
-    overlay.setAttribute('aria-hidden', 'false');
-  }
-}
-
-function closeSecret() {
-  if (overlay) {
-    overlay.classList.remove('open');
-    overlay.setAttribute('aria-hidden', 'true');
-  }
-}
-
-const secretBtn = document.getElementById('secretButton');
-const closeSecretBtn = document.getElementById('closeSecret');
-
-if (secretBtn) secretBtn.addEventListener('click', openSecret);
-if (closeSecretBtn) closeSecretBtn.addEventListener('click', closeSecret);
-
-if (overlay) {
-  overlay.addEventListener('click', e => { if (e.target === overlay) closeSecret(); });
-}
-
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSecret(); });
-
-// =========================================
-// 2. EASTER EGGS DA LANDING PAGE
-// =========================================
-
-// Easter egg 1: clique cinco vezes no título/logo da peça.
-let logoClicks = 0, logoReset;
-const mainLogo = document.querySelector('.main-logo');
-if (mainLogo) {
-  mainLogo.addEventListener('click', () => {
-    logoClicks++;
-    clearTimeout(logoReset);
-    logoReset = setTimeout(() => logoClicks = 0, 1800);
-    if (logoClicks >= 5) {
-      logoClicks = 0;
-      showToast('VOCÊ OLHOU DE PERTO DEMAIS.');
-      openSecret();
-    }
-  });
-}
-
-// Easter egg 2: a pequena cruz escondida no hero.
-const deathMark = document.getElementById('deathMark');
-if (deathMark) {
-  deathMark.addEventListener('click', () => showToast('ELA ESTAVA AQUI O TEMPO TODO.'));
-}
-
-// Easter egg 3: digite NADINE em qualquer lugar da página.
-let typed = '';
-document.addEventListener('keydown', e => {
-  if (e.key.length === 1 && /[a-z]/i.test(e.key)) {
-    typed = (typed + e.key.toLowerCase()).slice(-12);
-    if (typed.endsWith('nadine')) {
-      showToast('NADINE NÃO É A RESPOSTA.');
-      typed = '';
-    }
-  }
-});
-
-// Easter egg 4: clique três vezes na frase do manifesto.
-let manifestoClicks = 0;
-const redline = document.querySelector('.redline');
-if (redline) {
-  redline.addEventListener('click', () => {
-    manifestoClicks++;
-    if (manifestoClicks >= 3) {
-      manifestoClicks = 0;
-      showToast('A CULPA NUNCA FICA ONDE VOCÊ DEIXOU.');
-    }
-  });
-}
-
-// =========================================
-// 3. JOGO DA MORTE (A VIGÍLIA)
-// =========================================
 (() => {
-  const root = document.querySelector("#morte-game");
-  if (!root || root.dataset.initialized) return;
-  root.dataset.initialized = "true";
+  /* ------------------------------------------------------------------------
+     00. UTILITÁRIOS
+     ------------------------------------------------------------------------ */
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+  const pad = (value, size = 2) => String(value).padStart(size, '0');
 
-  const $ = (selector) => root.querySelector(selector);
+  const storage = {
+    get(key) {
+      try { return localStorage.getItem(key); } catch { return null; }
+    },
+    set(key, value) {
+      try { localStorage.setItem(key, value); return true; } catch { return false; }
+    },
+    remove(key) {
+      try { localStorage.removeItem(key); } catch { /* sem armazenamento */ }
+    }
+  };
 
-  const startButton = $("#game-start");
-  const restartButton = $("#game-restart");
-  const target = $("#death-target");
-  const arena = $("#game-arena");
-  const intro = $("#game-intro");
-  const result = $("#game-result");
-  const message = $("#game-message");
-  const timeDisplay = $("#game-time");
-  const scoreDisplay = $("#game-score");
-  const recordDisplay = $("#game-record");
+  function onMultiClick(element, count, callback, windowMs = 1800) {
+    if (!element) return;
+    let clicks = 0;
+    let timer;
 
-  const RECORD_KEY = "misantropia-morte-recorde";
+    element.addEventListener('click', () => {
+      clicks++;
+      clearTimeout(timer);
 
-  let timeLeft = 20;
-  let score = 0;
-  let active = false;
-  let countdown = null;
-  let appearance = null;
-  let appearanceId = 0;
+      if (clicks >= count) {
+        clicks = 0;
+        callback();
+        return;
+      }
 
-  let record = 0;
-
-  try {
-    record = Number(localStorage.getItem(RECORD_KEY)) || 0;
-  } catch (_) { }
-
-  if (recordDisplay) recordDisplay.textContent = String(record).padStart(2, "0");
-
-  function hideTarget() {
-    appearanceId++;
-    clearTimeout(appearance);
-    if (target) target.hidden = true;
+      timer = setTimeout(() => { clicks = 0; }, windowMs);
+    });
   }
 
-  function showTarget() {
-    if (!active || !target || !arena) return;
+  /* ------------------------------------------------------------------------
+     01. TOAST
+     ------------------------------------------------------------------------ */
+  const toastElement = $('#toast');
+  let toastTimer;
 
-    hideTarget();
+  function showToast(message, tone = 'alert', duration = 2600) {
+    if (!toastElement) return;
+    toastElement.textContent = message;
+    toastElement.dataset.tone = tone;
+    toastElement.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastElement.classList.remove('show'), duration);
+  }
 
-    const id = appearanceId;
-    const padding = 38;
-    const maxX = Math.max(padding, arena.clientWidth - padding);
-    const maxY = Math.max(padding + 35, arena.clientHeight - padding - 20);
+  /* ------------------------------------------------------------------------
+     02. MENU MOBILE
+     ------------------------------------------------------------------------ */
+  function initMenu() {
+    const toggle = $('.menu-toggle');
+    const nav = $('#main-nav');
+    if (!toggle || !nav) return;
 
-    const x = padding + Math.random() * (maxX - padding);
-    const y = padding + 35 + Math.random() * (maxY - padding - 35);
+    const setOpen = (open) => {
+      nav.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+      toggle.textContent = open ? '×' : '☰';
+    };
 
-    target.style.left = `${x}px`;
-    target.style.top = `${y}px`;
-    target.hidden = false;
+    toggle.addEventListener('click', () => setOpen(!nav.classList.contains('open')));
+    $$('a', nav).forEach((link) => link.addEventListener('click', () => setOpen(false)));
+  }
 
-    if (message) message.textContent = "ELA ESTÁ AQUI. NÃO PISQUE.";
+  /* ------------------------------------------------------------------------
+     03. OVERLAY SECRETO
+     ------------------------------------------------------------------------ */
+  const secret = (() => {
+    const overlay = $('#secretOverlay');
+    const closeButton = $('#closeSecret');
+    const openButton = $('#secretButton');
+    let lastFocus = null;
 
-    appearance = setTimeout(() => {
-      if (!active || id !== appearanceId) return;
+    function open() {
+      if (!overlay) return;
+      lastFocus = document.activeElement;
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+      closeButton?.focus();
+    }
 
+    function close() {
+      if (!overlay || !overlay.classList.contains('open')) return;
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+      lastFocus?.focus?.();
+    }
+
+    openButton?.addEventListener('click', open);
+    closeButton?.addEventListener('click', close);
+    overlay?.addEventListener('click', (event) => {
+      if (event.target === overlay) close();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') close();
+    });
+
+    return { open, close };
+  })();
+
+  /* ------------------------------------------------------------------------
+     04. EASTER EGGS
+     ------------------------------------------------------------------------ */
+  function initEasterEggs() {
+    onMultiClick($('.main-logo'), 5, () => {
+      showToast('VOCÊ OLHOU DE PERTO DEMAIS.');
+      secret.open();
+    });
+
+    $('#deathMark')?.addEventListener('click', () => {
+      showToast('ELA ESTAVA AQUI O TEMPO TODO.');
+    });
+
+    let typed = '';
+    document.addEventListener('keydown', (event) => {
+      if (event.target.closest('input, textarea') || !/^[a-z]$/i.test(event.key)) return;
+
+      typed = (typed + event.key.toLowerCase()).slice(-12);
+      if (typed.endsWith('nadine')) {
+        showToast('NADINE NÃO É A RESPOSTA.');
+        typed = '';
+      }
+    });
+
+    onMultiClick($('.redline'), 3, () => {
+      showToast('A CULPA NUNCA FICA ONDE VOCÊ DEIXOU.');
+    });
+  }
+
+  /* ------------------------------------------------------------------------
+     05. EMISSORA — TROCA DE CANAIS
+     ------------------------------------------------------------------------ */
+  function initBroadcast() {
+    const body = $('#tv-body');
+    const channelLabel = $('#tv-channel');
+    const kicker = $('#tv-kicker');
+    const headline = $('#tv-headline');
+    const text = $('#tv-text');
+    const buttons = $$('.tv-channel-btn');
+
+    if (!body || !channelLabel || !kicker || !headline || !text || !buttons.length) return;
+
+    const channels = [
+      {
+        kicker: 'PLANTÃO ESPECIAL',
+        headline: 'A ESCOLHIDA ESTÁ CONOSCO.',
+        text: 'Nadine é a esperança desta nação. Fique conosco: só esta emissora chega perto dela.'
+      },
+      {
+        kicker: 'URGENTE',
+        headline: 'REBELDES CRESCEM. A EMISSORA AVISA.',
+        text: 'Grupos contrários a Nadine ganham força, mas o governo garante: tudo sob controle. ' +
+              'Quem garante o governo? Não perguntamos.'
+      },
+      {
+        kicker: 'ENTREVISTA EXCLUSIVA',
+        headline: 'NADINE, AO VIVO COM JORGE JR.',
+        text: 'Uma conversa franca com a garota que carrega nossa esperança. ' +
+              'Perguntas selecionadas. Respostas esperadas.'
+      },
+      {
+        kicker: 'SINAL INTERROMPIDO',
+        headline: 'POR ONDE ANDA NADINE?',
+        text: 'A pergunta que não quer calar. Se a salvação falhou, o que será de nós? ' +
+              'Algo deve ser feito.'
+      }
+    ];
+
+    let current = 0;
+
+    function setChannel(index) {
+      const data = channels[index];
+      if (!data) return;
+
+      current = index;
+      channelLabel.textContent = `CANAL ${pad(index + 1)}`;
+      kicker.textContent = data.kicker;
+      headline.textContent = data.headline;
+      text.textContent = data.text;
+
+      buttons.forEach((button, i) => button.classList.toggle('active', i === index));
+
+      body.classList.remove('switching');
+      void body.offsetWidth;
+      body.classList.add('switching');
+
+      if (index === channels.length - 1) showToast('A PERGUNTA JÁ ESTAVA ESCRITA.');
+    }
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const index = Number(button.dataset.channel);
+        if (index !== current) setChannel(index);
+      });
+    });
+  }
+
+  /* ------------------------------------------------------------------------
+     06. JOGO DA MORTE
+     ------------------------------------------------------------------------ */
+  function initDeathGame() {
+    const root = $('#morte-game');
+    if (!root) return;
+
+    const startButton = $('#game-start', root);
+    const restartButton = $('#game-restart', root);
+    const target = $('#death-target', root);
+    const arena = $('#game-arena', root);
+    const intro = $('#game-intro', root);
+    const result = $('#game-result', root);
+    const message = $('#game-message', root);
+    const timeDisplay = $('#game-time', root);
+    const scoreDisplay = $('#game-score', root);
+    const recordDisplay = $('#game-record', root);
+    const resultTitle = $('#result-title', root);
+    const resultDescription = $('#result-description', root);
+
+    const RECORD_KEY = 'misantropia-morte-recorde';
+    const DURATION = 20;
+    const VISIBLE_MS = 850;
+    const MISS_DELAY_MS = 450;
+    const HIT_DELAY_MS = 300;
+
+    let timeLeft = DURATION;
+    let score = 0;
+    let record = Number(storage.get(RECORD_KEY)) || 0;
+    let active = false;
+    let countdown = null;
+    let appearance = null;
+    let appearanceId = 0;
+
+    const say = (text) => { message.textContent = text; };
+
+    const render = {
+      time: () => { timeDisplay.textContent = pad(timeLeft); },
+      score: () => { scoreDisplay.textContent = pad(score); },
+      record: () => { recordDisplay.textContent = pad(record); }
+    };
+    render.record();
+
+    function hideTarget() {
+      appearanceId++;
+      clearTimeout(appearance);
       target.hidden = true;
-      if (message) message.textContent = "VOCÊ DEMOROU.";
-
-      appearance = setTimeout(showTarget, 450);
-    }, 850);
-  }
-
-  function finishGame() {
-    active = false;
-    clearInterval(countdown);
-    hideTarget();
-
-    if (result) result.hidden = false;
-
-    const resTitle = $("#result-title");
-    const resDesc = $("#result-description");
-
-    if (resTitle) {
-      resTitle.textContent =
-        score >= 15 ? "VOCÊ VIU DEMAIS." :
-          score >= 7 ? "ELA AINDA ESTÁ AQUI." :
-            "ELA VIU VOCÊ.";
     }
 
-    if (resDesc) {
-      resDesc.textContent =
-        `Você encontrou a Morte ${score} vez(es). ` +
+    function showTarget() {
+      if (!active) return;
+      hideTarget();
+
+      const id = appearanceId;
+      const padding = 38;
+      const topOffset = 35;
+      const maxX = Math.max(padding, arena.clientWidth - padding);
+      const maxY = Math.max(padding + topOffset, arena.clientHeight - padding - 20);
+
+      target.style.left = `${padding + Math.random() * (maxX - padding)}px`;
+      target.style.top = `${padding + topOffset + Math.random() * (maxY - padding - topOffset)}px`;
+      target.hidden = false;
+      say('ELA ESTÁ AQUI. NÃO PISQUE.');
+
+      appearance = setTimeout(() => {
+        if (!active || id !== appearanceId) return;
+        target.hidden = true;
+        say('VOCÊ DEMOROU.');
+        appearance = setTimeout(showTarget, MISS_DELAY_MS);
+      }, VISIBLE_MS);
+    }
+
+    function finishGame() {
+      active = false;
+      clearInterval(countdown);
+      hideTarget();
+
+      resultTitle.textContent =
+        score >= 15 ? 'VOCÊ VIU DEMAIS.' :
+        score >= 7 ? 'ELA AINDA ESTÁ AQUI.' :
+        'ELA VIU VOCÊ.';
+
+      resultDescription.textContent =
+        `Você encontrou a Morte ${score} ${score === 1 ? 'vez' : 'vezes'}. ` +
         (score >= 15
-          ? "Mas será que ela deixou você vencer?"
-          : "Talvez seja melhor não olhar para trás.");
+          ? 'Ela mesma avisou: você sempre a encontra. Será que ela deixou você vencer?'
+          : 'Talvez seja melhor não olhar para trás.');
+
+      result.hidden = false;
+      say('VIGÍLIA ENCERRADA.');
     }
 
-    if (message) message.textContent = "VIGÍLIA ENCERRADA.";
-    if (startButton) startButton.hidden = true;
-  }
+    function startGame() {
+      clearInterval(countdown);
+      clearTimeout(appearance);
 
-  function startGame() {
-    clearInterval(countdown);
-    clearTimeout(appearance);
+      timeLeft = DURATION;
+      score = 0;
+      active = true;
 
-    timeLeft = 20;
-    score = 0;
-    active = true;
+      render.time();
+      render.score();
+      result.hidden = true;
+      intro.hidden = true;
+      say('PROCURANDO SINAL...');
 
-    if (timeDisplay) timeDisplay.textContent = "20";
-    if (scoreDisplay) scoreDisplay.textContent = "00";
-    if (result) result.hidden = true;
-    if (intro) intro.hidden = true;
-    if (startButton) startButton.hidden = true;
-    if (message) message.textContent = "PROCURANDO SINAL...";
+      showTarget();
 
-    showTarget();
+      countdown = setInterval(() => {
+        timeLeft--;
+        render.time();
+        if (timeLeft <= 0) finishGame();
+      }, 1000);
+    }
 
-    countdown = setInterval(() => {
-      timeLeft--;
-      if (timeDisplay) timeDisplay.textContent = String(timeLeft).padStart(2, "0");
-
-      if (timeLeft <= 0) finishGame();
-    }, 1000);
-  }
-
-  if (target) {
-    target.addEventListener("click", () => {
+    target.addEventListener('click', () => {
       if (!active || target.hidden) return;
 
       score++;
-      if (scoreDisplay) scoreDisplay.textContent = String(score).padStart(2, "0");
+      render.score();
 
       if (score > record) {
         record = score;
-        if (recordDisplay) recordDisplay.textContent = String(record).padStart(2, "0");
-
-        try {
-          localStorage.setItem(RECORD_KEY, String(record));
-        } catch (_) { }
+        render.record();
+        storage.set(RECORD_KEY, String(record));
       }
 
       hideTarget();
-      if (message) message.textContent = "VOCÊ A ENCONTROU. POR ENQUANTO.";
+      say('VOCÊ A ENCONTROU. POR ENQUANTO.');
+      appearance = setTimeout(showTarget, HIT_DELAY_MS);
+    });
 
-      appearance = setTimeout(showTarget, 300);
+    startButton.addEventListener('click', startGame);
+    restartButton.addEventListener('click', startGame);
+
+    onMultiClick($('#death-easter-egg'), 3, () => {
+      root.classList.add('is-active');
+      root.scrollIntoView({ behavior: 'smooth' });
+      if (!active) say('VOCÊ ENCONTROU O QUE ESTAVA ESCONDIDO.');
     });
   }
 
-  if (startButton) startButton.addEventListener("click", startGame);
-  if (restartButton) restartButton.addEventListener("click", startGame);
-})();
+  /* ------------------------------------------------------------------------
+     07. O JULGAMENTO
+     ------------------------------------------------------------------------ */
+  function initJudgment() {
+    const content = $('#story-content');
+    const sceneLabel = $('#story-scene-label');
+    const saveLabel = $('#story-save-label');
+    const chapterLabel = $('#story-chapter');
+    const footerCode = $('#story-footer-code');
+    const clueLabel = $('#story-clues');
+    const progressBar = $('#story-progress');
+    const inventoryButton = $('#story-inventory');
+    const inventoryDialog = $('#story-evidence-dialog');
+    const inventoryList = $('#story-evidence-list');
+    const inventoryEmpty = $('#story-inventory-empty');
+    const closeInventory = $('#story-close-inventory');
+    const beginButton = $('#story-begin');
 
-// Revelar o Jogo da Morte ao clicar 3 vezes no símbolo '†' dos personagens
-(() => {
-  const trigger = document.querySelector("#death-easter-egg");
-  const game = document.querySelector("#morte-game");
-
-  if (!trigger || !game) return;
-
-  let clicks = 0;
-  let resetClick = null;
-
-  trigger.addEventListener("click", () => {
-    clicks++;
-    clearTimeout(resetClick);
-
-    if (clicks >= 3) {
-      clicks = 0;
-      game.classList.add("ativo");
-      game.scrollIntoView({ behavior: "smooth" });
-
-      const message = game.querySelector("#game-message");
-      if (message) {
-        message.textContent = "VOCÊ ENCONTROU O QUE ESTAVA ESCONDIDO.";
-      }
-    } else {
-      resetClick = setTimeout(() => {
-        clicks = 0;
-      }, 1800);
-    }
-  });
-})();
-
-// =========================================
-// 4. MISANTROPIA — O JULGAMENTO
-//    Motor narrativo avançado
-// =========================================
-(() => {
-  "use strict";
-
-  const $ = (selector, root = document) =>
-    root.querySelector(selector);
-
-  const content = $("#story-content");
-  const sceneLabel = $("#story-scene-label");
-  const saveLabel = $("#story-save-label");
-  const chapterLabel = $("#story-chapter");
-  const footerCode = $("#story-footer-code");
-  const clueLabel = $("#story-clues");
-  const progressBar = $("#story-progress");
-  const inventoryButton = $("#story-inventory");
-  const inventoryDialog = $("#story-evidence-dialog");
-  const inventoryList = $("#story-evidence-list");
-  const inventoryEmpty = $("#story-inventory-empty");
-  const closeInventory = $("#story-close-inventory");
-
-  if (
-    !content || !sceneLabel || !saveLabel ||
-    !chapterLabel || !footerCode || !clueLabel ||
-    !progressBar || !inventoryButton ||
-    !inventoryDialog || !inventoryList ||
-    !inventoryEmpty || !closeInventory
-  ) {
-    return;
-  }
-
-  const SAVE_KEY = "misantropia-julgamento-v1";
-
-  const initialState = () => ({
-    scene: "letter",
-    chapter: 0,
-    clues: [],
-    choices: [],
-    trust: {
-      celimene: 0,
-      alceste: 0,
-      oronte: 0
-    },
-    flags: {
-      acceptedLetter: false,
-      readEvidence: false,
-      confrontedCelimene: false,
-      protectedWitness: false,
-      exposedEvidence: false,
-      destroyedLetter: false
-    },
-    ending: null
-  });
-
-  let state = initialState();
-  let toastTimer;
-  let toastElement;
-
-  const clueData = {
-    seal: {
-      title: "O selo rompido",
-      description:
-        "O envelope foi aberto antes de chegar às suas mãos. " +
-        "Alguém teve acesso à carta.",
-      selector: ".hero-stamp"
-    },
-
-    margin: {
-      title: "A anotação na margem",
-      description:
-        "Uma nota sugere que o depoimento oficial não corresponde " +
-        "ao que foi dito nos bastidores.",
-      selector: ".character-note"
-    },
-
-    witness: {
-      title: "A última declaração",
-      description:
-        "A declaração final contém uma informação que só uma " +
-        "testemunha presente poderia conhecer.",
-      selector: ".finale-small"
-    },
-
-    mark: {
-      title: "A marca escondida",
-      description:
-        "Uma marca quase invisível indica que alguém tentou " +
-        "direcionar sua investigação.",
-      selector: ".hidden-mark"
-    }
-  };
-
-  // Garante a criação do elemento de aviso visual na tela
-  toastElement = document.createElement("div");
-  toastElement.className = "story-toast";
-  toastElement.setAttribute("role", "status");
-  toastElement.setAttribute("aria-live", "polite");
-  document.body.appendChild(toastElement);
-
-  function notify(message) {
-    toastElement.textContent = message;
-    toastElement.classList.add("visible");
-
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => {
-      toastElement.classList.remove("visible");
-    }, 3000);
-  }
-
-  const scenes = {
-    letter: {
-      chapter: 1,
-      label: "ATO I / A CARTA",
-      kicker: "DOCUMENTO RECEBIDO ÀS 23:17",
-      title: "Alguém quer que você julgue.",
-      text: [
-        "O envelope não tem remetente. Dentro, há uma carta " +
-        "e uma transcrição incompleta de um julgamento.",
-        "No final da página, uma frase foi escrita à mão: " +
-        "\"Não procure quem mentiu. Procure quem precisava da mentira.\""
-      ],
-      choices: [
-        {
-          id: "accept",
-          label: "Abrir o arquivo e investigar.",
-          detail: "Você aceita conhecer as versões.",
-          next: "depositions",
-          effects: {
-            acceptedLetter: true
-          }
-        },
-        {
-          id: "destroy",
-          label: "Destruir a carta e recusar o julgamento.",
-          detail: "Talvez ignorar também seja uma escolha.",
-          next: "destroyed",
-          effects: {
-            destroyedLetter: true
-          }
-        },
-        {
-          id: "inspect",
-          label: "Examinar o envelope antes de abri-lo.",
-          detail: "O menor detalhe pode mudar tudo.",
-          next: "envelope",
-          effects: {
-            acceptedLetter: true
-          },
-          requires: {
-            clue: "seal"
-          },
-          lockedText: "Encontre primeiro a pista do selo no site."
-        }
-      ]
-    },
-
-    destroyed: {
-      chapter: 1,
-      label: "ATO I / RECUSA",
-      kicker: "REGISTRO INTERROMPIDO",
-      title: "Você não abriu o arquivo.",
-      text: [
-        "A carta desaparece da sua mesa. Você decide que não é " +
-        "responsável por resolver os problemas dos outros.",
-        "Mas, antes de sair, percebe uma anotação no verso: " +
-        "\"A omissão também será registrada.\""
-      ],
-      choices: [
-        {
-          id: "return",
-          label: "Voltar atrás e investigar.",
-          next: "depositions",
-          effects: {
-            acceptedLetter: true
-          }
-        },
-        {
-          id: "leave",
-          label: "Encerrar a investigação.",
-          next: "endingSilence"
-        }
-      ]
-    },
-
-    envelope: {
-      chapter: 1,
-      label: "ATO I / VESTÍGIOS",
-      kicker: "ANÁLISE DO DOCUMENTO",
-      title: "O envelope já foi aberto.",
-      text: [
-        "O selo está rompido por dentro. Isso significa que a carta " +
-        "foi aberta e fechada novamente antes de chegar até você.",
-        "No canto, alguém escreveu as iniciais C. A. Você não sabe " +
-        "se identificam uma testemunha ou quem preparou a armadilha."
-      ],
-      choices: [
-        {
-          id: "follow",
-          label: "Seguir para os depoimentos.",
-          next: "depositions",
-          effects: {
-            readEvidence: true
-          }
-        }
-      ]
-    },
-
-    depositions: {
-      chapter: 1,
-      label: "ATO I / DEPOIMENTOS",
-      kicker: "TRÊS VERSÕES REGISTRADAS",
-      title: "Ninguém conta a mesma história.",
-      text: [
-        "Alceste afirma que todos mentem para proteger os próprios " +
-        "interesses. Celimene diz que ele confunde sinceridade com " +
-        "crueldade. Oronte garante que não tem nada a esconder.",
-        "Você precisa decidir quem ouvir primeiro. O julgamento ainda " +
-        "não começou, mas as alianças já estão sendo formadas."
-      ],
-      choices: [
-        {
-          id: "talkAlceste",
-          label: "Ouvir Alceste.",
-          detail: "O homem que não confia em ninguém.",
-          next: "alceste",
-          effects: {
-            trust: { alceste: 1 }
-          }
-        },
-        {
-          id: "talkCelimene",
-          label: "Ouvir Celimene.",
-          detail: "A pessoa que conhece os bastidores.",
-          next: "celimene",
-          effects: {
-            trust: { celimene: 1 }
-          }
-        },
-        {
-          id: "talkOronte",
-          label: "Ouvir Oronte.",
-          detail: "O homem que deseja encerrar o caso.",
-          next: "oronte",
-          effects: {
-            trust: { oronte: 1 }
-          }
-        }
-      ]
-    },
-
-    alceste: {
-      chapter: 2,
-      label: "ATO II / ALCESTE",
-      kicker: "DEPOIMENTO Nº 01",
-      title: "A sinceridade tem um preço.",
-      text: [
-        "Alceste afirma que não quer salvar ninguém. Diz que o problema " +
-        "não é uma mentira isolada, mas uma sociedade que prefere " +
-        "uma versão conveniente à realidade.",
-        "Quando você pergunta sobre a carta, ele olha para o envelope " +
-        "e diz: \"Eu reconheço a letra. Não reconheço a intenção.\""
-      ],
-      choices: [
-        {
-          id: "believeAlceste",
-          label: "Acreditar que ele quer revelar a verdade.",
-          next: "celimene",
-          effects: {
-            trust: { alceste: 2 }
-          }
-        },
-        {
-          id: "challengeAlceste",
-          label: "Questionar por que ele reconhece a letra.",
-          next: "contradiction",
-          effects: {
-            trust: { alceste: -1 }
-          }
-        },
-        {
-          id: "protectAlceste",
-          label: "Não revelar que ele reconheceu a letra.",
-          next: "celimene",
-          effects: {
-            protectedWitness: true
-          }
-        }
-      ]
-    },
-
-    celimene: {
-      chapter: 2,
-      label: "ATO II / CELIMENE",
-      kicker: "DEPOIMENTO Nº 02",
-      title: "Toda versão tem uma plateia.",
-      text: [
-        "Celimene admite que algumas pessoas mudaram seus depoimentos. " +
-        "Ela diz que não foi a única e pergunta por que todos estão " +
-        "interessados em descobrir quem começou.",
-        "Ela oferece uma informação em troca de uma promessa: " +
-        "você não vai usar o nome de uma testemunha para encerrar " +
-        "o caso rapidamente."
-      ],
-      choices: [
-        {
-          id: "promise",
-          label: "Prometer proteger a testemunha.",
-          next: "oronte",
-          effects: {
-            trust: { celimene: 2 },
-            protectedWitness: true
-          }
-        },
-        {
-          id: "refusePromise",
-          label: "Recusar promessas antes de conhecer as provas.",
-          next: "oronte",
-          effects: {
-            trust: { celimene: -1 }
-          }
-        },
-        {
-          id: "confront",
-          label: "Confrontá-la com a anotação encontrada.",
-          next: "contradiction",
-          requires: {
-            clue: "margin"
-          },
-          lockedText: "Encontre a anotação escondida na página."
-        }
-      ]
-    },
-
-    oronte: {
-      chapter: 2,
-      label: "ATO II / ORONTE",
-      kicker: "DEPOIMENTO Nº 03",
-      title: "Ele quer que o caso termine.",
-      text: [
-        "Oronte afirma que um julgamento precisa de uma conclusão. " +
-        "Segundo ele, prolongar a investigação só aumenta o dano.",
-        "Quando você pergunta quem se beneficia com o encerramento, " +
-        "ele responde que ninguém. A resposta vem depressa demais."
-      ],
-      choices: [
-        {
-          id: "acceptOronte",
-          label: "Aceitar a explicação e avançar.",
-          next: "contradiction",
-          effects: {
-            trust: { oronte: 1 }
-          }
-        },
-        {
-          id: "suspectOronte",
-          label: "Perguntar por que ele tem tanta pressa.",
-          next: "contradiction",
-          effects: {
-            trust: { oronte: -1 }
-          }
-        },
-        {
-          id: "showEvidence",
-          label: "Mostrar a evidência da carta.",
-          next: "contradiction",
-          requires: {
-            clue: "seal"
-          },
-          effects: {
-            exposedEvidence: true
-          },
-          lockedText: "Você precisa descobrir a pista do selo primeiro."
-        }
-      ]
-    },
-
-    contradiction: {
-      chapter: 2,
-      label: "ATO II / CONTRADIÇÃO",
-      kicker: "NOVO ELEMENTO NO PROCESSO",
-      title: "A cronologia não faz sentido.",
-      text: [
-        "Os depoimentos indicam horários diferentes. Uma testemunha " +
-        "diz que a carta chegou depois da reunião. Outra afirma que " +
-        "ela já estava sobre a mesa antes do encontro.",
-        "Você pode reunir as provas disponíveis, proteger quem falou " +
-        "ou levar a contradição diretamente ao julgamento."
-      ],
-      choices: [
-        {
-          id: "gather",
-          label: "Registrar a contradição no processo.",
-          next: "evidenceReview",
-          effects: {
-            readEvidence: true
-          }
-        },
-        {
-          id: "protect",
-          label: "Proteger a testemunha e guardar o detalhe.",
-          next: "evidenceReview",
-          effects: {
-            protectedWitness: true
-          }
-        },
-        {
-          id: "accuse",
-          label: "Acusar alguém imediatamente.",
-          next: "trial",
-          effects: {
-            exposedEvidence: true,
-            trust: { oronte: -1 }
-          }
-        }
-      ]
-    },
-
-    evidenceReview: {
-      chapter: 2,
-      label: "ATO II / REVISÃO",
-      kicker: "AS PROVAS NÃO SE EXPLICAM SOZINHAS",
-      title: "Você tem uma escolha a fazer.",
-      text: [
-        "A carta, a anotação e os depoimentos apontam para mais de " +
-        "uma interpretação. Nenhuma evidência, sozinha, identifica " +
-        "quem decidiu alterar a história.",
-        "Uma marca escondida no material da peça pode ajudar. " +
-        "Você também pode prosseguir sem encontrar todas as pistas."
-      ],
-      choices: [
-        {
-          id: "investigateMore",
-          label: "Procurar mais pistas na landing page.",
-          next: "evidenceReview",
-          requires: {
-            allClues: true
-          },
-          effects: {
-            readEvidence: true
-          },
-          lockedText: "Ainda faltam pistas escondidas no site."
-        },
-        {
-          id: "goToTrial",
-          label: "Levar o caso ao julgamento.",
-          next: "trial"
-        }
-      ]
-    },
-
-    trial: {
-      chapter: 3,
-      label: "ATO III / JULGAMENTO",
-      kicker: "DECISÃO IRREVERSÍVEL",
-      title: "O que você fará com a verdade?",
-      text: [
-        "O salão está cheio. Cada pessoa espera que você confirme " +
-        "uma versão diferente. Você sabe que revelar uma prova " +
-        "pode expor uma testemunha. Escondê-la pode proteger alguém, " +
-        "mas também preservar uma mentira.",
-        "O julgamento não pergunta apenas quem mentiu. Pergunta " +
-        "o que você está disposto a fazer com aquilo que descobriu."
-      ],
-      choices: [
-        {
-          id: "reveal",
-          label: "Revelar todas as evidências ao público.",
-          detail: "A verdade acima das consequências.",
-          next: "endingTruth",
-          effects: {
-            exposedEvidence: true
-          }
-        },
-        {
-          id: "protectWitness",
-          label: "Proteger a testemunha e manter parte do arquivo fechado.",
-          detail: "Nem toda verdade precisa ser pública.",
-          next: "endingMercy",
-          effects: {
-            protectedWitness: true
-          }
-        },
-        {
-          id: "closeCase",
-          label: "Encerrar o caso sem apontar um culpado.",
-          detail: "Você se recusa a transformar suspeitas em sentença.",
-          next: "endingSilence"
-        },
-        {
-          id: "accuseOronte",
-          label: "Acusar Oronte com base nas contradições.",
-          detail: "Esta opção exige evidências suficientes.",
-          next: "endingAccusation",
-          requires: {
-            clueCount: 2,
-            flag: "readEvidence"
-          },
-          lockedText:
-            "Você precisa de pelo menos duas pistas e de registrar " +
-            "as contradições antes de sustentar essa acusação."
-        }
-      ]
-    },
-
-    endingTruth: {
-      chapter: 3,
-      label: "DESFECHO / A VERDADE",
-      kicker: "ARQUIVO CONCLUÍDO",
-      title: "A verdade não absolve ninguém.",
-      ending: true,
-      text: [
-        "As provas são reveladas. Os depoimentos são confrontados " +
-        "e o julgamento deixa de ter uma resposta simples.",
-        "Você descobriu que a mentira não pertencia a uma única pessoa. " +
-        "Ela foi mantida por todos que tinham algo a perder.",
-        "Você expôs o caso. Agora precisa conviver com as consequências."
-      ]
-    },
-
-    endingMercy: {
-      chapter: 3,
-      label: "DESFECHO / A COMPAIXÃO",
-      kicker: "ARQUIVO CONCLUÍDO",
-      title: "Você escolheu quem não seria exposto.",
-      ending: true,
-      text: [
-        "A testemunha permanece protegida. Parte do processo não " +
-        "chega ao público, e algumas perguntas continuam sem resposta.",
-        "Você impediu que alguém fosse condenado por uma informação " +
-        "incompleta. Mas também aceitou que a história oficial " +
-        "continuasse incompleta."
-      ]
-    },
-
-    endingSilence: {
-      chapter: 3,
-      label: "DESFECHO / O SILÊNCIO",
-      kicker: "ARQUIVO CONCLUÍDO",
-      title: "O processo foi encerrado.",
-      ending: true,
-      text: [
-        "Você se recusa a transformar suspeitas em sentença. " +
-        "O arquivo é fechado, e cada testemunha retorna à própria vida.",
-        "O silêncio evita uma condenação precipitada. Também deixa " +
-        "intacta a estrutura que tornou a mentira possível."
-      ]
-    },
-
-    endingAccusation: {
-      chapter: 3,
-      label: "DESFECHO / A ACUSAÇÃO",
-      kicker: "ARQUIVO CONCLUÍDO",
-      title: "Você apontou um culpado.",
-      ending: true,
-      text: [
-        "A acusação muda o rumo do julgamento. As contradições " +
-        "são suficientes para levantar suspeitas, mas não provam " +
-        "que uma única pessoa controlou todos os acontecimentos.",
-        "Você conseguiu uma resposta para o público. Não necessariamente " +
-        "a resposta que o caso merecia."
-      ]
-    }
-  };
-
-  function hasClue(id) {
-    return state.clues.includes(id);
-  }
-
-  function hasAllClues() {
-    return Object.keys(clueData).every(hasClue);
-  }
-
-  function meetsRequirements(requirements = {}) {
-    if (
-      requirements.clue &&
-      !hasClue(requirements.clue)
-    ) return false;
-
-    if (
-      requirements.allClues &&
-      !hasAllClues()
-    ) return false;
-
-    if (
-      requirements.clueCount &&
-      state.clues.length < requirements.clueCount
-    ) return false;
-
-    if (
-      requirements.flag &&
-      !state.flags[requirements.flag]
-    ) return false;
-
-    return true;
-  }
-
-  function applyEffects(effects = {}) {
-    Object.entries(effects).forEach(([key, value]) => {
-      if (key === "trust") {
-        Object.entries(value).forEach(([person, amount]) => {
-          if (person in state.trust) {
-            state.trust[person] += amount;
-          }
-        });
-      } else if (key in state.flags) {
-        state.flags[key] = value;
-      }
-    });
-  }
-
-  function recordChoice(sceneId, choiceId) {
-    state.choices.push({
-      scene: sceneId,
-      choice: choiceId
-    });
-  }
-
-  function updateSidebar() {
-    clueLabel.textContent =
-      `${String(state.clues.length).padStart(2, "0")} / 04`;
-
-    progressBar.style.width =
-      `${(state.clues.length / 4) * 100}%`;
-
-    const scene = scenes[state.scene];
-    chapterLabel.textContent =
-      String(scene?.chapter || state.chapter).padStart(2, "0");
-
-    footerCode.textContent =
-      `REGISTRO ${String(state.choices.length).padStart(3, "0")}`;
-  }
-
-  function renderInventory() {
-    inventoryList.replaceChildren();
-
-    const discovered = state.clues
-      .map((id) => clueData[id])
-      .filter(Boolean);
-
-    inventoryEmpty.hidden = discovered.length > 0;
-
-    discovered.forEach((clue) => {
-      const item = document.createElement("li");
-      const title = document.createElement("strong");
-      const description = document.createElement("p");
-
-      title.textContent = clue.title;
-      description.textContent = clue.description;
-
-      item.append(title, description);
-      inventoryList.appendChild(item);
-    });
-  }
-
-  function renderScene(sceneId) {
-    const scene = scenes[sceneId];
-
-    if (!scene) {
-      notify("Não foi possível carregar esta cena.");
+    if (![content, sceneLabel, saveLabel, chapterLabel, footerCode, clueLabel, progressBar,
+      inventoryButton, inventoryDialog, inventoryList, inventoryEmpty, closeInventory].every(Boolean)) {
       return;
     }
 
-    state.scene = sceneId;
-    state.chapter = scene.chapter;
+    const SAVE_KEY = 'misantropia-julgamento-v2';
+    const notify = (message) => showToast(message, 'story', 3000);
 
-    sceneLabel.textContent = scene.label;
-    content.replaceChildren();
+    const clueData = {
+      seal: {
+        title: 'O selo rompido',
+        description: 'O envelope foi aberto antes de chegar às suas mãos. Alguém teve acesso à carta.'
+      },
+      margin: {
+        title: 'A anotação na margem',
+        description: 'Uma nota sugere que o que foi dito diante das câmeras não corresponde ' +
+                     'ao que foi combinado nos bastidores.'
+      },
+      witness: {
+        title: 'A última declaração',
+        description: 'A declaração final contém um detalhe que só quem estava presente poderia conhecer.'
+      },
+      mark: {
+        title: 'A marca escondida',
+        description: 'Uma marca quase invisível indica que alguém tentou direcionar sua investigação.'
+      }
+    };
+    const CLUE_TOTAL = Object.keys(clueData).length;
 
-    const kicker = document.createElement("p");
-    kicker.className = "story-kicker";
-    kicker.textContent = scene.kicker;
-
-    const title = document.createElement("h3");
-    title.textContent = scene.title;
-
-    content.append(kicker, title);
-
-    scene.text.forEach((paragraphText) => {
-      const paragraph = document.createElement("p");
-      paragraph.textContent = paragraphText;
-      content.appendChild(paragraph);
+    const initialState = () => ({
+      scene: 'letter',
+      chapter: 0,
+      clues: [],
+      choices: [],
+      trust: { vergueiro: 0, jorge: 0, pastor: 0 },
+      flags: {
+        acceptedLetter: false,
+        readEvidence: false,
+        protectedWitness: false,
+        exposedEvidence: false,
+        destroyedLetter: false
+      },
+      ending: null
     });
 
-    if (scene.ending) {
-      renderEnding(scene);
-      updateSidebar();
-      saveProgress();
-      return;
-    }
+    let state = initialState();
 
-    const choicesContainer = document.createElement("div");
-    choicesContainer.className = "story-choices";
+    const scenes = {
+      letter: {
+        chapter: 1,
+        label: 'ATO I / A CARTA',
+        kicker: 'DOCUMENTO RECEBIDO ÀS 23:17',
+        title: 'Alguém quer que você julgue.',
+        text: [
+          'O envelope não tem remetente. Dentro, há uma carta e a transcrição incompleta ' +
+          'de uma entrevista que nunca deveria ter ido ao ar.',
+          'No final da página, uma frase foi escrita à mão: ' +
+          '“Não procure quem mentiu. Procure quem precisava da mentira.”'
+        ],
+        choices: [
+          {
+            id: 'accept',
+            label: 'Abrir o arquivo e investigar.',
+            detail: 'Você aceita conhecer as versões.',
+            next: 'depositions',
+            effects: { acceptedLetter: true }
+          },
+          {
+            id: 'destroy',
+            label: 'Destruir a carta e recusar o julgamento.',
+            detail: 'Talvez ignorar também seja uma escolha.',
+            next: 'destroyed',
+            effects: { destroyedLetter: true }
+          },
+          {
+            id: 'inspect',
+            label: 'Examinar o envelope antes de abri-lo.',
+            detail: 'O menor detalhe pode mudar tudo.',
+            next: 'envelope',
+            effects: { acceptedLetter: true },
+            requires: { clue: 'seal' },
+            lockedText: 'Encontre primeiro a pista do selo no site.'
+          }
+        ]
+      },
 
-    scene.choices.forEach((choice, index) => {
-      const available = meetsRequirements(choice.requires);
-      const button = document.createElement("button");
+      destroyed: {
+        chapter: 1,
+        label: 'ATO I / RECUSA',
+        kicker: 'REGISTRO INTERROMPIDO',
+        title: 'Você não abriu o arquivo.',
+        text: [
+          'A carta desaparece da sua mesa. Você decide que não é responsável ' +
+          'por resolver os problemas dos outros.',
+          'Mas, antes de sair, percebe uma anotação no verso: “A omissão também será registrada.”'
+        ],
+        choices: [
+          { id: 'return', label: 'Voltar atrás e investigar.', next: 'depositions', effects: { acceptedLetter: true } },
+          { id: 'leave', label: 'Encerrar a investigação.', next: 'endingSilence' }
+        ]
+      },
 
-      button.type = "button";
-      button.className = "story-choice";
-      button.disabled = !available;
+      envelope: {
+        chapter: 1,
+        label: 'ATO I / VESTÍGIOS',
+        kicker: 'ANÁLISE DO DOCUMENTO',
+        title: 'O envelope já foi aberto.',
+        text: [
+          'O selo está rompido por dentro. Isso significa que a carta foi aberta e fechada ' +
+          'novamente antes de chegar até você.',
+          'No canto, alguém escreveu apenas a inicial A. Você não sabe se ela identifica ' +
+          'uma testemunha ou quem preparou a armadilha.'
+        ],
+        choices: [
+          { id: 'follow', label: 'Seguir para os depoimentos.', next: 'depositions', effects: { readEvidence: true } }
+        ]
+      },
 
-      const number = document.createElement("span");
-      number.className = "choice-number";
-      number.textContent = `0${index + 1}.`;
+      depositions: {
+        chapter: 1,
+        label: 'ATO I / DEPOIMENTOS',
+        kicker: 'TRÊS VERSÕES REGISTRADAS',
+        title: 'Ninguém conta a mesma história.',
+        text: [
+          'Vergueiro garante que foi só um dia ruim. Jorge Jr. jura que apenas fez as perguntas ' +
+          'que lhe entregaram. O Pastor afirma que o povo despertou sozinho.',
+          'Você precisa decidir quem ouvir primeiro. O julgamento ainda não começou, ' +
+          'mas as alianças já estão sendo formadas.'
+        ],
+        choices: [
+          {
+            id: 'talkVergueiro',
+            label: 'Ouvir Vergueiro.',
+            detail: 'O presidente que não gosta de desagradar.',
+            next: 'vergueiro',
+            effects: { trust: { vergueiro: 1 } }
+          },
+          {
+            id: 'talkJorge',
+            label: 'Ouvir Jorge Jr.',
+            detail: 'O repórter que só queria uma matéria.',
+            next: 'jorge',
+            effects: { trust: { jorge: 1 } }
+          },
+          {
+            id: 'talkPastor',
+            label: 'Ouvir o Pastor.',
+            detail: 'A voz que o povo seguiu.',
+            next: 'pastor',
+            effects: { trust: { pastor: 1 } }
+          }
+        ]
+      },
 
-      const label = document.createElement("span");
-      label.textContent = choice.label;
+      vergueiro: {
+        chapter: 2,
+        label: 'ATO II / VERGUEIRO',
+        kicker: 'DEPOIMENTO Nº 01',
+        title: 'O poder tem dono.',
+        text: [
+          'Vergueiro afirma que tudo não passou de um episódio isolado. Diz que o problema ' +
+          'não é uma pessoa, mas um povo que prefere uma versão confortável à realidade.',
+          'Quando você pergunta sobre a carta, ele olha para o envelope e diz: ' +
+          '“Eu reconheço a letra. Não reconheço a ordem.”'
+        ],
+        choices: [
+          {
+            id: 'believeVergueiro',
+            label: 'Acreditar que ele só tentou manter a calma.',
+            next: 'jorge',
+            effects: { trust: { vergueiro: 2 } }
+          },
+          {
+            id: 'challengeVergueiro',
+            label: 'Questionar por que ele reconhece a letra.',
+            next: 'contradiction',
+            effects: { trust: { vergueiro: -1 } }
+          },
+          {
+            id: 'protectVergueiro',
+            label: 'Não revelar que ele reconheceu a letra.',
+            next: 'jorge',
+            effects: { protectedWitness: true }
+          }
+        ]
+      },
 
-      button.append(number, label);
+      jorge: {
+        chapter: 2,
+        label: 'ATO II / JORGE JR.',
+        kicker: 'DEPOIMENTO Nº 02',
+        title: 'Toda pergunta tem um dono.',
+        text: [
+          'Jorge Jr. admite que a última pergunta da entrevista não foi ideia dele. ' +
+          'Diz que só queria uma chance de mudar de vida e pergunta por que agora ' +
+          'todos querem saber quem começou.',
+          'Ele oferece uma informação em troca de uma promessa: você não vai usar o nome ' +
+          'dele para encerrar o caso rapidamente.'
+        ],
+        choices: [
+          {
+            id: 'promise',
+            label: 'Prometer proteger o repórter.',
+            next: 'pastor',
+            effects: { trust: { jorge: 2 }, protectedWitness: true }
+          },
+          {
+            id: 'refusePromise',
+            label: 'Recusar promessas antes de conhecer as provas.',
+            next: 'pastor',
+            effects: { trust: { jorge: -1 } }
+          },
+          {
+            id: 'confront',
+            label: 'Confrontá-lo com a anotação encontrada.',
+            next: 'contradiction',
+            requires: { clue: 'margin' },
+            lockedText: 'Encontre a anotação escondida na página.'
+          }
+        ]
+      },
 
-      if (choice.detail && available) {
-        const detail = document.createElement("small");
-        detail.textContent = choice.detail;
-        button.appendChild(detail);
+      pastor: {
+        chapter: 2,
+        label: 'ATO II / O PASTOR',
+        kicker: 'DEPOIMENTO Nº 03',
+        title: 'O povo precisava de um culpado.',
+        text: [
+          'O Pastor afirma que um povo sem esperança precisa de uma conclusão. ' +
+          'Segundo ele, prolongar a dúvida só aumenta a dor.',
+          'Quando você pergunta quem se beneficia com a queda de Nadine, ele responde ' +
+          'que ninguém. A resposta vem depressa demais.'
+        ],
+        choices: [
+          {
+            id: 'acceptPastor',
+            label: 'Aceitar a explicação e avançar.',
+            next: 'contradiction',
+            effects: { trust: { pastor: 1 } }
+          },
+          {
+            id: 'suspectPastor',
+            label: 'Perguntar por que ele tem tanta pressa.',
+            next: 'contradiction',
+            effects: { trust: { pastor: -1 } }
+          },
+          {
+            id: 'showEvidence',
+            label: 'Mostrar a evidência da carta.',
+            next: 'contradiction',
+            requires: { clue: 'seal' },
+            effects: { exposedEvidence: true },
+            lockedText: 'Você precisa descobrir a pista do selo primeiro.'
+          }
+        ]
+      },
+
+      contradiction: {
+        chapter: 2,
+        label: 'ATO II / CONTRADIÇÃO',
+        kicker: 'NOVO ELEMENTO NO PROCESSO',
+        title: 'A cronologia não faz sentido.',
+        text: [
+          'Os depoimentos indicam horários diferentes. Uma testemunha diz que a notícia sobre ' +
+          'Nadine já circulava antes de a entrevista terminar. Outra afirma que a pergunta ' +
+          'fatal estava escrita antes de ser feita.',
+          'Você pode reunir as provas disponíveis, proteger quem falou ' +
+          'ou levar a contradição diretamente ao julgamento.'
+        ],
+        choices: [
+          {
+            id: 'gather',
+            label: 'Registrar a contradição no processo.',
+            next: 'evidenceReview',
+            effects: { readEvidence: true }
+          },
+          {
+            id: 'protect',
+            label: 'Proteger a testemunha e guardar o detalhe.',
+            next: 'evidenceReview',
+            effects: { protectedWitness: true }
+          },
+          {
+            id: 'accuse',
+            label: 'Acusar alguém imediatamente.',
+            next: 'trial',
+            effects: { exposedEvidence: true, trust: { pastor: -1 } }
+          }
+        ]
+      },
+
+      evidenceReview: {
+        chapter: 2,
+        label: 'ATO II / REVISÃO',
+        kicker: 'AS PROVAS NÃO SE EXPLICAM SOZINHAS',
+        title: 'Você tem uma escolha a fazer.',
+        text: [
+          'A carta, a anotação e os depoimentos apontam para mais de uma interpretação. ' +
+          'Nenhuma evidência, sozinha, identifica quem decidiu alterar a história.',
+          'Uma marca escondida no material da peça pode ajudar. ' +
+          'Você também pode prosseguir sem encontrar todas as pistas.'
+        ],
+        choices: [
+          {
+            id: 'allClues',
+            label: 'Cruzar todas as pistas reunidas.',
+            detail: 'Você tem todas as peças. Falta decidir o que fazer com elas.',
+            next: 'trial',
+            requires: { allClues: true },
+            effects: { readEvidence: true },
+            lockedText: 'Ainda faltam pistas escondidas no site.'
+          },
+          { id: 'goToTrial', label: 'Levar o caso ao julgamento.', next: 'trial' }
+        ]
+      },
+
+      trial: {
+        chapter: 3,
+        label: 'ATO III / JULGAMENTO',
+        kicker: 'DECISÃO IRREVERSÍVEL',
+        title: 'O que você fará com a verdade?',
+        text: [
+          'O salão está cheio. Cada pessoa espera que você confirme uma versão diferente. ' +
+          'Você sabe que revelar uma prova pode expor uma testemunha. Escondê-la pode proteger ' +
+          'alguém, mas também preservar uma mentira.',
+          'O julgamento não pergunta apenas quem mentiu. Pergunta o que você está disposto ' +
+          'a fazer com aquilo que descobriu.'
+        ],
+        choices: [
+          {
+            id: 'reveal',
+            label: 'Revelar todas as evidências ao público.',
+            detail: 'A verdade acima das consequências.',
+            next: 'endingTruth',
+            effects: { exposedEvidence: true }
+          },
+          {
+            id: 'protectWitness',
+            label: 'Proteger a testemunha e manter parte do arquivo fechado.',
+            detail: 'Nem toda verdade precisa ser pública.',
+            next: 'endingMercy',
+            effects: { protectedWitness: true }
+          },
+          {
+            id: 'closeCase',
+            label: 'Encerrar o caso sem apontar um culpado.',
+            detail: 'Você se recusa a transformar suspeitas em sentença.',
+            next: 'endingSilence'
+          },
+          {
+            id: 'accuseAmerico',
+            label: 'Acusar Américo com base nas contradições.',
+            detail: 'Esta opção exige evidências suficientes.',
+            next: 'endingAccusation',
+            requires: { clueCount: 2, flag: 'readEvidence' },
+            lockedText: 'Você precisa de pelo menos duas pistas e de registrar ' +
+                        'as contradições antes de sustentar essa acusação.'
+          }
+        ]
+      },
+
+      endingTruth: {
+        chapter: 3,
+        label: 'DESFECHO / A VERDADE',
+        kicker: 'ARQUIVO CONCLUÍDO',
+        title: 'A verdade não absolve ninguém.',
+        ending: true,
+        text: [
+          'As provas são reveladas. Os depoimentos são confrontados e o julgamento deixa ' +
+          'de ter uma resposta simples.',
+          'Você descobriu que a mentira não pertencia a uma única pessoa. ' +
+          'Ela foi mantida por todos que tinham algo a perder.',
+          'Você expôs o caso. Agora precisa conviver com as consequências.'
+        ]
+      },
+
+      endingMercy: {
+        chapter: 3,
+        label: 'DESFECHO / A COMPAIXÃO',
+        kicker: 'ARQUIVO CONCLUÍDO',
+        title: 'Você escolheu quem não seria exposto.',
+        ending: true,
+        text: [
+          'A testemunha permanece protegida. Parte do processo não chega ao público, ' +
+          'e algumas perguntas continuam sem resposta.',
+          'Você impediu que alguém fosse condenado por uma informação incompleta. ' +
+          'Mas também aceitou que a história oficial continuasse incompleta.'
+        ]
+      },
+
+      endingSilence: {
+        chapter: 3,
+        label: 'DESFECHO / O SILÊNCIO',
+        kicker: 'ARQUIVO CONCLUÍDO',
+        title: 'O processo foi encerrado.',
+        ending: true,
+        text: [
+          'Você se recusa a transformar suspeitas em sentença. O arquivo é fechado, ' +
+          'e cada testemunha retorna à própria vida.',
+          'O silêncio evita uma condenação precipitada. Também deixa intacta ' +
+          'a estrutura que tornou a mentira possível.'
+        ]
+      },
+
+      endingAccusation: {
+        chapter: 3,
+        label: 'DESFECHO / A ACUSAÇÃO',
+        kicker: 'ARQUIVO CONCLUÍDO',
+        title: 'Você apontou um culpado.',
+        ending: true,
+        text: [
+          'A acusação muda o rumo do julgamento. As contradições são suficientes para levantar ' +
+          'suspeitas, mas não provam que uma única pessoa controlou todos os acontecimentos.',
+          'Você conseguiu uma resposta para o público. Não necessariamente a resposta que o caso ' +
+          'merecia. Talvez seja assim que toda sentença começa.'
+        ]
       }
-
-      if (!available) {
-        const lockText = document.createElement("small");
-        lockText.textContent =
-          choice.lockedText || "Evidências insuficientes.";
-        button.appendChild(lockText);
-      }
-
-      button.addEventListener("click", () => {
-        selectChoice(sceneId, choice);
-      });
-
-      choicesContainer.appendChild(button);
-    });
-
-    content.appendChild(choicesContainer);
-
-    if (state.clues.length > 0) {
-      const note = document.createElement("div");
-      note.className = "story-note";
-      note.textContent =
-        `Você reuniu ${state.clues.length} de 4 pistas. ` +
-        "Consulte o arquivo para revisar as evidências.";
-      content.appendChild(note);
-    }
-
-    updateSidebar();
-    saveProgress();
-  }
-
-  function selectChoice(sceneId, choice) {
-    if (!meetsRequirements(choice.requires)) {
-      notify(choice.lockedText || "Ainda faltam evidências.");
-      return;
-    }
-
-    recordChoice(sceneId, choice.id);
-    applyEffects(choice.effects);
-
-    if (choice.next.startsWith("ending")) {
-      state.ending = choice.next;
-    }
-
-    renderScene(choice.next);
-  }
-
-  function renderEnding(scene) {
-    state.ending = state.scene;
-
-    const endingBox = document.createElement("div");
-    endingBox.className = "story-ending";
-
-    const endingTitle = document.createElement("strong");
-    endingTitle.textContent = getEndingLabel(scene);
-
-    const endingText = document.createElement("p");
-    endingText.textContent = getEndingAnalysis();
-
-    endingBox.append(endingTitle, endingText);
-    content.appendChild(endingBox);
-
-    const restartButton = document.createElement("button");
-    restartButton.className = "story-action";
-    restartButton.type = "button";
-    restartButton.textContent = "RECOMEÇAR A HISTÓRIA ↻";
-
-    restartButton.addEventListener("click", restartStory);
-    content.appendChild(restartButton);
-
-    const endingCode = document.createElement("p");
-    endingCode.className = "story-kicker";
-    endingCode.textContent =
-      `PISTAS: ${state.clues.length}/4 · ` +
-      `DECISÕES: ${state.choices.length}`;
-
-    content.appendChild(endingCode);
-
-    saveLabel.textContent = "CASO CONCLUÍDO";
-    notify("O julgamento terminou. Seu desfecho foi registrado.");
-  }
-
-  function getEndingLabel(scene) {
-    const labels = {
-      endingTruth: "DESFECHO I — EXPOSIÇÃO",
-      endingMercy: "DESFECHO II — PROTEÇÃO",
-      endingSilence: "DESFECHO III — SILÊNCIO",
-      endingAccusation: "DESFECHO IV — ACUSAÇÃO"
     };
 
-    return labels[state.scene] || scene.label;
-  }
+    const endingLabels = {
+      endingTruth: 'DESFECHO I — EXPOSIÇÃO',
+      endingMercy: 'DESFECHO II — PROTEÇÃO',
+      endingSilence: 'DESFECHO III — SILÊNCIO',
+      endingAccusation: 'DESFECHO IV — ACUSAÇÃO'
+    };
 
-  function getEndingAnalysis() {
-    const clueCount = state.clues.length;
-    const alceste = state.trust.alceste;
-    const celimene = state.trust.celimene;
-    const oronte = state.trust.oronte;
+    const perspectiveNotes = {
+      vergueiro: ' Você deu mais peso à versão de Vergueiro.',
+      jorge: ' Você deu mais peso à perspectiva de Jorge Jr.',
+      pastor: ' Você considerou a versão do Pastor.'
+    };
 
-    let analysis;
+    const hasClue = (id) => state.clues.includes(id);
+    const hasAllClues = () => Object.keys(clueData).every(hasClue);
 
-    if (clueCount === 4) {
-      analysis =
-        "Você encontrou todas as pistas. Sua versão dos fatos " +
-        "considerou detalhes que as testemunhas tentaram deixar de fora.";
-    } else if (clueCount >= 2) {
-      analysis =
-        "Você reuniu evidências importantes, mas algumas partes " +
-        "da história permaneceram fora do seu alcance.";
-    } else {
-      analysis =
-        "Você tomou decisões com informações limitadas. " +
-        "O resultado mostra o risco de julgar antes de conhecer o processo.";
+    function meetsRequirements({ clue, allClues, clueCount, flag } = {}) {
+      if (clue && !hasClue(clue)) return false;
+      if (allClues && !hasAllClues()) return false;
+      if (clueCount && state.clues.length < clueCount) return false;
+      if (flag && !state.flags[flag]) return false;
+      return true;
     }
 
-    if (celimene > alceste && celimene > oronte) {
-      analysis += " Você deu mais peso à perspectiva de Celimene.";
-    } else if (alceste > oronte) {
-      analysis += " Você deu mais peso à desconfiança de Alceste.";
-    } else if (oronte > 0) {
-      analysis += " Você considerou a versão de Oronte.";
-    }
-
-    if (state.flags.protectedWitness) {
-      analysis += " Uma testemunha foi protegida pelas suas decisões.";
-    }
-
-    if (state.flags.exposedEvidence) {
-      analysis += " Você decidiu expor parte das evidências.";
-    }
-
-    return analysis;
-  }
-
-  function installClues() {
-    Object.entries(clueData).forEach(([id, clue]) => {
-      const elements = document.querySelectorAll(clue.selector);
-      elements.forEach((element) => {
-        element.dataset.storyClue = id;
-        element.style.cursor = "pointer";
-        element.title = "Há algo escondido neste elemento.";
-        element.setAttribute("aria-label", `Investigar pista: ${clue.title}`);
-
-        if (!element.matches("button, a, input, select, textarea, [tabindex]")) {
-          element.tabIndex = 0;
+    function applyEffects(effects = {}) {
+      Object.entries(effects).forEach(([key, value]) => {
+        if (key === 'trust') {
+          Object.entries(value).forEach(([person, amount]) => {
+            if (person in state.trust) state.trust[person] += amount;
+          });
+        } else if (key in state.flags) {
+          state.flags[key] = value;
         }
       });
-    });
-  }
-
-  function collectClue(id) {
-    const clue = clueData[id];
-
-    if (!clue) return;
-
-    if (hasClue(id)) {
-      notify("Esta evidência já está no arquivo.");
-      return;
     }
 
-    state.clues.push(id);
-    updateSidebar();
-    renderInventory();
-    saveProgress();
+    function getEndingAnalysis() {
+      const clueCount = state.clues.length;
+      let analysis;
 
-    notify(`EVIDÊNCIA REGISTRADA: ${clue.title}`);
-  }
-
-  // Ouvinte global robusto de alta prioridade para apanhar as pistas independentemente do layout
-  document.addEventListener("click", (event) => {
-    const target = event.target.closest(".hero-stamp, .character-note, .finale-small, .hidden-mark, [data-story-clue]");
-    if (!target) return;
-
-    let clueId = target.dataset.storyClue;
-    if (!clueId) {
-      if (target.matches(".hero-stamp")) clueId = "seal";
-      else if (target.matches(".character-note")) clueId = "margin";
-      else if (target.matches(".finale-small")) clueId = "witness";
-      else if (target.matches(".hidden-mark")) clueId = "mark";
-    }
-
-    if (clueId) {
-      event.preventDefault();
-      event.stopPropagation();
-      collectClue(clueId);
-    }
-  }, true);
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key !== "Enter" && event.key !== " ") return;
-
-    const target = event.target.closest(".hero-stamp, .character-note, .finale-small, .hidden-mark, [data-story-clue]");
-    if (!target || target.matches("button, a")) return;
-
-    let clueId = target.dataset.storyClue;
-    if (!clueId) {
-      if (target.matches(".hero-stamp")) clueId = "seal";
-      else if (target.matches(".character-note")) clueId = "margin";
-      else if (target.matches(".finale-small")) clueId = "witness";
-      else if (target.matches(".hidden-mark")) clueId = "mark";
-    }
-
-    if (clueId) {
-      event.preventDefault();
-      collectClue(clueId);
-    }
-  });
-
-  inventoryButton.addEventListener("click", () => {
-    renderInventory();
-    inventoryDialog.showModal();
-  });
-
-  closeInventory.addEventListener("click", () => {
-    inventoryDialog.close();
-  });
-
-  inventoryDialog.addEventListener("click", (event) => {
-    if (event.target === inventoryDialog) {
-      inventoryDialog.close();
-    }
-  });
-
-  function saveProgress() {
-    try {
-      localStorage.setItem(SAVE_KEY, JSON.stringify(state));
-      saveLabel.textContent = "PROGRESSO SALVO";
-    } catch {
-      saveLabel.textContent = "SESSÃO LOCAL";
-    }
-  }
-
-  function loadProgress() {
-    try {
-      const raw = localStorage.getItem(SAVE_KEY);
-      if (!raw) return false;
-
-      const saved = JSON.parse(raw);
-
-      if (
-        !saved ||
-        !scenes[saved.scene] ||
-        !Array.isArray(saved.clues) ||
-        !Array.isArray(saved.choices) ||
-        !saved.trust ||
-        !saved.flags
-      ) {
-        return false;
+      if (clueCount === CLUE_TOTAL) {
+        analysis = 'Você encontrou todas as pistas. Sua versão dos fatos considerou detalhes ' +
+                   'que as testemunhas tentaram deixar de fora.';
+      } else if (clueCount >= 2) {
+        analysis = 'Você reuniu evidências importantes, mas algumas partes da história ' +
+                   'permaneceram fora do seu alcance.';
+      } else {
+        analysis = 'Você tomou decisões com informações limitadas. O resultado mostra ' +
+                   'o risco de julgar antes de conhecer o processo.';
       }
 
-      const fresh = initialState();
+      const [[topName, topValue], [, secondValue]] =
+        Object.entries(state.trust).sort((a, b) => b[1] - a[1]);
+      if (topValue > 0 && topValue > secondValue) analysis += perspectiveNotes[topName];
 
-      state = {
-        ...fresh,
-        ...saved,
-        trust: { ...fresh.trust, ...saved.trust },
-        flags: { ...fresh.flags, ...saved.flags },
-        clues: saved.clues.filter((id) => id in clueData),
-        choices: saved.choices
-      };
+      if (state.flags.protectedWitness) analysis += ' Uma testemunha foi protegida pelas suas decisões.';
+      if (state.flags.exposedEvidence) analysis += ' Você decidiu expor parte das evidências.';
 
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  function restartStory() {
-    state = initialState();
-
-    try {
-      localStorage.removeItem(SAVE_KEY);
-    } catch {
-      // O jogo continua funcionando sem armazenamento local.
+      return analysis;
     }
 
-    saveLabel.textContent = "NOVA INVESTIGAÇÃO";
-    renderScene("letter");
-    notify("Uma nova investigação começou.");
-  }
+    function saveProgress() {
+      const saved = storage.set(SAVE_KEY, JSON.stringify(state));
+      if (!state.ending) saveLabel.textContent = saved ? 'PROGRESSO SALVO' : 'SESSÃO LOCAL';
+    }
 
-  const beginBtn = $("#story-begin");
-  if (beginBtn) {
-    beginBtn.addEventListener("click", () => {
+    function loadProgress() {
+      const raw = storage.get(SAVE_KEY);
+      if (!raw) return false;
+
+      try {
+        const saved = JSON.parse(raw);
+        if (!saved || !scenes[saved.scene] || !Array.isArray(saved.clues) ||
+          !Array.isArray(saved.choices) || !saved.trust || !saved.flags) {
+          return false;
+        }
+
+        const fresh = initialState();
+        state = {
+          ...fresh,
+          ...saved,
+          trust: { ...fresh.trust, ...saved.trust },
+          flags: { ...fresh.flags, ...saved.flags },
+          clues: saved.clues.filter((id) => id in clueData),
+          choices: saved.choices
+        };
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    function updateSidebar() {
+      clueLabel.textContent = `${pad(state.clues.length)} / ${pad(CLUE_TOTAL)}`;
+      progressBar.style.width = `${(state.clues.length / CLUE_TOTAL) * 100}%`;
+      chapterLabel.textContent = pad(scenes[state.scene]?.chapter ?? state.chapter);
+      footerCode.textContent = `REGISTRO ${pad(state.choices.length, 3)}`;
+    }
+
+    function renderInventory() {
+      inventoryList.replaceChildren();
+
+      const discovered = state.clues.map((id) => clueData[id]).filter(Boolean);
+      inventoryEmpty.hidden = discovered.length > 0;
+
+      discovered.forEach((clue) => {
+        const item = document.createElement('li');
+        const title = document.createElement('strong');
+        const description = document.createElement('p');
+
+        title.textContent = clue.title;
+        description.textContent = clue.description;
+
+        item.append(title, description);
+        inventoryList.appendChild(item);
+      });
+    }
+
+    function buildChoice(sceneId, choice, index) {
+      const available = meetsRequirements(choice.requires);
+      const button = document.createElement('button');
+      const number = document.createElement('span');
+      const label = document.createElement('span');
+
+      button.type = 'button';
+      button.className = 'story-choice';
+      button.disabled = !available;
+
+      number.className = 'choice-number';
+      number.textContent = `${pad(index + 1)}.`;
+      label.textContent = choice.label;
+      button.append(number, label);
+
+      const hint = available ? choice.detail : (choice.lockedText || 'Evidências insuficientes.');
+      if (hint) {
+        const small = document.createElement('small');
+        small.textContent = hint;
+        button.appendChild(small);
+      }
+
+      button.addEventListener('click', () => selectChoice(sceneId, choice));
+      return button;
+    }
+
+    function renderEnding(scene) {
+      state.ending = state.scene;
+
+      const box = document.createElement('div');
+      const title = document.createElement('strong');
+      const analysis = document.createElement('p');
+      const restart = document.createElement('button');
+      const summary = document.createElement('p');
+
+      box.className = 'story-ending';
+      title.textContent = endingLabels[state.scene] || scene.label;
+      analysis.textContent = getEndingAnalysis();
+      box.append(title, analysis);
+
+      restart.type = 'button';
+      restart.className = 'btn story-restart';
+      restart.textContent = 'RECOMEÇAR A HISTÓRIA ↻';
+      restart.addEventListener('click', restartStory);
+
+      summary.className = 'story-kicker';
+      summary.textContent = `PISTAS: ${state.clues.length}/${CLUE_TOTAL} · DECISÕES: ${state.choices.length}`;
+
+      content.append(box, restart, summary);
+
+      saveLabel.textContent = 'CASO CONCLUÍDO';
+      notify('O julgamento terminou. Seu desfecho foi registrado.');
+    }
+
+    function renderScene(sceneId) {
+      const scene = scenes[sceneId];
+      if (!scene) {
+        notify('Não foi possível carregar esta cena.');
+        return;
+      }
+
+      state.scene = sceneId;
+      state.chapter = scene.chapter;
+      sceneLabel.textContent = scene.label;
+      content.replaceChildren();
+
+      const kicker = document.createElement('p');
+      const title = document.createElement('h3');
+      kicker.className = 'story-kicker';
+      kicker.textContent = scene.kicker;
+      title.textContent = scene.title;
+      content.append(kicker, title);
+
+      scene.text.forEach((paragraph) => {
+        const element = document.createElement('p');
+        element.textContent = paragraph;
+        content.appendChild(element);
+      });
+
+      if (scene.ending) {
+        renderEnding(scene);
+      } else {
+        const choices = document.createElement('div');
+        choices.className = 'story-choices';
+        scene.choices.forEach((choice, index) => choices.appendChild(buildChoice(sceneId, choice, index)));
+        content.appendChild(choices);
+
+        if (state.clues.length > 0) {
+          const note = document.createElement('div');
+          note.className = 'story-note';
+          note.textContent = `Você reuniu ${state.clues.length} de ${CLUE_TOTAL} pistas. ` +
+                             'Consulte o arquivo para revisar as evidências.';
+          content.appendChild(note);
+        }
+      }
+
+      updateSidebar();
+      saveProgress();
+    }
+
+    function selectChoice(sceneId, choice) {
+      if (!meetsRequirements(choice.requires)) {
+        notify(choice.lockedText || 'Ainda faltam evidências.');
+        return;
+      }
+
+      state.choices.push({ scene: sceneId, choice: choice.id });
+      applyEffects(choice.effects);
+      renderScene(choice.next);
+    }
+
+    function restartStory() {
+      state = initialState();
+      storage.remove(SAVE_KEY);
+      saveLabel.textContent = 'NOVA INVESTIGAÇÃO';
+      renderScene('letter');
+      notify('Uma nova investigação começou.');
+    }
+
+    function collectClue(id) {
+      const clue = clueData[id];
+      if (!clue) return;
+
+      if (hasClue(id)) {
+        notify('Esta evidência já está no arquivo.');
+        return;
+      }
+
+      state.clues.push(id);
+      updateSidebar();
+      renderInventory();
+      saveProgress();
+      notify(`EVIDÊNCIA REGISTRADA: ${clue.title}`);
+    }
+
+    $$('[data-clue]').forEach((element) => {
+      if (!element.title) element.title = 'Há algo escondido neste elemento.';
+
+      if (!element.matches('button, a, input, select, textarea, [tabindex]')) {
+        element.tabIndex = 0;
+        element.setAttribute('role', 'button');
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      const element = event.target.closest('[data-clue]');
+      if (element) collectClue(element.dataset.clue);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+
+      const element = event.target.closest('[data-clue]');
+      if (!element || element.matches('button, a')) return;
+
+      event.preventDefault();
+      collectClue(element.dataset.clue);
+    });
+
+    inventoryButton.addEventListener('click', () => {
+      renderInventory();
+      inventoryDialog.showModal();
+    });
+    closeInventory.addEventListener('click', () => inventoryDialog.close());
+    inventoryDialog.addEventListener('click', (event) => {
+      if (event.target === inventoryDialog) inventoryDialog.close();
+    });
+
+    beginButton?.addEventListener('click', () => {
       if (loadProgress()) {
         renderScene(state.scene);
         renderInventory();
-        notify("Seu progresso anterior foi recuperado.");
+        notify('Seu progresso anterior foi recuperado.');
       } else {
         restartStory();
       }
     });
+
+    updateSidebar();
+    renderInventory();
   }
 
-  installClues();
-  updateSidebar();
-  renderInventory();
-})();
+  /* ------------------------------------------------------------------------
+     08. ACESSO AO ARQUIVO 017 (SENHA)
+     ------------------------------------------------------------------------ */
+  function initAccessLock() {
+    const navLink = $('#nav-julgamento');
+    const lock = $('#julgamento-lock');
+    const section = $('#julgamento');
+    const form = $('#julgamento-form');
+    const input = $('#julgamento-input');
+    const error = $('#julgamento-erro');
 
-// =========================================
-// CONTROLE DO EASTER EGG DE ACESSO (P4INFORMATICA)
-// =========================================
-(() => {
-  const navJulgamento = document.getElementById("nav-julgamento");
-  const lockContainer = document.getElementById("julgamento-lock");
-  const secaoJulgamento = document.getElementById("julgamento");
-  const form = document.getElementById("julgamento-form");
-  const input = document.getElementById("julgamento-input");
-  const erroMsg = document.getElementById("julgamento-erro");
+    if (!navLink || !lock || !section || !form || !input || !error) return;
 
-  if (!navJulgamento || !lockContainer || !secaoJulgamento || !form) return;
+    const ACCESS_KEY = 'p4informatica';
+    let errorTimer;
 
-  // 1. Ao clicar em "Julgamento" no menu, exibe a caixa de senha
-  navJulgamento.addEventListener("click", (e) => {
-    // Se o jogo já estiver liberado, navega direto
-    if (secaoJulgamento.classList.contains("revelado")) return;
+    navLink.addEventListener('click', (event) => {
+      if (section.classList.contains('is-unlocked')) return;
 
-    e.preventDefault();
-    lockContainer.classList.add("ativo");
-    lockContainer.scrollIntoView({ behavior: "smooth" });
-    input.focus();
-  });
+      event.preventDefault();
+      lock.classList.add('is-open');
+      lock.scrollIntoView({ behavior: 'smooth' });
+      input.focus({ preventScroll: true });
+    });
 
-  // 2. Valida a senha ao enviar o formulário
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
 
-    // Converte para minúsculas para aceitar p4informatica, P4INFORMATICA, P4Informatica, etc.
-    const senhaDigitada = input.value.trim().toLowerCase();
-
-    if (senhaDigitada === "p4informatica") {
-      // Oculta a caixa de senha e revela o jogo
-      lockContainer.classList.remove("ativo");
-      secaoJulgamento.classList.add("revelado");
-      secaoJulgamento.scrollIntoView({ behavior: "smooth" });
-
-      if (typeof showToast === "function") {
-        showToast("ACESSO CONCEDIDO: ARQUIVO 017 LIBERADO.");
+      if (input.value.trim().toLowerCase() === ACCESS_KEY) {
+        lock.classList.remove('is-open');
+        section.classList.add('is-unlocked');
+        section.scrollIntoView({ behavior: 'smooth' });
+        showToast('ACESSO CONCEDIDO: ARQUIVO 017 LIBERADO.');
+        return;
       }
-    } else {
-      // Exibe mensagem de erro
-      erroMsg.hidden = false;
-      input.value = "";
+
+      error.hidden = false;
+      input.value = '';
       input.focus();
 
-      setTimeout(() => {
-        erroMsg.hidden = true;
-      }, 3000);
+      clearTimeout(errorTimer);
+      errorTimer = setTimeout(() => { error.hidden = true; }, 3000);
+    });
+  }
+
+  /* ------------------------------------------------------------------------
+     09. MINIGAME DO AMÉRICO
+     ------------------------------------------------------------------------ */
+  function initAmericoGame() {
+    const root = $('#americo-game');
+    if (!root) return;
+
+    const startBtn = $('#americo-start', root);
+    const restartBtn = $('#americo-restart', root);
+    const intro = $('#americo-intro', root);
+    const arena = $('#americo-arena', root);
+    const result = $('#americo-result', root);
+    const headlineText = $('#americo-headline-text', root);
+    const headlineKicker = $('#americo-headline-kicker', root);
+    const timerLabel = $('#americo-timer-label', root);
+    const msg = $('#americo-message', root);
+    const btnCensor = $('#btn-censor', root);
+    const btnBroadcast = $('#btn-broadcast', root);
+    const resultTitle = $('#americo-result-title', root);
+    const resultDesc = $('#americo-result-desc', root);
+
+    const headlines = [
+      { kicker: 'URGENTE', text: 'Protestos pacíficos começam na praça central.', safe: false },
+      { kicker: 'EXCLUSIVO', text: 'Nadine traz uma mensagem de paz ao vivo.', safe: true },
+      { kicker: 'ECONOMIA', text: 'Estoques de alimentos chegam ao fim na capital.', safe: false },
+      { kicker: 'BOATOS', text: 'Dizem que o governo abandonou os setores baixos.', safe: false },
+      { kicker: 'HOMENAGEM', text: 'A nação agradece a generosidade de Américo.', safe: true },
+      { kicker: 'PLANTÃO', text: 'Sinal misterioso interfere nas transmissões da Íris.', safe: false },
+      { kicker: 'SEGURANÇA', text: 'Toque de recolher decretado para manter a ordem.', safe: true }
+    ];
+
+    let currentIdx = 0;
+    let score = 0;
+    let timeLeft = 15;
+    let timer = null;
+    let playing = false;
+
+    function nextHeadline() {
+      if (currentIdx >= headlines.length) {
+        endGame(true);
+        return;
+      }
+      const item = headlines[currentIdx];
+      headlineKicker.textContent = `${item.kicker} (${currentIdx + 1}/${headlines.length})`;
+      headlineText.textContent = item.text;
     }
-  });
+
+    function handleChoice(userChoiceSafe) {
+      if (!playing) return;
+      const item = headlines[currentIdx];
+
+      if (userChoiceSafe === item.safe) {
+        score += 10;
+        msg.textContent = 'EXCELENTE. A OPINIÃO PÚBLICA ESTÁ A SALVO.';
+      } else {
+        score -= 5;
+        msg.textContent = 'ERRO GRAVE. O POVO ESTÁ COMENTANDO DEMAIS!';
+      }
+
+      currentIdx++;
+      nextHeadline();
+    }
+
+    function endGame(completed) {
+      playing = false;
+      clearInterval(timer);
+      arena.hidden = true;
+      result.hidden = false;
+
+      resultTitle.textContent = score >= 30 ? 'AMÉRICO ESTÁ ORGULHOSO.' : 'O CONTROLE FOI PERDIDO.';
+      resultDesc.textContent = `Você pontuou ${score} pontos gerenciando a emissora. ` +
+        (score >= 30 ? 'Você sabe como manipular o que o povo vê.' : 'A verdade escapou pelas suas mãos.');
+    }
+
+    function startGame() {
+      currentIdx = 0;
+      score = 0;
+      timeLeft = 15;
+      playing = true;
+      intro.hidden = true;
+      result.hidden = true;
+      arena.hidden = false;
+
+      nextHeadline();
+
+      clearInterval(timer);
+      timer = setInterval(() => {
+        timeLeft--;
+        timerLabel.textContent = `TEMPO: ${timeLeft}s`;
+        if (timeLeft <= 0) {
+          endGame(false);
+        }
+      }, 1000);
+    }
+
+    btnCensor.addEventListener('click', () => handleChoice(false));
+    btnBroadcast.addEventListener('click', () => handleChoice(true));
+    startBtn.addEventListener('click', startGame);
+    restartBtn.addEventListener('click', startGame);
+
+    onMultiClick($('#broadcast-title'), 4, () => {
+      root.classList.add('is-active');
+      root.scrollIntoView({ behavior: 'smooth' });
+      showToast('SALA DE CONTROLE SECRETA DESBLOQUEADA.');
+    });
+  }
+
+  /* ------------------------------------------------------------------------
+     10. O TEMPLO DE NADINE
+     ------------------------------------------------------------------------ */
+  function initNadineTemple() {
+    const btn = $('#nadine-blessing-btn');
+    const msg = $('#nadine-blessing-msg');
+    if (!btn || !msg) return;
+
+    const phrases = [
+      '“Ninguém sobrevive sozinho quando todos decidem que você é a resposta.”',
+      '“A transmissão foi cortada. Restou apenas o eco da sua voz.”',
+      '“Eles acreditam porque é mais fácil do que carregar o próprio medo.”',
+      '“A salvação não tem rosto. Tem preço.”'
+    ];
+
+    btn.addEventListener('click', () => {
+      const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+      msg.textContent = randomPhrase;
+      showToast('UMA VERDADE FOI REVELADA NO ALTAR.');
+    });
+  }
+
+  /* ------------------------------------------------------------------------
+     11. MINIGAME DA NADINE (O PESO DA FÉ)
+     ------------------------------------------------------------------------ */
+  function initNadineGame() {
+    const trigger = $('#nadine-game-trigger');
+    const modal = $('#nadine-game-modal');
+    const closeBtn = $('#nadine-game-close');
+    const startBtn = $('#nadine-game-start');
+    const restartBtn = $('#nadine-game-restart');
+    const intro = $('#nadine-game-intro');
+    const arena = $('#nadine-game-arena');
+    const resultBox = $('#nadine-game-result');
+    const player = $('#nadine-player');
+    const mentalFill = $('#nadine-mental-fill');
+    const resultTitle = $('#nadine-result-title');
+    const resultDesc = $('#nadine-result-desc');
+    const btnLeft = $('#nadine-btn-left');
+    const btnRight = $('#nadine-btn-right');
+
+    if (!trigger || !modal) return;
+
+    let gameActive = false;
+    let mentalEnergy = 100;
+    let playerX = 50;
+    let gameTimer = null;
+    let spawnTimer = null;
+    let difficultyTimer = null;
+    let secondsElapsed = 0;
+    let spawnIntervalMs = 900;
+    let fallSpeed = 2;
+    let activeWords = [];
+    let keysPressed = {};
+
+    const badWords = ['Crítica', 'Culpa', 'Peso', 'Medo', 'Dúvida', 'Censura', 'Julgamento', 'Exigência'];
+    const goodWords = ['Esperança', 'Luz', 'Paz', 'Verdade', 'Fé', 'Alívio'];
+
+    onMultiClick(trigger, 4, () => {
+      modal.hidden = false;
+      showToast('SANTUÁRIO MENTAL DE NADINE ACESSADO.');
+    });
+
+    closeBtn?.addEventListener('click', () => {
+      modal.hidden = true;
+      stopGame();
+    });
+
+    startBtn?.addEventListener('click', startGame);
+    restartBtn?.addEventListener('click', startGame);
+
+    window.addEventListener('keydown', (e) => {
+      if (!gameActive) return;
+      if (e.key === 'ArrowLeft' || e.key === 'a') keysPressed['left'] = true;
+      if (e.key === 'ArrowRight' || e.key === 'd') keysPressed['right'] = true;
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'a') keysPressed['left'] = false;
+      if (e.key === 'ArrowRight' || e.key === 'd') keysPressed['right'] = false;
+    });
+
+    let touchInterval = null;
+    const moveTouch = (dir) => {
+      if (!gameActive) return;
+      if (dir === 'left') playerX = Math.max(5, playerX - 4);
+      if (dir === 'right') playerX = Math.min(95, playerX + 4);
+      player.style.left = `${playerX}%`;
+    };
+
+    if (btnLeft && btnRight) {
+      btnLeft.addEventListener('mousedown', () => { touchInterval = setInterval(() => moveTouch('left'), 50); });
+      btnLeft.addEventListener('mouseup', () => clearInterval(touchInterval));
+      btnLeft.addEventListener('touchstart', (e) => { e.preventDefault(); touchInterval = setInterval(() => moveTouch('left'), 50); });
+      btnLeft.addEventListener('touchend', () => clearInterval(touchInterval));
+
+      btnRight.addEventListener('mousedown', () => { touchInterval = setInterval(() => moveTouch('right'), 50); });
+      btnRight.addEventListener('mouseup', () => clearInterval(touchInterval));
+      btnRight.addEventListener('touchstart', (e) => { e.preventDefault(); touchInterval = setInterval(() => moveTouch('right'), 50); });
+      btnRight.addEventListener('touchend', () => clearInterval(touchInterval));
+    }
+
+    function startGame() {
+      intro.hidden = true;
+      resultBox.hidden = true;
+      arena.hidden = false;
+      gameActive = true;
+      mentalEnergy = 100;
+      playerX = 50;
+      secondsElapsed = 0;
+      spawnIntervalMs = 900;
+      fallSpeed = 2;
+      activeWords.forEach(w => w.element.remove());
+      activeWords = [];
+
+      updateMentalBar();
+
+      gameTimer = setInterval(updateGameLoop, 20);
+      spawnTimer = setInterval(spawnWord, spawnIntervalMs);
+
+      difficultyTimer = setInterval(() => {
+        secondsElapsed += 5;
+        if (spawnIntervalMs > 300) spawnIntervalMs -= 100;
+        fallSpeed += 0.4;
+      }, 5000);
+    }
+
+    function stopGame() {
+      gameActive = false;
+      clearInterval(gameTimer);
+      clearInterval(spawnTimer);
+      clearInterval(difficultyTimer);
+      activeWords.forEach(w => w.element.remove());
+      activeWords = [];
+    }
+
+    function spawnWord() {
+      if (!gameActive) return;
+      const isGood = Math.random() > 0.55;
+      const list = isGood ? goodWords : badWords;
+      const text = list[Math.floor(Math.random() * list.length)];
+
+      const el = document.createElement('div');
+      el.className = `nadine-falling-word ${isGood ? 'good' : 'bad'}`;
+      el.textContent = text;
+      arena.appendChild(el);
+
+      const posX = Math.random() * 80 + 10;
+      el.style.left = `${posX}%`;
+
+      activeWords.push({
+        element: el,
+        x: posX,
+        y: -25,
+        isGood: isGood
+      });
+    }
+
+    function updateGameLoop() {
+      if (!gameActive) return;
+
+      if (keysPressed['left']) playerX = Math.max(5, playerX - 2.5);
+      if (keysPressed['right']) playerX = Math.min(95, playerX + 2.5);
+      player.style.left = `${playerX}%`;
+
+      const arenaHeight = arena.clientHeight;
+      const playerRect = player.getBoundingClientRect();
+
+      for (let i = activeWords.length - 1; i >= 0; i--) {
+        let w = activeWords[i];
+        w.y += fallSpeed;
+        w.element.style.top = `${w.y}px`;
+
+        const wordRect = w.element.getBoundingClientRect();
+        if (
+          wordRect.bottom >= playerRect.top &&
+          wordRect.top <= playerRect.bottom &&
+          wordRect.right >= playerRect.left &&
+          wordRect.left <= playerRect.right
+        ) {
+          if (w.isGood) {
+            mentalEnergy = Math.min(100, mentalEnergy + 15);
+          } else {
+            mentalEnergy = Math.max(0, mentalEnergy - 25);
+          }
+          updateMentalBar();
+          w.element.remove();
+          activeWords.splice(i, 1);
+          continue;
+        }
+
+        if (w.y > arenaHeight) {
+          w.element.remove();
+          activeWords.splice(i, 1);
+        }
+      }
+
+      if (mentalEnergy <= 0) {
+        endGame(false);
+      }
+
+      if (secondsElapsed >= 30) {
+        endGame(true);
+      }
+    }
+
+    function updateMentalBar() {
+      mentalFill.style.width = `${mentalEnergy}%`;
+    }
+
+    function endGame(won) {
+      stopGame();
+      arena.hidden = true;
+      resultBox.hidden = false;
+
+      if (won) {
+        resultTitle.textContent = 'FÉ PRESERVADA.';
+        resultDesc.textContent = 'Você resistiu ao peso das críticas e manteve a mente firme por 30 segundos.';
+      } else {
+        resultTitle.textContent = 'MENTE COLAPSADA.';
+        resultDesc.textContent = 'O peso das cobranças foi insuportável e a energia mental se esgotou.';
+      }
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+     INICIALIZAÇÃO
+     ------------------------------------------------------------------------ */
+  initMenu();
+  initEasterEggs();
+  initBroadcast();
+  initDeathGame();
+  initJudgment();
+  initAccessLock();
+  initAmericoGame();
+  initNadineTemple();
+  initNadineGame();
 })();

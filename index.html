@@ -6,45 +6,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#e8dfcf" />
   <meta name="description"
-    content="Misantropia — peça teatral da Semana Esportiva e Cultural do IFCE Campus Fortaleza." />
+    content="Misantropia — tragédia em três atos da Semana Esportiva e Cultural (JAC 2026) do IFCE Campus Fortaleza." />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="MISANTROPIA — JAC 2026" />
+  <meta property="og:description" content="Quem merece se salvar? Uma tragédia em três atos." />
+  <meta property="og:image" content="logo-misantropia.png" />
 
   <title>MISANTROPIA — JAC 2026</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet">
+    rel="stylesheet" />
 
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="icon" type="image/png" href="favicon.png" />
 </head>
 
 <body>
   <div class="grain" aria-hidden="true"></div>
 
+  <!-- ====================================================================
+       NAVEGAÇÃO
+       ==================================================================== -->
   <header class="topbar">
     <a class="wordmark" href="#inicio" aria-label="Misantropia, início">
-      JAC <span>26</span><i> / TEATRO</i>
+      JAC <span>26</span><i> / P4 INFORMÁTICA</i>
     </a>
 
-    <nav aria-label="Navegação principal">
+    <nav id="main-nav" aria-label="Navegação principal">
       <a href="#manifesto">Manifesto</a>
       <a href="#personagens">Personagens</a>
-      <a href="#ficha">Ficha artística</a>
+      <a href="#emissora">Emissora</a>
+      <a href="#nadine" id="nav-nadine" hidden>Salvação? </a>
+      <a href="#ficha" hidden>Ficha artística</a>
       <a href="#julgamento" id="nav-julgamento">Julgamento</a>
     </nav>
 
-    <a class="ticket-link" href="#sobre">A peça <span>↘</span></a>
+    <a class="ticket-link" href="#sobre">A peça <span aria-hidden="true">↘</span></a>
 
-    <button class="menu-toggle" aria-label="Abrir menu" aria-expanded="false">
+    <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-controls="main-nav" aria-expanded="false">
       ☰
     </button>
   </header>
 
   <main>
-    <!-- ABERTURA -->
+    <!-- ====================================================================
+         ABERTURA
+         ==================================================================== -->
     <section class="hero" id="inicio">
       <div class="hero-meta">
         <span>SEMANA ESPORTIVA E CULTURAL</span>
@@ -63,10 +74,11 @@
           SE SALVAR<span class="period">?</span>
         </h1>
 
-        <div class="hero-stamp" data-story-clue="seal" style="cursor: pointer;" title="Investigar selo">
+        <div class="hero-stamp" data-clue="seal" title="Investigar selo">
           UMA PEÇA<br>
           CHAMADA
         </div>
+
         <div class="logo-band">
           <img class="main-logo" src="logo-misantropia.png" alt="Misantropia — logotipo da peça" />
 
@@ -78,17 +90,19 @@
         </div>
 
         <div class="hero-bottom">
-          <a href="#sobre">ENTRE POR SUA CONTA <span>↓</span></a>
+          <a href="#sobre">ENTRE POR SUA CONTA <span aria-hidden="true">↓</span></a>
           <span class="classification">CLASSIFICAÇÃO INDICATIVA: 16 ANOS</span>
         </div>
 
-        <button class="hidden-mark" id="deathMark" aria-label="Marca misteriosa">
+        <button class="hidden-mark" id="deathMark" type="button" aria-label="Marca misteriosa" data-clue="mark">
           †
         </button>
       </div>
     </section>
 
-    <!-- CONTEXTO -->
+    <!-- ====================================================================
+         01 / CONTEXTO
+         ==================================================================== -->
     <section class="intro section-pad" id="sobre">
       <div class="section-index">01 / CONTEXTO</div>
 
@@ -103,27 +117,106 @@
 
       <div class="intro-text">
         <p>
-          Em um mundo marcado pela dor, pela escassez e pela guerra,
-          uma jovem se torna o símbolo de salvação de uma humanidade
-          à beira do fim.
+          Em um mundo marcado pela dor e pela tragédia, a humanidade
+          está perto de presenciar o próprio fim. Então surge uma jovem
+          capaz de reacender a fé que todos haviam perdido.
         </p>
 
         <p>
-          Mas fé também pode virar controle. E, quando todos procuram
-          alguém para culpar, a verdade talvez seja a primeira vítima.
+          Mas até onde as pessoas vão por ela? Fé também pode virar controle e,
+          quando todos procuram alguém para culpar, a verdade talvez seja
+          a primeira vítima.
         </p>
 
-        <div class="quote-mark">“</div>
+        <div class="quote-mark" aria-hidden="true">“</div>
 
         <blockquote>
-          Em quem confiar quando nada parece ter salvação?
+          <p>Em quem confiar quando nada parece ter salvação?</p>
         </blockquote>
 
-        <div class="quote-mark" style="padding-left: 300px;">”</div>
+        <div class="quote-mark quote-mark--close" aria-hidden="true">”</div>
       </div>
     </section>
+    <!-- ====================================================================
+         01.5 / O TEMPLO DE NADINE (SALVAÇÃO?)
+         ==================================================================== -->
+    <section class="nadine-temple section-pad" id="nadine" aria-labelledby="temple-title">
+      <div class="section-index">01.5 / O TEMPLO</div>
 
-    <!-- MANIFESTO -->
+      <div class="temple-heading">
+        <p class="eyebrow"><span class="red-dot"></span> O PESO DA ESPERANÇA</p>
+        <h2 id="temple-title">
+          SALVAÇÃO<br>
+          <span>OU CONTROLE?</span>
+        </h2>
+        <p>
+          Todos exigem um milagre daquela que não pediu para ser símbolo.
+          Aqui jaz a fé de um mundo que esqueceu como confiar em si mesmo.
+        </p>
+      </div>
+
+      <div class="temple-grid">
+        <div class="temple-card">
+          <span class="file-label">SANTUÁRIO ÍNTIMO</span>
+          <h3>A VOZ DA MULTIDÃO</h3>
+          <p>
+            "Salve-nos." É o que eles dizem todos os dias. Mas ninguém pergunta
+            o que acontece quando a única pessoa sã decide que já não quer salvar ninguém.
+          </p>
+        </div>
+
+        <div class="temple-card shrine-box">
+          <span class="file-label">ALTAR DE NADINE</span>
+          <div class="shrine-symbol">
+            <img src="foto-nadine.jpg" alt="Nadine" id="nadine-game-trigger" style="cursor: pointer;" title="Clique 4 vezes..." />
+          </div>
+          <p class="shrine-quote">"Eles não amam a mim. Amam o alívio que sentem quando olham para o meu rosto."</p>
+          <button class="btn" id="nadine-blessing-btn" type="button">OUVIR A PROMESSA ↗</button>
+          <p id="nadine-blessing-msg" class="shrine-feedback" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <!-- MINIGAME DE NADINE — O PESO DA FÉ -->
+      <div class="nadine-game-overlay" id="nadine-game-modal" hidden>
+        <div class="nadine-game-box">
+          <div class="game-heading">
+            <span>MINIGAME / O PESO DA FÉ</span>
+            <button type="button" id="nadine-game-close" class="secret-close" aria-label="Fechar">×</button>
+          </div>
+
+          <div class="nadine-game-intro" id="nadine-game-intro">
+            <h3>RESISTA AO PESO</h3>
+            <p>Desvie das críticas e absorva a esperança. Mantenha sua energia mental estável por 30 segundos.</p>
+            <button class="btn" id="nadine-game-start" type="button">INICIAR VIGÍLIA ↗</button>
+          </div>
+
+          <div class="nadine-game-arena" id="nadine-game-arena" hidden>
+            <div class="nadine-mental-bar-wrap">
+              <span>ENERGIA MENTAL</span>
+              <div class="nadine-mental-bar">
+                <div id="nadine-mental-fill" style="width: 100%;"></div>
+              </div>
+            </div>
+
+            <div id="nadine-player" class="nadine-player-avatar">N</div>
+
+            <div class="nadine-touch-controls">
+              <button type="button" id="nadine-btn-left" aria-label="Esquerda">◀</button>
+              <button type="button" id="nadine-btn-right" aria-label="Direita">▶</button>
+            </div>
+          </div>
+
+          <div class="nadine-game-result" id="nadine-game-result" hidden>
+            <h3 id="nadine-result-title"></h3>
+            <p id="nadine-result-desc"></p>
+            <button class="btn" id="nadine-game-restart" type="button">TENTAR NOVAMENTE ↗</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ====================================================================
+         02 / MANIFESTO
+         ==================================================================== -->
     <section class="manifesto" id="manifesto">
       <div class="manifesto-top">
         <span>02 / MANIFESTO</span>
@@ -144,7 +237,9 @@
       </div>
     </section>
 
-    <!-- PERSONAGENS -->
+    <!-- ====================================================================
+         03 / PERSONAGENS
+         ==================================================================== -->
     <section class="characters section-pad" id="personagens">
       <div class="section-heading">
         <div>
@@ -162,88 +257,282 @@
         <article class="character">
           <span class="char-no">01</span>
           <div class="char-symbol">N.</div>
-
           <div class="char-info">
             <h3>NADINE</h3>
             <p>
-              A esperança de todos. Uma jovem que tenta sustentar um mundo
-              inteiro enquanto luta contra as próprias dúvidas.
+              A esperança de todos. Uma jovem que tenta sustentar um mundo inteiro enquanto luta contra as próprias
+              dúvidas.
             </p>
           </div>
-
           <span class="char-tag">A ESCOLHIDA</span>
         </article>
 
         <article class="character">
           <span class="char-no">02</span>
           <div class="char-symbol">A.</div>
-
           <div class="char-info">
             <h3>AMÉRICO</h3>
             <p>
-              Banqueiro, manipulador e sedento por influência. Para ele,
-              ser amado talvez seja apenas outra forma de dominar.
+              Dono da emissora que dita o que o povo vê.
+              Para ele, ser amado talvez seja apenas outra forma de dominar..
             </p>
           </div>
-
           <span class="char-tag">O SALVADOR?</span>
         </article>
 
         <article class="character">
           <span class="char-no">03</span>
           <div class="char-symbol">M.</div>
-
           <div class="char-info">
             <h3>MAIA</h3>
             <p>
-              Conselheira de Nadine. Tenta enxergar a pessoa por trás
-              do símbolo, mesmo quando o mundo deixa de fazê-lo.
+              Conselheira de Nadine. Com espírito materno, acolhe, compreende e tenta
+              enxergar a garota por trás do símbolo, mesmo quando o mundo deixa de fazê-lo.
             </p>
           </div>
-
           <span class="char-tag">A CONSELHEIRA</span>
         </article>
 
         <article class="character">
           <span class="char-no">04</span>
           <div class="char-symbol">V.</div>
-
           <div class="char-info">
             <h3>VERGUEIRO</h3>
             <p>
-              Um presidente que ocupa o poder, mas talvez nunca tenha
-              sido dono das próprias decisões.
+              Presidente de uma nação condenada ao fracasso. Não está no poder por merecimento,
+              e sim por ter agradado as pessoas certas: é mais um produto do que uma figura de poder.
             </p>
           </div>
-
           <span class="char-tag">O PRESIDENTE</span>
         </article>
 
         <article class="character">
           <span class="char-no">05</span>
-          <div class="char-symbol" id="death-easter-egg" style="cursor: pointer;">†</div>
+          <div class="char-symbol">J.</div>
+          <div class="char-info">
+            <h3>JORGE JR.</h3>
+            <p>
+              Jornalista recém-formado, ingênuo e em busca da matéria que vai mudar sua vida.
+              O alívio cômico de um mundo que não tem muito o que celebrar.
+            </p>
+          </div>
+          <span class="char-tag">O REPÓRTER</span>
+        </article>
 
+        <article class="character">
+          <span class="char-no">06</span>
+          <div class="char-symbol is-secret" id="death-easter-egg">†</div>
           <div class="char-info">
             <h3>MORTE</h3>
             <p>
-              Uma presença silenciosa. Está sempre por perto — e parece
-              conhecer uma verdade que ninguém quer ouvir.
+              Uma entidade que tira o ar de quem a vê. Está sempre presente ao lado
+              da jovem e parece conhecer uma verdade que ninguém quer ouvir.
             </p>
           </div>
-
           <span class="char-tag">A TESTEMUNHA</span>
         </article>
       </div>
 
-      <p class="character-note">
+      <p class="character-note" data-clue="margin">
         OS PERSONAGENS SÃO MAIS DO QUE PARECEM. <span>OU MENOS.</span>
       </p>
     </section>
 
-    <!-- ELENCO -->
+    <!-- ====================================================================
+         04 / TRANSMISSÃO — A EMISSORA DE AMÉRICO
+         ==================================================================== -->
+    <section class="broadcast" id="emissora" aria-labelledby="broadcast-title">
+      <div class="broadcast-top">
+        <span class="section-index">04 / TRANSMISSÃO</span>
+        <span class="on-air"><span class="red-dot"></span> NO AR · 24 HORAS</span>
+      </div>
+
+      <div class="broadcast-heading">
+        <p class="eyebrow">PROPRIEDADE DE *******</p>
+        <h2 id="broadcast-title">
+          A VERDADE<br>
+          <span>É O QUE VAI AO AR.</span>
+        </h2>
+        <p>
+          Em uma nação sem certezas, a emissora de ******* virou a única voz
+          em que todos ainda querem acreditar. Ele não conta a história:
+          escolhe qual versão será a história.
+        </p>
+      </div>
+
+      <div class="broadcast-layout">
+        <div class="tv-set">
+          <div class="tv-screen">
+            <div class="tv-hud">
+              <span id="tv-channel">CANAL 01</span>
+              <span class="tv-live"><span class="red-dot"></span>AO VIVO</span>
+            </div>
+
+            <div class="tv-body" id="tv-body" aria-live="polite">
+              <p class="tv-kicker" id="tv-kicker">PLANTÃO ESPECIAL</p>
+              <h3 id="tv-headline">A ESCOLHIDA ESTÁ CONOSCO.</h3>
+              <p id="tv-text">
+                Nadine é a esperança desta nação. Fique conosco:
+                só esta emissora chega perto dela.
+              </p>
+            </div>
+
+            <div class="tv-ticker" aria-hidden="true">
+              <div class="tv-ticker-track">
+                <span>ACREDITAR, SALVAR E CELEBRAR ///</span>
+                <span>FAREMOS MAIS PARA PERDER MENOS, À PÁTRIA ///</span>
+                <span>NADINE ESTÁ CONOSCO. FIQUE CONOSCO TAMBÉM ///</span>
+                <span>DESCONFIE DE QUEM NÃO ESTÁ ASSISTINDO ///</span>
+                <span>ACREDITAR, SALVAR E CELEBRAR ///</span>
+                <span>FAREMOS MAIS PARA PERDER MENOS, À PÁTRIA ///</span>
+                <span>NADINE ESTÁ CONOSCO. FIQUE CONOSCO TAMBÉM ///</span>
+                <span>DESCONFIE DE QUEM NÃO ESTÁ ASSISTINDO ///</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tv-controls" role="group" aria-label="Trocar de canal">
+            <button type="button" class="tv-channel-btn active" data-channel="0" aria-label="Canal 1">01</button>
+            <button type="button" class="tv-channel-btn" data-channel="1" aria-label="Canal 2">02</button>
+            <button type="button" class="tv-channel-btn" data-channel="2" aria-label="Canal 3">03</button>
+            <button type="button" class="tv-channel-btn" data-channel="3" aria-label="Canal 4">04</button>
+          </div>
+          <p class="tv-hint">TROQUE DE CANAL. A MESMA NOTÍCIA NUNCA É A MESMA.</p>
+        </div>
+
+        <aside class="station-file">
+          <p class="file-label">FICHA DA EMISSORA</p>
+          <strong class="station-name">IRIS</strong>
+
+          <div class="file-rule"></div>
+
+          <dl class="station-data">
+            <div>
+              <dt>DONO</dt>
+              <dd>?</dd>
+            </div>
+            <div>
+              <dt>ALCANCE</dt>
+              <dd>O que restou da nação</dd>
+            </div>
+            <div>
+              <dt>LEMA</dt>
+              <dd>“Acreditar, salvar e celebrar.”</dd>
+            </div>
+            <div>
+              <dt>ATRAÇÃO PRINCIPAL</dt>
+              <dd>Nadine</dd>
+            </div>
+            <div>
+              <dt>REPÓRTER DE CONFIANÇA</dt>
+              <dd>Jorge Jr.</dd>
+            </div>
+            <div>
+              <dt>CONCORRENTES</dt>
+              <dd>Nenhum. Por escolha.</dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
+
+      <div class="schedule">
+        <div class="schedule-head">
+          <span>GRADE DE PROGRAMAÇÃO</span>
+          <span>SUJEITA A ALTERAÇÕES DE ACORDO COM A CONVENIÊNCIA</span>
+        </div>
+
+        <ul class="schedule-list">
+          <li>
+            <time>06:00</time>
+            <div>
+              <h3>BOM DIA, ESPERANÇA</h3>
+              <p>Telejornal da manhã. Só as notícias em que o povo precisa acreditar.</p>
+            </div>
+            <span class="schedule-tag">INFORMAÇÃO</span>
+          </li>
+          <li>
+            <time>12:00</time>
+            <div>
+              <h3>A HORA DA CULPA</h3>
+              <p>Debate ao vivo. Alguém sempre sai condenado antes do intervalo.</p>
+            </div>
+            <span class="schedule-tag">ENTRETENIMENTO</span>
+          </li>
+          <li>
+            <time>20:00</time>
+            <div>
+              <h3>NADINE, AO VIVO</h3>
+              <p>A escolhida diante das câmeras. As perguntas já vêm prontas.</p>
+            </div>
+            <span class="schedule-tag">HORÁRIO NOBRE</span>
+          </li>
+          <li>
+            <time>23:17</time>
+            <div>
+              <h3>ARQUIVO CONFIDENCIAL</h3>
+              <p>Documentos que “vazaram”. Vazaram porque alguém quis.</p>
+            </div>
+            <span class="schedule-tag">?</span>
+          </li>
+        </ul>
+      </div>
+      <!-- ====================================================================
+         MINIGAME SECRETO — O CONTROLE DE AMÉRICO (Easter Egg)
+         ==================================================================== -->
+      <div class="americo-game" id="americo-game" aria-labelledby="americo-title">
+        <div class="game-heading">
+          <span>ARQUIVO 088 — EDIÇÃO DE EMERGÊNCIA</span>
+          <span class="game-warning">A VERDADE É O QUE VOCÊ APROVA</span>
+        </div>
+
+        <div class="game-intro" id="americo-intro">
+          <p class="game-kicker">SALA DE CONTROLE DA ÍRIS</p>
+          <h2 class="game-title" id="americo-title">
+            APROVE OU<br>
+            <span>CENSURE.</span>
+          </h2>
+          <p class="game-text">
+            O sinal está instável. Manchetes perigosas estão subindo para o ar.
+            Você tem poucos segundos para decidir o que o povo pode ver.
+          </p>
+          <button class="btn" id="americo-start" type="button">ASSUMIR A TRANSMISSÃO ↗</button>
+        </div>
+
+        <div class="game-arena" id="americo-arena" hidden>
+          <span class="arena-label">TELEPROMPTER DE AMÉRICO</span>
+          <span class="arena-coordinate" id="americo-timer-label">TEMPO: 15s</span>
+
+          <div class="americo-prompt-box">
+            <p id="americo-headline-kicker" class="tv-kicker">MANCHETE #1</p>
+            <h3 id="americo-headline-text">O povo está questionando o governo nas ruas.</h3>
+          </div>
+
+          <div class="americo-choices">
+            <button class="btn" id="btn-censor" type="button">CENSURAR (BLOQUEAR) ✕</button>
+            <button class="btn" id="btn-broadcast" type="button">IR AO AR (APROVAR) ✓</button>
+          </div>
+
+          <p id="americo-message" aria-live="polite">ESCOLHA RÁPIDO...</p>
+        </div>
+
+        <div class="game-result" id="americo-result" hidden>
+          <span class="game-kicker">PLANTÃO ENCERRADO</span>
+          <h3 id="americo-result-title">O PÓLVORA ESTÁ SOB CONTROLE.</h3>
+          <p id="americo-result-desc"></p>
+          <button class="btn" id="americo-restart" type="button">EDITAR NOVAMENTE ↗</button>
+        </div>
+      </div>
+      <p class="broadcast-note">
+        QUEM CONTROLA A TELA, <span>CONTROLA O MEDO.</span>
+      </p>
+    </section>
+
+    <!-- ====================================================================
+         05 / ELENCO
+         ==================================================================== -->
     <section class="cast section-pad" id="ficha">
       <div class="cast-heading">
-        <div class="section-index">04 / QUEM DÁ VIDA À HISTÓRIA</div>
+        <div class="section-index">05 / QUEM DÁ VIDA À HISTÓRIA</div>
         <h2>POR TRÁS<br>DAS <span>MÁSCARAS.</span></h2>
         <p>Conheça o elenco e a equipe de Misantropia.</p>
       </div>
@@ -251,110 +540,100 @@
       <div class="cast-grid">
         <article class="cast-member">
           <div class="photo-slot">
-            <span>FOTO 01</span>
-            <span class="photo-cross">＋</span>
+            <img src="foto-nadine.jpg" alt="">
+            <span class="photo-cross" aria-hidden="true">＋</span>
           </div>
           <div class="cast-caption">
-            <h3>Nome do ator / atriz</h3>
-            <p>Nadine</p>
+            <h3>Nadine</h3>
           </div>
         </article>
 
         <article class="cast-member">
           <div class="photo-slot">
-            <span>FOTO 02</span>
-            <span class="photo-cross">＋</span>
+            <img src="mortededo.png" alt="">
+            <span class="photo-cross" aria-hidden="true">＋</span>
           </div>
           <div class="cast-caption">
-            <h3>Nome do ator / atriz</h3>
-            <p>Morte</p>
+            <h3>Morte</h3>
           </div>
         </article>
 
         <article class="cast-member">
           <div class="photo-slot">
-            <span>FOTO 03</span>
-            <span class="photo-cross">＋</span>
+            <img src="foto-americoriso.jpg" alt="">
+            <span class="photo-cross" aria-hidden="true">＋</span>
           </div>
           <div class="cast-caption">
-            <h3>Nome do ator / atriz</h3>
-            <p>Américo</p>
+            <h3>Américo</h3>
           </div>
         </article>
 
         <article class="cast-member">
           <div class="photo-slot">
-            <span>FOTO 04</span>
-            <span class="photo-cross">＋</span>
+            <img src="foto-maia.jpg" alt="">
+            <span class="photo-cross" aria-hidden="true">＋</span>
           </div>
           <div class="cast-caption">
-            <h3>Nome do ator / atriz</h3>
-            <p>Maia</p>
+            <h3>Maia</h3>
           </div>
         </article>
 
         <article class="cast-member">
           <div class="photo-slot">
-            <span>FOTO 05</span>
-            <span class="photo-cross">＋</span>
+            <img src="foto-vergueiro.jpg" alt="">
+            <span class="photo-cross" aria-hidden="true">＋</span>
           </div>
           <div class="cast-caption">
-            <h3>Nome do ator / atriz</h3>
-            <p>Vergueiro</p>
+            <h3>Vergueiro</h3>
           </div>
         </article>
 
         <article class="cast-member">
           <div class="photo-slot">
-            <span>FOTO 06</span>
-            <span class="photo-cross">＋</span>
+            <img src="foto-jorgejr.jpg" alt="">
+            <span class="photo-cross" aria-hidden="true">＋</span>
           </div>
           <div class="cast-caption">
-            <h3>Nome do ator / atriz</h3>
-            <p>Jorge Junior</p>
+            <h3>Jorge Jr.</h3>
           </div>
         </article>
       </div>
 
-      <p class="cast-instruction">
-        ESPAÇO RESERVADO PARA AS FOTOS DO ELENCO
-      </p>
+      <p class="cast-instruction">ESPAÇO RESERVADO PARA AS FOTOS DO ELENCO</p>
     </section>
 
-    <!-- SEÇÃO JOGO DA MORTE (OCULTA ATÉ O EASTER EGG DOS 3 CLIQUES) -->
-    <section id="morte-game" aria-labelledby="game-title">
+    <!-- ====================================================================
+         06 / JOGO DA MORTE (oculto até o easter egg dos 3 cliques no †)
+         ==================================================================== -->
+    <section class="death-game" id="morte-game" aria-labelledby="game-title">
       <div class="game-heading">
-        <span class="game-index">05 / ARQUIVO 004 — INTERFERÊNCIA</span>
+        <span>06 / ARQUIVO 004 — INTERFERÊNCIA</span>
         <span class="game-warning">NÃO DESVIE O OLHAR</span>
       </div>
 
       <div class="game-intro" id="game-intro">
         <p class="game-kicker">UM JOGO DE ATENÇÃO</p>
 
-        <h2 id="game-title">
+        <h2 class="game-title" id="game-title">
           A MORTE ESTÁ<br>
           <span>OBSERVANDO.</span>
         </h2>
 
-        <p>
+        <p class="game-text">
           Ela vai aparecer. Você terá poucos segundos para encontrá-la.
           Não confie no que seus olhos deixam de ver.
         </p>
 
-        <button id="game-start" type="button">
-          INICIAR VIGÍLIA ↗
-        </button>
+        <button class="btn" id="game-start" type="button">INICIAR VIGÍLIA ↗</button>
       </div>
 
       <div class="game-arena" id="game-arena" aria-label="Área do jogo">
         <span class="arena-label">OBSERVAÇÃO Nº 001</span>
-        <span class="arena-coordinate">LOCAL DESCONHECIDO</span>
+        <span class="arena-coordinate">O QUARTO DE NADINE</span>
 
         <button id="death-target" type="button" aria-label="Encontrar a Morte" hidden>†</button>
 
-        <p id="game-message" aria-live="polite">
-          AGUARDANDO O INÍCIO...
-        </p>
+        <p id="game-message" aria-live="polite">AGUARDANDO O INÍCIO...</p>
       </div>
 
       <div class="game-scoreboard">
@@ -377,14 +656,9 @@
 
       <div class="game-result" id="game-result" hidden>
         <span class="game-kicker">FIM DA VIGÍLIA</span>
-
         <h3 id="result-title">ELA VIU VOCÊ.</h3>
-
         <p id="result-description"></p>
-
-        <button id="game-restart" type="button">
-          TENTAR NOVAMENTE ↗
-        </button>
+        <button class="btn" id="game-restart" type="button">TENTAR NOVAMENTE ↗</button>
       </div>
 
       <p class="game-footnote">
@@ -393,23 +667,28 @@
       </p>
     </section>
 
-    <!-- CAIXA DE SENHA DO JULGAMENTO (ARQUIVO 017) -->
-    <div id="julgamento-lock" class="judgment-lock-container">
+    <!-- ====================================================================
+         ARQUIVO 017 — CAIXA DE SENHA
+         ==================================================================== -->
+    <div class="judgment-lock" id="julgamento-lock">
       <div class="judgment-lock-card">
         <span class="file-label">ARQUIVO 017 / ACESSO RESTRITO</span>
         <h3>INSIRA A CHAVE DE SEGURANÇA</h3>
         <p>Este documento requer autorização especial para ser desbloqueado.</p>
 
         <form id="julgamento-form" autocomplete="off">
-          <input type="password" id="julgamento-input" placeholder="DIGITE A SENHA..." required />
-          <button type="submit">DESBLOQUEAR ↗</button>
+          <input type="password" id="julgamento-input" placeholder="DIGITE A SENHA..." aria-label="Chave de segurança"
+            required />
+          <button class="btn" type="submit">DESBLOQUEAR ↗</button>
         </form>
-        <p id="julgamento-erro" class="lock-error" hidden>CHAVE INCORRETA. ACESSO NEGADO.</p>
+        <p id="julgamento-erro" class="lock-error" role="alert" hidden>CHAVE INCORRETA. ACESSO NEGADO.</p>
       </div>
     </div>
 
-    <!-- EXPERIÊNCIA INTERATIVA: O JULGAMENTO -->
-    <section class="judgment section-pad" id="julgamento">
+    <!-- ====================================================================
+         ARQUIVO 017 — O JULGAMENTO (experiência interativa)
+         ==================================================================== -->
+    <section class="judgment section-pad" id="julgamento" aria-labelledby="judgment-title">
       <div class="judgment-top">
         <span class="section-index">ARQUIVO 017 / EXPERIÊNCIA INTERATIVA</span>
         <span class="judgment-status">
@@ -419,7 +698,7 @@
 
       <div class="judgment-heading">
         <p class="eyebrow">NÃO CONFIE NA PRIMEIRA VERSÃO.</p>
-        <h2>O JULGAMENTO<br><span>DE UM MISANTROPO.</span></h2>
+        <h2 id="judgment-title">O JULGAMENTO<br><span>DE UM MISANTROPO.</span></h2>
         <p>
           Três depoimentos. Uma verdade incompleta.
           E uma decisão que não poderá ser desfeita.
@@ -443,9 +722,7 @@
             <span>PISTAS</span>
             <strong id="story-clues">00 / 04</strong>
           </div>
-          <div class="file-progress">
-            <span id="story-progress"></span>
-          </div>
+          <div class="file-progress"><span id="story-progress"></span></div>
 
           <div class="file-stat">
             <span>CAPÍTULO</span>
@@ -468,16 +745,14 @@
             <h3>A carta chegou sem remetente.</h3>
             <p>
               Dentro do envelope, uma única frase:
-              "Amanhã, alguém será condenado por uma verdade que ninguém
-              teve coragem de contar."
+              “Amanhã, alguém será condenado por uma verdade que ninguém
+              teve coragem de contar.”
             </p>
             <p>
               Você pode abrir o arquivo. Mas, a partir daí,
               cada escolha fará parte do julgamento.
             </p>
-            <button class="story-action" id="story-begin" type="button">
-              ABRIR O ARQUIVO <span>↗</span>
-            </button>
+            <button class="btn" id="story-begin" type="button">ABRIR O ARQUIVO <span>↗</span></button>
           </div>
 
           <div class="judgment-console-bottom">
@@ -487,25 +762,24 @@
         </div>
       </div>
 
-      <p class="judgment-footnote">
-        O QUE VOCÊ ESCOLHE ACREDITAR TAMBÉM É UMA EVIDÊNCIA.
-      </p>
+      <p class="judgment-footnote">O QUE VOCÊ ESCOLHE ACREDITAR TAMBÉM É UMA EVIDÊNCIA.</p>
 
-      <dialog class="story-dialog" id="story-evidence-dialog">
+      <dialog class="story-dialog" id="story-evidence-dialog" aria-labelledby="evidence-title">
         <div class="story-dialog-top">
           <span>ARQUIVO DE EVIDÊNCIAS</span>
           <button id="story-close-inventory" type="button" aria-label="Fechar evidências">×</button>
         </div>
-        <h3>O que você descobriu.</h3>
+        <h3 id="evidence-title">O que você descobriu.</h3>
         <ul id="story-evidence-list"></ul>
         <p id="story-inventory-empty">Nenhuma evidência registrada.</p>
       </dialog>
     </section>
-    <!-- FIM DA EXPERIÊNCIA -->
 
-    <!-- ENCERRAMENTO -->
+    <!-- ====================================================================
+         ENCERRAMENTO
+         ==================================================================== -->
     <section class="finale">
-      <div class="finale-small">
+      <div class="finale-small" data-clue="witness">
         ÚLTIMA PERGUNTA / SEM RESPOSTA FÁCIL
       </div>
 
@@ -527,28 +801,27 @@
     </section>
   </main>
 
-  <!-- RODAPÉ -->
+  <!-- ======================================================================
+       RODAPÉ
+       ====================================================================== -->
   <footer>
-    <a href="#inicio" class="footer-logo">
-      MISANTROPIA<span>®</span>
-    </a>
+    <a href="#inicio" class="footer-logo">MISANTROPIA<span>®</span></a>
 
     <p>
       Uma peça da Semana Esportiva e Cultural<br>
       IFCE — Campus Fortaleza · 2026
     </p>
 
-    <button id="secretButton" aria-label="Abrir mensagem escondida">
-      ?
-    </button>
+    <button id="secretButton" type="button" aria-label="Abrir mensagem escondida">?</button>
   </footer>
 
-  <!-- EASTER EGG EXISTENTE -->
-  <div class="secret-overlay" id="secretOverlay" aria-hidden="true">
+  <!-- ======================================================================
+       OVERLAYS
+       ====================================================================== -->
+  <div class="secret-overlay" id="secretOverlay" role="dialog" aria-modal="true" aria-hidden="true"
+    aria-label="Arquivo não catalogado">
     <div class="secret-paper">
-      <button class="secret-close" id="closeSecret" aria-label="Fechar">
-        ×
-      </button>
+      <button class="secret-close" id="closeSecret" type="button" aria-label="Fechar">×</button>
 
       <span class="eyebrow">ARQUIVO NÃO CATALOGADO</span>
 
@@ -563,9 +836,7 @@
         Nem todo mundo conta a mesma história.
       </p>
 
-      <span class="secret-code">
-        REGISTRO Nº 000 — FIM DO ARQUIVO
-      </span>
+      <span class="secret-code">REGISTRO Nº 000 — FIM DO ARQUIVO</span>
     </div>
   </div>
 
