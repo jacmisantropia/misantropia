@@ -1,21 +1,5 @@
 /* ==========================================================================
    MISANTROPIA — JAC 2026
-   Índice
-   01. Variáveis e base
-   02. Componentes compartilhados (botão, toast, rótulos)
-   03. Navegação
-   04. Hero
-   05. Contexto
-   06. Manifesto
-   07. Personagens
-   08. Transmissão (emissora)
-   09. Elenco
-   10. Jogo da Morte
-   11. O Julgamento (Arquivo 017)
-   12. Encerramento e rodapé
-   13. Overlay secreto
-   14. Responsivo
-   15. Movimento reduzido
    ========================================================================== */
 
 /* ==========================================================================
@@ -29,7 +13,6 @@
   --muted: #70675d;
   --line: rgba(23, 21, 18, 0.25);
 
-  /* Tons usados nas seções escuras */
   --ink-line: #514b43;
   --paper-dim: #c6bcad;
   --paper-mute: #a69c8e;
@@ -90,7 +73,6 @@ body {
   padding: 100px 9vw;
 }
 
-/* Pistas escondidas (data-clue) */
 [data-clue] {
   cursor: help;
 }
@@ -118,7 +100,6 @@ body {
   border-radius: 50%;
 }
 
-/* Faixas de rótulo em mono (topo/rodapé de seções) */
 .hero-meta,
 .hero-bottom,
 .manifesto-top,
@@ -131,7 +112,6 @@ body {
   letter-spacing: 0.08em;
 }
 
-/* Botão principal */
 .btn {
   --btn-hover: var(--red);
   display: inline-block;
@@ -155,7 +135,6 @@ body {
   margin-left: 12px;
 }
 
-/* Título de seção padrão (claro) */
 .intro h2,
 .section-heading h2,
 .cast-heading h2 {
@@ -170,7 +149,6 @@ body {
   color: var(--red);
 }
 
-/* Toast único do site */
 .toast {
   position: fixed;
   left: 50%;
@@ -680,7 +658,6 @@ body {
   align-items: stretch;
 }
 
-/* --- Televisão --- */
 .tv-set {
   min-width: 0;
 }
@@ -800,7 +777,6 @@ body {
   letter-spacing: 0.07em;
 }
 
-/* --- Ficha da emissora --- */
 .station-file {
   display: flex;
   flex-direction: column;
@@ -850,7 +826,6 @@ body {
   font: 700 12px / 1.5 var(--mono);
 }
 
-/* --- Grade de programação --- */
 .schedule {
   margin-top: 60px;
 }
@@ -919,6 +894,64 @@ body {
 
 .broadcast-note span {
   color: var(--red);
+}
+
+/* ==========================================================================
+   MINIGAME DO AMÉRICO (CORREÇÕES DE LAYOUT)
+   ========================================================================== */
+.americo-game {
+  display: none;
+  margin-top: 50px;
+  padding: 40px;
+  border: 1px solid var(--ink-line);
+  background: #11100e;
+  color: var(--paper);
+}
+
+.americo-game.is-active {
+  display: block;
+}
+
+.americo-game .game-arena {
+  position: relative;
+  height: auto;
+  min-height: 280px;
+  padding: 40px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
+
+/* Quando estiver oculto com a propriedade hidden, garante que ele suma */
+.americo-game .game-arena[hidden] {
+  display: none !important;
+}
+
+.americo-prompt-box {
+  margin: 20px 0;
+  padding: 24px 16px;
+  border: 1px dashed var(--ink-line);
+  background: rgba(255, 255, 255, 0.02);
+  text-align: center;
+}
+
+.americo-prompt-box h3 {
+  margin: 10px 0 0;
+  font: 800 clamp(20px, 4vw, 32px) / 1.1 var(--display);
+  text-transform: uppercase;
+}
+
+.americo-choices {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 16px !important;
+  margin: 15px 0 !important;
+  width: 100% !important;
+}
+
+.americo-choices .btn {
+  flex: 1 1 auto;
+  text-align: center;
 }
 
 /* ==========================================================================
@@ -1771,7 +1804,300 @@ footer button {
 }
 
 /* ==========================================================================
-   14. RESPONSIVO
+   14. TEMPLO DE NADINE
+   ========================================================================== */
+.nadine-temple {
+  border-top: 1px solid var(--line);
+  background: var(--paper2);
+}
+
+.temple-heading {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 10vw;
+  align-items: end;
+  margin-bottom: 45px;
+}
+
+.temple-heading h2 {
+  margin: 24px 0 0;
+  font: 800 clamp(48px, 6vw, 88px) / 0.85 var(--display);
+  letter-spacing: -0.025em;
+}
+
+.temple-heading h2 span {
+  color: var(--red);
+}
+
+.temple-heading > p:last-child {
+  max-width: 390px;
+  margin-bottom: 8px;
+  color: var(--text-soft);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.temple-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: stretch;
+}
+
+.temple-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px;
+  border: 1px solid rgba(23, 21, 18, 0.2);
+  background: var(--paper);
+}
+
+.temple-card h3 {
+  margin: 15px 0 15px;
+  font: 800 32px / 0.95 var(--display);
+  text-transform: uppercase;
+}
+
+.temple-card p {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.shrine-box {
+  align-items: center;
+  text-align: center;
+  border-color: var(--red);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.shrine-box .file-label {
+  color: var(--paper-mute);
+}
+
+.shrine-symbol {
+  display: grid;
+  place-items: center;
+  width: 75px;
+  height: 75px;
+  margin: 20px auto;
+  border: 1px solid var(--red);
+  color: var(--red);
+  overflow: hidden;
+}
+
+.shrine-symbol img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.shrine-quote {
+  max-width: 400px;
+  margin: 10px 0 25px !important;
+  color: var(--paper-dim) !important;
+  font: italic 13px/1.6 var(--mono);
+}
+
+.shrine-feedback {
+  margin-top: 15px !important;
+  color: var(--red) !important;
+  font: 10px var(--mono);
+  letter-spacing: 0.08em;
+}
+
+/* ==========================================================================
+   MINIGAME DA NADINE
+   ========================================================================== */
+.nadine-game-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(13, 12, 10, 0.95);
+}
+
+.nadine-game-overlay[hidden] {
+  display: none;
+}
+
+.nadine-game-box {
+  position: relative;
+  width: min(550px, 100%);
+  padding: 30px;
+  border-top: 7px solid var(--red);
+  background: var(--paper);
+  color: var(--ink);
+  text-align: center;
+}
+
+.nadine-game-intro {
+  padding: 20px 0;
+}
+
+.nadine-game-intro h3 {
+  font: 800 32px var(--display);
+  margin-bottom: 15px;
+}
+
+.nadine-game-arena {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  margin-top: 15px;
+  background: var(--ink);
+  overflow: hidden;
+  border: 1px solid var(--ink-line);
+}
+
+.nadine-mental-bar-wrap {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  z-index: 10;
+  color: var(--paper);
+  font: 9px var(--mono);
+  text-align: left;
+}
+
+.nadine-mental-bar {
+  width: 100%;
+  height: 8px;
+  margin-top: 4px;
+  background: #332f2a;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+#nadine-mental-fill {
+  height: 100%;
+  background: var(--red);
+  transition: width 0.1s linear;
+}
+
+.nadine-player-avatar {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  width: 45px;
+  height: 45px;
+  background: var(--red);
+  color: var(--paper);
+  font: 700 20px var(--display);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  box-shadow: 0 0 15px rgba(200, 23, 23, 0.6);
+}
+
+.nadine-falling-word {
+  position: absolute;
+  top: -30px;
+  font: 700 11px var(--mono);
+  padding: 4px 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.nadine-falling-word.bad {
+  background: rgba(200, 23, 23, 0.2);
+  color: #ff8b8b;
+  border: 1px solid var(--red);
+}
+
+.nadine-falling-word.good {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffe68b;
+  border: 1px solid #ffd700;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+}
+
+.nadine-touch-controls {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15px;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.nadine-touch-controls button {
+  width: 50px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--paper);
+  color: var(--paper);
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.nadine-touch-controls button:active {
+  background: var(--red);
+}
+
+.nadine-game-result {
+  padding: 20px 0;
+}
+
+.nadine-game-result h3 {
+  font: 800 28px var(--display);
+  margin-bottom: 10px;
+}
+
+/* ==========================================================================
+   CANAL 05 — CONTAGEM REGRESSIVA
+   ========================================================================== */
+.tv-countdown {
+  margin-top: 15px;
+}
+
+.tv-countdown-timer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+  font-family: var(--mono);
+}
+
+.tv-countdown-timer div {
+  text-align: center;
+}
+
+.tv-countdown-timer strong {
+  display: block;
+  color: var(--red);
+  font-size: clamp(24px, 4vw, 36px);
+  line-height: 1;
+}
+
+.tv-countdown-timer span:not(:last-child) {
+  font-size: 9px;
+  color: var(--paper-mute);
+}
+
+.tv-countdown-timer > span {
+  font-size: 20px;
+  color: var(--red);
+  font-weight: bold;
+}
+
+/* ==========================================================================
+   15. RESPONSIVO
    ========================================================================== */
 @media (max-width: 900px) {
   .broadcast-layout {
@@ -2084,6 +2410,45 @@ footer button {
   .secret-paper {
     padding: 35px 25px;
   }
+
+  .temple-heading {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .temple-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* CORREÇÃO FORÇADA E DEFINITIVA DOS BOTÕES NO CELULAR */
+  .americo-game {
+    padding: 20px 12px !important;
+  }
+
+  .americo-choices {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 15px 0 0 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .americo-choices button,
+  .americo-choices .btn {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: unset !important;
+    margin: 0 !important;
+    padding: 14px 10px !important;
+    text-align: center !important;
+    white-space: normal !important;
+    box-sizing: border-box !important;
+  }
 }
 
 @media (max-width: 600px) {
@@ -2120,7 +2485,7 @@ footer button {
 }
 
 /* ==========================================================================
-   15. MOVIMENTO REDUZIDO
+   16. MOVIMENTO REDUZIDO
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -2134,350 +2499,112 @@ footer button {
     transition: none !important;
   }
 }
-/* Minigame do Américo */
-.americo-game {
-  display: none;
-  margin-top: 50px;
-  padding: 40px;
-  border: 1px solid var(--ink-line);
-  background: #11100e;
-  color: var(--paper);
-}
-
-.americo-game.is-active {
-  display: block;
-}
-
-.americo-prompt-box {
-  margin: 40px 0;
-  padding: 30px;
-  border: 1px dashed var(--ink-line);
-  background: rgba(255, 255, 255, 0.02);
-  text-align: center;
-}
-
-.americo-prompt-box h3 {
-  margin: 10px 0 0;
-  font: 800 clamp(24px, 4vw, 36px) / 1.1 var(--display);
-  text-transform: uppercase;
-}
-
-.americo-choices {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 20px;
-}
-
 /* ==========================================================================
-   O TEMPLO DE NADINE (SALVAÇÃO?)
+   17. SEÇÃO DE PÔSTERES
    ========================================================================== */
-.nadine-temple {
+.posters {
   border-top: 1px solid var(--line);
-  background: var(--paper2);
-}
-
-.temple-heading {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 10vw;
-  align-items: end;
-  margin-bottom: 45px;
-}
-
-.temple-heading h2 {
-  margin: 24px 0 0;
-  font: 800 clamp(48px, 6vw, 88px) / 0.85 var(--display);
-  letter-spacing: -0.025em;
-}
-
-.temple-heading h2 span {
-  color: var(--red);
-}
-
-.temple-heading > p:last-child {
-  max-width: 390px;
-  margin-bottom: 8px;
-  color: var(--text-soft);
-  font-size: 13px;
-  line-height: 1.8;
-}
-
-.temple-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-  align-items: stretch;
-}
-
-.temple-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 40px;
-  border: 1px solid rgba(23, 21, 18, 0.2);
   background: var(--paper);
 }
 
-.temple-card h3 {
-  margin: 15px 0 15px;
-  font: 800 32px / 0.95 var(--display);
-  text-transform: uppercase;
-}
-
-.temple-card p {
-  margin: 0;
-  color: var(--text-soft);
-  font-size: 13px;
-  line-height: 1.8;
-}
-
-.shrine-box {
-  align-items: center;
-  text-align: center;
-  border-color: var(--red);
-  background: var(--ink);
-  color: var(--paper);
-}
-
-.shrine-box .file-label {
-  color: var(--paper-mute);
-}
-
-.shrine-symbol {
+.posters-grid {
   display: grid;
-  place-items: center;
-  width: 75px;
-  height: 75px;
-  margin: 20px auto;
-  border: 1px solid var(--red);
-  color: var(--red);
-  overflow: hidden;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 40px;
 }
 
-.shrine-symbol img {
+.poster-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  background: var(--paper2);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.poster-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--red);
+}
+
+.poster-image-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: #171512;
+}
+
+.poster-image-wrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
+  transition: transform 0.4s ease, filter 0.4s ease;
 }
 
-.shrine-quote {
-  max-width: 400px;
-  margin: 10px 0 25px !important;
-  color: var(--paper-dim) !important;
-  font: italic 13px/1.6 var(--mono);
+.poster-card:hover .poster-image-wrap img {
+  transform: scale(1.05);
 }
 
-.shrine-feedback {
-  margin-top: 15px !important;
-  color: var(--red) !important;
-  font: 10px var(--mono);
-  letter-spacing: 0.08em;
-}
-
-/* ==========================================================================
-   MINIGAME DA NADINE (O PESO DA FÉ)
-   ========================================================================== */
-.nadine-game-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.poster-info {
   padding: 20px;
-  background: rgba(13, 12, 10, 0.95);
-}
-
-.nadine-game-overlay[hidden] {
-  display: none;
-}
-
-.nadine-game-box {
-  position: relative;
-  width: min(550px, 100%);
-  padding: 30px;
-  border-top: 7px solid var(--red);
-  background: var(--paper);
-  color: var(--ink);
-  text-align: center;
-}
-
-.nadine-game-intro {
-  padding: 20px 0;
-}
-
-.nadine-game-intro h3 {
-  font: 800 32px var(--display);
-  margin-bottom: 15px;
-}
-
-.nadine-game-arena {
-  position: relative;
-  width: 100%;
-  height: 380px;
-  margin-top: 15px;
-  background: var(--ink);
-  overflow: hidden;
-  border: 1px solid var(--ink-line);
-}
-
-.nadine-mental-bar-wrap {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  right: 10px;
-  z-index: 10;
-  color: var(--paper);
-  font: 9px var(--mono);
-  text-align: left;
-}
-
-.nadine-mental-bar {
-  width: 100%;
-  height: 8px;
-  margin-top: 4px;
-  background: #332f2a;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-#nadine-mental-fill {
-  height: 100%;
-  background: var(--red);
-  transition: width 0.1s linear;
-}
-
-.nadine-player-avatar {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  width: 45px;
-  height: 45px;
-  background: var(--red);
-  color: var(--paper);
-  font: 700 20px var(--display);
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  transform: translateX(-50%);
-  z-index: 5;
-  box-shadow: 0 0 15px rgba(200, 23, 23, 0.6);
-}
-
-.nadine-falling-word {
-  position: absolute;
-  top: -30px;
-  font: 700 11px var(--mono);
-  padding: 4px 8px;
-  white-space: nowrap;
-  pointer-events: none;
-  z-index: 4;
-}
-
-.nadine-falling-word.bad {
-  background: rgba(200, 23, 23, 0.2);
-  color: #ff8b8b;
-  border: 1px solid var(--red);
-}
-
-.nadine-falling-word.good {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffe68b;
-  border: 1px solid #ffd700;
-  box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
-}
-
-.nadine-touch-controls {
-  position: absolute;
-  bottom: 10px;
-  left: 0;
-  right: 0;
   display: flex;
-  justify-content: space-between;
-  padding: 0 15px;
-  z-index: 10;
-  pointer-events: auto;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.nadine-touch-controls button {
-  width: 50px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid var(--paper);
-  color: var(--paper);
-  font-size: 18px;
-  cursor: pointer;
-  border-radius: 4px;
+.poster-tag {
+  color: var(--red);
+  font: 9px var(--mono);
+  letter-spacing: 0.1em;
 }
 
-.nadine-touch-controls button:active {
-  background: var(--red);
+.poster-info h3 {
+  margin: 4px 0 0;
+  font: 800 24px / 0.95 var(--display);
+  text-transform: uppercase;
 }
 
-.nadine-game-result {
-  padding: 20px 0;
+.poster-info p {
+  margin: 0;
+  color: var(--text-soft);
+  font: 11px / 1.6 var(--mono);
 }
 
-.nadine-game-result h3 {
-  font: 800 28px var(--display);
-  margin-bottom: 10px;
-}
-
-@media (max-width: 760px) {
-  .temple-heading {
-    grid-template-columns: 1fr;
-    gap: 15px;
+@media (max-width: 900px) {
+  .posters-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
   }
-  .temple-grid {
+}
+
+@media (max-width: 600px) {
+  .posters-grid {
     grid-template-columns: 1fr;
+    gap: 24px;
   }
 }
 /* ==========================================================================
-   CANAL 05 — CONTAGEM REGRESSIVA NA TV
+   REAÇÃO DO AMÉRICO NO MINIGAME
    ========================================================================== */
-.tv-countdown {
-  margin-top: 15px;
-}
-
-.tv-countdown-timer {
+.americo-reaction {
+  margin: 20px auto;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 12px;
-  margin-top: 8px;
-  font-family: var(--mono);
 }
 
-.tv-countdown-timer div {
-  text-align: center;
+.americo-reaction img {
+  width: 140px;
+  height: auto;
+  border: 1px solid var(--red);
+  box-shadow: 0 0 20px rgba(200, 23, 23, 0.4);
+  image-rendering: pixelated; /* Mantém os pixels nítidos */
 }
-
-.tv-countdown-timer strong {
-  display: block;
-  color: var(--red);
-  font-size: clamp(24px, 4vw, 36px);
-  line-height: 1;
-}
-
-.tv-countdown-timer span:not(:last-child) {
-  font-size: 9px;
-  color: var(--paper-mute);
-}
-
-.tv-countdown-timer > span {
-  font-size: 20px;
-  color: var(--red);
-  font-weight: bold;
-}
-/*===============================
-================================*/
-/*CODIGO PARA ESCONDER ABAS*/
+/* OCULTAR ABAS SEGUNDO ESPECIFICAÇÕES DO PROJETO */
 .cast {
   display: none !important;
 }
 .nadine-temple {
   display: none !important;
 }
-/*===============================
-================================*/

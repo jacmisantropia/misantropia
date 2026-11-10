@@ -43,6 +43,7 @@
       <a href="#nadine" id="nav-nadine" hidden>Salvação? </a>
       <a href="#ficha" hidden>Ficha artística</a>
       <a href="#julgamento" id="nav-julgamento">Julgamento</a>
+      <a href="#posteres">Pôsteres</a>
     </nav>
 
     <a class="ticket-link" href="#sobre">A peça <span aria-hidden="true">↘</span></a>
@@ -53,9 +54,6 @@
   </header>
 
   <main>
-    <!-- ====================================================================
-         ABERTURA
-         ==================================================================== -->
     <!-- ====================================================================
          ABERTURA
          ==================================================================== -->
@@ -141,6 +139,7 @@
         <div class="quote-mark quote-mark--close" aria-hidden="true">”</div>
       </div>
     </section>
+
     <!-- ====================================================================
          01.5 / O TEMPLO DE NADINE (SALVAÇÃO?)
          ==================================================================== -->
@@ -172,7 +171,8 @@
         <div class="temple-card shrine-box">
           <span class="file-label">ALTAR DE NADINE</span>
           <div class="shrine-symbol">
-            <img src="foto-nadine.jpg" alt="Nadine" id="nadine-game-trigger" style="cursor: pointer;" title="Clique 4 vezes..." />
+            <img src="foto-nadine.jpg" alt="Nadine" id="nadine-game-trigger" style="cursor: pointer;"
+              title="Clique 4 vezes..." />
           </div>
           <p class="shrine-quote">"Eles não amam a mim. Amam o alívio que sentem quando olham para o meu rosto."</p>
           <button class="btn" id="nadine-blessing-btn" type="button">OUVIR A PROMESSA ↗</button>
@@ -218,6 +218,7 @@
         </div>
       </div>
     </section>
+
     <!-- ====================================================================
          02 / MANIFESTO
          ==================================================================== -->
@@ -481,9 +482,8 @@
           </li>
         </ul>
       </div>
-      <!-- ====================================================================
-         MINIGAME SECRETO — O CONTROLE DE AMÉRICO (Easter Egg)
-         ==================================================================== -->
+
+      <!-- MINIGAME SECRETO DA EMISSORA -->
       <div class="americo-game" id="americo-game" aria-labelledby="americo-title">
         <div class="game-heading">
           <span>ARQUIVO 088 — EDIÇÃO DE EMERGÊNCIA</span>
@@ -522,16 +522,93 @@
 
         <div class="game-result" id="americo-result" hidden>
           <span class="game-kicker">PLANTÃO ENCERRADO</span>
+          
+          <!-- Container de vídeo/GIF do Américo -->
+          <div class="americo-reaction" id="americo-reaction" hidden>
+            <video id="americo-gif" src="gif-americo.mp4" autoplay loop muted playsinline></video>
+          </div>
+
           <h3 id="americo-result-title">O PÓLVORA ESTÁ SOB CONTROLE.</h3>
           <p id="americo-result-desc"></p>
           <button class="btn" id="americo-restart" type="button">EDITAR NOVAMENTE ↗</button>
         </div>
       </div>
+
       <p class="broadcast-note">
         QUEM CONTROLA A TELA, <span>CONTROLA O MEDO.</span>
       </p>
     </section>
 
+    <!-- ====================================================================
+         07 / PÔSTERES E MATERIAIS
+         ==================================================================== -->
+    <section class="posters section-pad" id="posteres" aria-labelledby="posters-title">
+      <div class="section-heading">
+        <div>
+          <div class="section-index">07 / MATERIAL VISUAL</div>
+          <h2 id="posters-title">CARTAZES DE<br><span>DIVULGAÇÃO.</span></h2>
+        </div>
+
+        <p>
+          Registros visuais e materiais promocionais de Misantropia.
+        </p>
+      </div>
+
+      <div class="posters-grid">
+        <article class="poster-card">
+          <div class="poster-image-wrap">
+            <img src="Povo-Poster.png" alt="Pôster de Personagem — Nadine" loading="lazy" />
+          </div>
+          <div class="poster-info">
+            <span class="poster-tag">PERSONAGEM</span>
+            <h3>NADINE — A ESCOLHIDA</h3>
+            <p>O peso de carregar a fé de uma nação inteira.</p>
+          </div>
+        </article>
+
+        <article class="poster-card">
+          <div class="poster-image-wrap">
+            <img src="misantropiaposter.png" alt="Pôster Oficial — Misantropia" loading="lazy" />
+          </div>
+          <div class="poster-info">
+            <span class="poster-tag">PÔSTER OFICIAL</span>
+            <h3>QUEM MERECE SE SALVAR?</h3>
+            <p>Cartaz principal da Semana Esportiva e Cultural 2026.</p>
+          </div>
+        </article>
+
+        <article class="poster-card">
+          <div class="poster-image-wrap">
+            <img src="americo-poster.png" alt="Pôster de Personagem — Américo" loading="lazy" />
+          </div>
+          <div class="poster-info">
+            <span class="poster-tag">PERSONAGEM</span>
+            <h3>AMÉRICO — E A EMISSORA</h3>
+            <p>A verdade é o que vai ao ar.</p>
+          </div>
+        </article>
+        <article class="poster-card">
+          <div class="poster-image-wrap">
+            <img src="PosterInstaMensageiro.png" alt="Pôster de Personagem — Mensageiro" loading="lazy" />
+          </div>
+          <div class="poster-info">
+            <span class="poster-tag">PERSONAGEM</span>
+            <h3>O MENSAGEIRO</h3>
+            <p>Um louco, ou talvez não?</p>
+          </div>
+        </article>
+        <article class="poster-card">
+          <div class="poster-image-wrap">
+            <img src="cegasurdamudaposter.png" alt="Censura" loading="lazy" />
+          </div>
+          <div class="poster-info">
+            <span class="poster-tag">PERSONAGENS</span>
+            <h3>A CENSURA</h3>
+            <p>Fruto do controle de uma emissora famosa?</p>
+          </div>
+        </article>
+      </div>
+    </section>
     <!-- ====================================================================
          05 / ELENCO
          ==================================================================== -->
@@ -608,7 +685,7 @@
     </section>
 
     <!-- ====================================================================
-         06 / JOGO DA MORTE (oculto até o easter egg dos 3 cliques no †)
+         06 / JOGO DA MORTE
          ==================================================================== -->
     <section class="death-game" id="morte-game" aria-labelledby="game-title">
       <div class="game-heading">
@@ -691,7 +768,7 @@
     </div>
 
     <!-- ====================================================================
-         ARQUIVO 017 — O JULGAMENTO (experiência interativa)
+         ARQUIVO 017 — O JULGAMENTO
          ==================================================================== -->
     <section class="judgment section-pad" id="julgamento" aria-labelledby="judgment-title">
       <div class="judgment-top">

@@ -167,7 +167,6 @@
 
     if (!body || !channelLabel || !kicker || !headline || !text || !buttons.length) return;
 
-    // Defina aqui a data exata da peça: Ano, Mês-1 (ex: Junho = 5), Dia, Hora, Minuto
     const targetDate = new Date(2026, 11, 3, 7, 30, 0).getTime();
     const dateFormatted = '03 DE DEZEMBRO DE 2026 ÀS 07:30H · AUDITORIO NILO PEÇANHA';
 
@@ -1216,7 +1215,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     09. MINIGAME DO AMÉRICO
+     09. MINIGAME DO AMÉRICO (REVISADO E CORRIGIDO)
      ------------------------------------------------------------------------ */
   function initAmericoGame() {
     const root = $('#americo-game');
@@ -1258,8 +1257,8 @@
         return;
       }
       const item = headlines[currentIdx];
-      headlineKicker.textContent = `${item.kicker} (${currentIdx + 1}/${headlines.length})`;
-      headlineText.textContent = item.text;
+      if (headlineKicker) headlineKicker.textContent = `${item.kicker} (${currentIdx + 1}/${headlines.length})`;
+      if (headlineText) headlineText.textContent = item.text;
     }
 
     function handleChoice(userChoiceSafe) {
@@ -1268,10 +1267,10 @@
 
       if (userChoiceSafe === item.safe) {
         score += 10;
-        msg.textContent = 'EXCELENTE. A OPINIÃO PÚBLICA ESTÁ A SALVO.';
+        if (msg) msg.textContent = 'EXCELENTE. A OPINIÃO PÚBLICA ESTÁ A SALVO.';
       } else {
         score -= 5;
-        msg.textContent = 'ERRO GRAVE. O POVO ESTÁ COMENTANDO DEMAIS!';
+        if (msg) msg.textContent = 'ERRO GRAVE. O POVO ESTÁ COMENTANDO DEMAIS!';
       }
 
       currentIdx++;
@@ -1281,12 +1280,42 @@
     function endGame(completed) {
       playing = false;
       clearInterval(timer);
-      arena.hidden = true;
-      result.hidden = false;
+      
+      if (arena) {
+        arena.hidden = true;
+        arena.style.display = 'none';
+      }
+      if (result) {
+        result.hidden = false;
+        result.style.display = 'block';
+      }
 
-      resultTitle.textContent = score >= 30 ? 'AMÉRICO ESTÁ ORGULHOSO.' : 'O CONTROLE FOI PERDIDO.';
-      resultDesc.textContent = `Você pontuou ${score} pontos gerenciando a emissora. ` +
-        (score >= 30 ? 'Você sabe como manipular o que o povo vê.' : 'A verdade escapou pelas suas mãos.');
+      const reactionBox = $('#americo-reaction', root);
+      const videoEl = $('#americo-gif', root);
+
+      if (score >= 30) {
+        if (resultTitle) resultTitle.textContent = 'AMÉRICO ESTÁ ORGULHOSO.';
+        
+        // Exibe e reproduz o vídeo/GIF do Américo
+        if (reactionBox && videoEl) {
+          videoEl.src = 'gif-americo.mp4';
+          reactionBox.hidden = false;
+          videoEl.play().catch(() => {});
+        }
+      } else {
+        if (resultTitle) resultTitle.textContent = 'O CONTROLE FOI PERDIDO.';
+        
+        // Oculta a reação se não atingir a pontuação
+        if (reactionBox) {
+          reactionBox.hidden = true;
+          if (videoEl) videoEl.pause();
+        }
+      }
+
+      if (resultDesc) {
+        resultDesc.textContent = `Você pontuou ${score} pontos gerenciando a emissora. ` +
+          (score >= 30 ? 'Você sabe como manipular o que o povo vê.' : 'A verdade escapou pelas suas mãos.');
+      }
     }
 
     function startGame() {
@@ -1294,26 +1323,49 @@
       score = 0;
       timeLeft = 15;
       playing = true;
-      intro.hidden = true;
-      result.hidden = true;
-      arena.hidden = false;
+
+      const reactionBox = $('#americo-reaction', root);
+      const videoEl = $('#americo-gif', root);
+      if (reactionBox) reactionBox.hidden = true;
+      if (videoEl) {
+        videoEl.pause();
+        videoEl.currentTime = 0;
+      }
+
+      if (intro) intro.hidden = true;
+      if (result) {
+        result.hidden = true;
+        result.style.display = 'none';
+      }
+      if (arena) {
+        arena.hidden = false;
+        arena.style.display = 'flex';
+      }
 
       nextHeadline();
 
       clearInterval(timer);
       timer = setInterval(() => {
         timeLeft--;
-        timerLabel.textContent = `TEMPO: ${timeLeft}s`;
+        if (timerLabel) timerLabel.textContent = `TEMPO: ${timeLeft}s`;
         if (timeLeft <= 0) {
           endGame(false);
         }
       }, 1000);
     }
 
-    btnCensor.addEventListener('click', () => handleChoice(false));
-    btnBroadcast.addEventListener('click', () => handleChoice(true));
-    startBtn.addEventListener('click', startGame);
-    restartBtn.addEventListener('click', startGame);
+    btnCensor?.addEventListener('click', (e) => {
+      e.preventDefault();
+      handleChoice(false);
+    });
+    
+    btnBroadcast?.addEventListener('click', (e) => {
+      e.preventDefault();
+      handleChoice(true);
+    });
+
+    startBtn?.addEventListener('click', startGame);
+    restartBtn?.addEventListener('click', startGame);
 
     onMultiClick($('#broadcast-title'), 4, () => {
       root.classList.add('is-active');
@@ -1546,7 +1598,6 @@
       }
     }
   }
-
 
   /* ------------------------------------------------------------------------
      INICIALIZAÇÃO
