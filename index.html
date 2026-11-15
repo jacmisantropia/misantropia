@@ -23,8 +23,9 @@
 
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/png" href="favicon.png" />
-  <script data-goatcounter="https://misantropia-site.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
+
+  <!-- Contador de Acessos GoatCounter -->
+  <script data-goatcounter="https://misantropia-site.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 
 <body>
@@ -42,10 +43,9 @@
       <a href="#manifesto">Manifesto</a>
       <a href="#personagens" hidden>Personagens</a>
       <a href="#emissora">Emissora</a>
-      <a href="#nadine" id="nav-nadine" hidden>Salvação? </a>
-      <a href="#ficha" hidden>Ficha artística</a>
-      <a href="#julgamento" id="nav-julgamento">Julgamento</a>
+      <a href="#minigames">Minigames</a>
       <a href="#posteres">Pôsteres</a>
+      <a href="#julgamento" id="nav-julgamento">Julgamento</a>
     </nav>
 
     <a class="ticket-link" href="#sobre">A peça <span aria-hidden="true">↘</span></a>
@@ -143,85 +143,6 @@
     </section>
 
     <!-- ====================================================================
-         01.5 / O TEMPLO DE NADINE (SALVAÇÃO?)
-         ==================================================================== -->
-    <section class="nadine-temple section-pad" id="nadine" aria-labelledby="temple-title">
-      <div class="section-index">01.5 / O TEMPLO</div>
-
-      <div class="temple-heading">
-        <p class="eyebrow"><span class="red-dot"></span> O PESO DA ESPERANÇA</p>
-        <h2 id="temple-title">
-          SALVAÇÃO<br>
-          <span>OU CONTROLE?</span>
-        </h2>
-        <p>
-          Todos exigem um milagre daquela que não pediu para ser símbolo.
-          Aqui jaz a fé de um mundo que esqueceu como confiar em si mesmo.
-        </p>
-      </div>
-
-      <div class="temple-grid">
-        <div class="temple-card">
-          <span class="file-label">SANTUÁRIO ÍNTIMO</span>
-          <h3>A VOZ DA MULTIDÃO</h3>
-          <p>
-            "Salve-nos." É o que eles dizem todos os dias. Mas ninguém pergunta
-            o que acontece quando a única pessoa sã decide que já não quer salvar ninguém.
-          </p>
-        </div>
-
-        <div class="temple-card shrine-box">
-          <span class="file-label">ALTAR DE NADINE</span>
-          <div class="shrine-symbol">
-            <img src="foto-nadine.jpg" alt="Nadine" id="nadine-game-trigger" style="cursor: pointer;"
-              title="Clique 4 vezes..." />
-          </div>
-          <p class="shrine-quote">"Eles não amam a mim. Amam o alívio que sentem quando olham para o meu rosto."</p>
-          <button class="btn" id="nadine-blessing-btn" type="button">OUVIR A PROMESSA ↗</button>
-          <p id="nadine-blessing-msg" class="shrine-feedback" aria-live="polite"></p>
-        </div>
-      </div>
-
-      <!-- MINIGAME DE NADINE — O PESO DA FÉ -->
-      <div class="nadine-game-overlay" id="nadine-game-modal" hidden>
-        <div class="nadine-game-box">
-          <div class="game-heading">
-            <span>MINIGAME / O PESO DA FÉ</span>
-            <button type="button" id="nadine-game-close" class="secret-close" aria-label="Fechar">×</button>
-          </div>
-
-          <div class="nadine-game-intro" id="nadine-game-intro">
-            <h3>RESISTA AO PESO</h3>
-            <p>Desvie das críticas e absorva a esperança. Mantenha sua energia mental estável por 30 segundos.</p>
-            <button class="btn" id="nadine-game-start" type="button">INICIAR VIGÍLIA ↗</button>
-          </div>
-
-          <div class="nadine-game-arena" id="nadine-game-arena" hidden>
-            <div class="nadine-mental-bar-wrap">
-              <span>ENERGIA MENTAL</span>
-              <div class="nadine-mental-bar">
-                <div id="nadine-mental-fill" style="width: 100%;"></div>
-              </div>
-            </div>
-
-            <div id="nadine-player" class="nadine-player-avatar">N</div>
-
-            <div class="nadine-touch-controls">
-              <button type="button" id="nadine-btn-left" aria-label="Esquerda">◀</button>
-              <button type="button" id="nadine-btn-right" aria-label="Direita">▶</button>
-            </div>
-          </div>
-
-          <div class="nadine-game-result" id="nadine-game-result" hidden>
-            <h3 id="nadine-result-title"></h3>
-            <p id="nadine-result-desc"></p>
-            <button class="btn" id="nadine-game-restart" type="button">TENTAR NOVAMENTE ↗</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ====================================================================
          02 / MANIFESTO
          ==================================================================== -->
     <section class="manifesto" id="manifesto">
@@ -245,7 +166,7 @@
     </section>
 
     <!-- ====================================================================
-         03 / PERSONAGENS
+         03 / PERSONAGENS (OCULTO POR PADRÃO)
          ==================================================================== -->
     <section class="characters section-pad" id="personagens" hidden>
       <div class="section-heading">
@@ -328,7 +249,7 @@
 
         <article class="character">
           <span class="char-no">06</span>
-          <div class="char-symbol is-secret" id="death-easter-egg">†</div>
+          <div class="char-symbol">†</div>
           <div class="char-info">
             <h3>MORTE</h3>
             <p>
@@ -485,69 +406,293 @@
         </ul>
       </div>
 
-      <!-- MINIGAME SECRETO DA EMISSORA -->
-      <div class="americo-game" id="americo-game" aria-labelledby="americo-title">
-        <div class="game-heading">
-          <span>ARQUIVO 088 — EDIÇÃO DE EMERGÊNCIA</span>
-          <span class="game-warning">A VERDADE É O QUE VOCÊ APROVA</span>
-        </div>
-
-        <div class="game-intro" id="americo-intro">
-          <p class="game-kicker">SALA DE CONTROLE DA ÍRIS</p>
-          <h2 class="game-title" id="americo-title">
-            APROVE OU<br>
-            <span>CENSURE.</span>
-          </h2>
-          <p class="game-text">
-            O sinal está instável. Manchetes perigosas estão subindo para o ar.
-            Você tem poucos segundos para decidir o que o povo pode ver.
-          </p>
-          <button class="btn" id="americo-start" type="button">ASSUMIR A TRANSMISSÃO ↗</button>
-        </div>
-
-        <div class="game-arena" id="americo-arena" hidden>
-          <span class="arena-label">TELEPROMPTER DE AMÉRICO</span>
-          <span class="arena-coordinate" id="americo-timer-label">TEMPO: 15s</span>
-
-          <div class="americo-prompt-box">
-            <p id="americo-headline-kicker" class="tv-kicker">MANCHETE #1</p>
-            <h3 id="americo-headline-text">O povo está questionando o governo nas ruas.</h3>
-          </div>
-
-          <div class="americo-choices">
-            <button class="btn" id="btn-censor" type="button">CENSURAR (BLOQUEAR) ✕</button>
-            <button class="btn" id="btn-broadcast" type="button">IR AO AR (APROVAR) ✓</button>
-          </div>
-
-          <p id="americo-message" aria-live="polite">ESCOLHA RÁPIDO...</p>
-        </div>
-
-        <div class="game-result" id="americo-result" hidden>
-          <span class="game-kicker">PLANTÃO ENCERRADO</span>
-          
-          <!-- Container de vídeo/GIF do Américo -->
-          <div class="americo-reaction" id="americo-reaction" hidden>
-            <video id="americo-gif" src="gif-americo.mp4" autoplay loop muted playsinline></video>
-          </div>
-
-          <h3 id="americo-result-title">O PÓLVORA ESTÁ SOB CONTROLE.</h3>
-          <p id="americo-result-desc"></p>
-          <button class="btn" id="americo-restart" type="button">EDITAR NOVAMENTE ↗</button>
-        </div>
-      </div>
-
-      <p class="broadcast-note">
+      <p class="broadcast-note" data-clue="margin">
         QUEM CONTROLA A TELA, <span>CONTROLA O MEDO.</span>
       </p>
     </section>
 
     <!-- ====================================================================
-         07 / PÔSTERES E MATERIAIS
+         05 / CENTRAL DE MINIGAMES (TODOS OS JOGOS REUNIDOS)
+         ==================================================================== -->
+    <section class="minigames-hub section-pad" id="minigames" aria-labelledby="minigames-title">
+      <div class="section-heading">
+        <div>
+          <div class="section-index">05 / EXPERIÊNCIAS INTERATIVAS</div>
+          <h2 id="minigames-title">CENTRAL DE<br><span>MINIGAMES.</span></h2>
+        </div>
+
+
+        <p>
+          Assuma o controle da emissora, encare a vigilância da Morte,
+          proteja a mente de Nadine contra o peso da fé ou ajude Maia
+          a reconstruir memórias fragmentadas.
+          Escolha um desafio abaixo.
+        </p>
+      </div>
+
+      <div class="minigames-grid">
+        <!-- MINIGAME 01: AMÉRICO -->
+        <article class="minigame-card" id="americo-game" aria-labelledby="americo-title">
+          <div class="minigame-card-top">
+            <span class="card-tag">ARQUIVO 088 · EMISSORA ÍRIS</span>
+            <h3 id="americo-title">APROVE OU CENSURE</h3>
+            <p class="card-desc">
+              Manchetes perigosas estão subindo para o ar. Decida rápido o que o povo pode ver antes que o tempo acabe.
+            </p>
+          </div>
+
+          <div class="game-intro-box" id="americo-intro">
+            <button class="btn" id="americo-start" type="button">ASSUMIR A TRANSMISSÃO ↗</button>
+          </div>
+
+          <div class="game-arena-box" id="americo-arena" hidden>
+            <div class="arena-hud">
+              <span>TELEPROMPTER</span>
+              <span class="hud-highlight" id="americo-timer-label">TEMPO: 15s</span>
+            </div>
+
+            <div class="americo-prompt-box">
+              <p id="americo-headline-kicker" class="tv-kicker">MANCHETE #1</p>
+              <h4 id="americo-headline-text">O povo está questionando o governo nas ruas.</h4>
+            </div>
+
+            <div class="americo-choices">
+              <button class="btn" id="btn-censor" type="button">CENSURAR ✕</button>
+              <button class="btn" id="btn-broadcast" type="button">IR AO AR ✓</button>
+            </div>
+
+            <p class="arena-feedback" id="americo-message" aria-live="polite">ESCOLHA RÁPIDO...</p>
+          </div>
+
+          <div class="game-result-box" id="americo-result" hidden>
+            <span class="game-kicker">PLANTÃO ENCERRADO</span>
+            <div class="americo-reaction" id="americo-reaction" hidden>
+              <video id="americo-gif" src="gif-americo.mp4" autoplay loop muted playsinline></video>
+            </div>
+            <h4 id="americo-result-title">O PÓLVORA ESTÁ SOB CONTROLE.</h4>
+            <p id="americo-result-desc"></p>
+            <button class="btn" id="americo-restart" type="button">EDITAR NOVAMENTE ↗</button>
+          </div>
+        </article>
+
+        <!-- MINIGAME 02: JOGO DA MORTE -->
+        <article class="minigame-card" id="morte-game" aria-labelledby="death-game-title">
+          <div class="minigame-card-top">
+            <span class="card-tag">ARQUIVO 004 · VIGÍLIA</span>
+            <h3 id="death-game-title">O RASTRO DA MORTE</h3>
+            <p class="card-desc">
+              Ela vai aparecer na escuridão. Clique no símbolo (†) o mais rápido possível antes que ela desapareça.
+            </p>
+          </div>
+
+          <div class="game-intro-box" id="game-intro">
+            <button class="btn" id="game-start" type="button">INICIAR VIGÍLIA ↗</button>
+          </div>
+
+          <div class="game-arena-box death-arena-box" id="game-arena" hidden>
+            <div class="arena-hud">
+              <span>TEMPO: <strong id="game-time">20</strong>s</span>
+              <span>ACERTOS: <strong id="game-score">00</strong></span>
+              <span>RECORDE: <strong id="game-record">00</strong></span>
+            </div>
+
+            <button id="death-target" type="button" aria-label="Encontrar a Morte" hidden>†</button>
+
+            <p class="arena-feedback" id="game-message" aria-live="polite">PROCURANDO SINAL...</p>
+          </div>
+
+
+          <div class="game-result-box" id="game-result" hidden>
+            <span class="game-kicker">FIM DA VIGÍLIA</span>
+
+            <div class="morte-reaction" id="morte-reaction" hidden>
+              <video id="morte-gif" src="gif-morte.mp4" autoplay loop muted playsinline>
+              </video>
+            </div>
+
+            <h4 id="result-title">ELA VIU VOCÊ.</h4>
+            <p id="result-description"></p>
+
+            <button class="btn" id="game-restart" type="button">
+              TENTAR NOVAMENTE ↗
+            </button>
+          </div>
+
+        </article>
+
+        <!-- MINIGAME 03: NADINE -->
+        <article class="minigame-card" id="nadine-game-card" aria-labelledby="nadine-game-title">
+          <div class="minigame-card-top">
+            <span class="card-tag">SANTUÁRIO · O PESO DA FÉ</span>
+            <h3 id="nadine-game-title">RESISTA AO PESO</h3>
+            <p class="card-desc">
+              Desvie das cobranças vermelhas e capture as palavras de esperança douradas por 30 segundos.
+            </p>
+          </div>
+
+          <div class="game-intro-box" id="nadine-game-intro">
+            <button class="btn" id="nadine-game-start" type="button">ACESSAR MENTE ↗</button>
+          </div>
+
+          <div class="game-arena-box nadine-arena-box" id="nadine-game-arena" hidden>
+            <div class="nadine-mental-bar-wrap">
+              <div class="nadine-hud-row">
+                <span>ENERGIA MENTAL</span>
+                <span id="nadine-timer-label">30s</span>
+              </div>
+              <div class="nadine-mental-bar">
+                <div id="nadine-mental-fill" style="width: 100%;"></div>
+              </div>
+            </div>
+
+            <div id="nadine-player" class="nadine-player-avatar">N</div>
+
+            <div class="nadine-touch-controls">
+              <button type="button" id="nadine-btn-left" aria-label="Mover para esquerda">◀</button>
+              <button type="button" id="nadine-btn-right" aria-label="Mover para direita">▶</button>
+            </div>
+          </div>
+
+
+          <div class="game-result-box" id="nadine-game-result" hidden>
+            <span class="game-kicker">VIGÍLIA MENTAL</span>
+
+            <div class="nadine-reaction" id="nadine-reaction" hidden>
+              <video id="nadine-gif" src="gif-nadine.mp4" autoplay loop muted playsinline>
+              </video>
+            </div>
+
+            <h4 id="nadine-result-title">FÉ PRESERVADA.</h4>
+            <p id="nadine-result-desc"></p>
+
+            <button class="btn" id="nadine-game-restart" type="button">
+              TENTAR NOVAMENTE ↗
+            </button>
+          </div>
+
+        </article>
+
+        <!-- MINIGAME 04: MAIA — FRAGMENTOS DA VERDADE -->
+        <article class="minigame-card" id="maia-game" aria-labelledby="maia-game-title">
+
+          <div class="minigame-card-top">
+            <span class="card-tag">
+              ARQUIVO 024 · MEMÓRIAS FRAGMENTADAS
+            </span>
+
+            <h3 id="maia-game-title">
+              FRAGMENTOS DA VERDADE
+            </h3>
+
+            <p class="card-desc">
+              As lembranças de Nadine foram fragmentadas.
+              Ajude Maia a reconstruir três mensagens
+              antes que o tempo acabe.
+            </p>
+          </div>
+
+          <!-- INTRODUÇÃO -->
+          <div class="game-intro-box" id="maia-intro">
+            <button class="btn" id="maia-start" type="button">
+              RECUPERAR MEMÓRIAS ↗
+            </button>
+          </div>
+
+          <!-- ÁREA DO JOGO -->
+          <div class="game-arena-box maia-arena-box" id="maia-arena" hidden>
+
+            <div class="arena-hud">
+              <span>
+                MEMÓRIA:
+                <strong id="maia-round">01/03</strong>
+              </span>
+
+              <span class="hud-highlight">
+                TEMPO:
+                <strong id="maia-timer">45</strong>s
+              </span>
+            </div>
+
+            <div class="maia-memory">
+              <span class="maia-label">
+                FRAGMENTO RECUPERADO
+              </span>
+
+              <p id="maia-memory-text">
+                Uma lembrança precisa ser reconstruída.
+              </p>
+            </div>
+
+            <div class="maia-answer-area">
+              <span class="maia-label">
+                RECONSTRUÇÃO
+              </span>
+
+              <div class="maia-answer" id="maia-answer" aria-label="Palavras selecionadas">
+              </div>
+
+              <p class="maia-placeholder" id="maia-placeholder">
+                Selecione os fragmentos na ordem correta.
+              </p>
+            </div>
+
+            <div class="maia-fragments-area">
+              <span class="maia-label">
+                FRAGMENTOS DISPONÍVEIS
+              </span>
+
+              <div class="maia-fragments" id="maia-fragments">
+              </div>
+            </div>
+
+            <button class="btn maia-confirm-btn" id="maia-confirm" type="button" disabled>
+              RECONSTRUIR MEMÓRIA ↗
+            </button>
+
+            <p class="arena-feedback" id="maia-message" aria-live="polite">
+              A VERDADE ESTÁ ENTRE OS FRAGMENTOS.
+            </p>
+
+          </div>
+
+          <!-- RESULTADO -->
+          <div class="game-result-box" id="maia-result" hidden>
+
+            <span class="game-kicker">
+              ARQUIVO DE MEMÓRIAS
+            </span>
+
+            <div class="maia-reaction" id="maia-reaction" hidden>
+
+              <video id="maia-gif" src="gif-maia.mp4" loop muted playsinline preload="metadata">
+              </video>
+
+            </div>
+
+            <h4 id="maia-result-title">
+              MEMÓRIAS RECUPERADAS.
+            </h4>
+
+            <p id="maia-result-desc"></p>
+
+            <button class="btn" id="maia-restart" type="button">
+              RECONSTRUIR NOVAMENTE ↗
+            </button>
+
+          </div>
+
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         06 / PÔSTERES E MATERIAIS
          ==================================================================== -->
     <section class="posters section-pad" id="posteres" aria-labelledby="posters-title">
       <div class="section-heading">
         <div>
-          <div class="section-index">07 / MATERIAL VISUAL</div>
+          <div class="section-index">06 / MATERIAL VISUAL</div>
           <h2 id="posters-title">CARTAZES DE<br><span>DIVULGAÇÃO.</span></h2>
         </div>
 
@@ -589,6 +734,7 @@
             <p>A verdade é o que vai ao ar.</p>
           </div>
         </article>
+
         <article class="poster-card">
           <div class="poster-image-wrap">
             <img src="PosterInstaMensageiro.png" alt="Pôster de Personagem — Mensageiro" loading="lazy" />
@@ -599,6 +745,7 @@
             <p>Um louco, ou talvez não?</p>
           </div>
         </article>
+
         <article class="poster-card">
           <div class="poster-image-wrap">
             <img src="cegasurdamudaposter.png" alt="Censura" loading="lazy" />
@@ -610,145 +757,6 @@
           </div>
         </article>
       </div>
-    </section>
-    <!-- ====================================================================
-         05 / ELENCO
-         ==================================================================== -->
-    <section class="cast section-pad" id="ficha">
-      <div class="cast-heading">
-        <div class="section-index">05 / QUEM DÁ VIDA À HISTÓRIA</div>
-        <h2>POR TRÁS<br>DAS <span>MÁSCARAS.</span></h2>
-        <p>Conheça o elenco e a equipe de Misantropia.</p>
-      </div>
-
-      <div class="cast-grid">
-        <article class="cast-member">
-          <div class="photo-slot">
-            <img src="foto-nadine.jpg" alt="">
-            <span class="photo-cross" aria-hidden="true">＋</span>
-          </div>
-          <div class="cast-caption">
-            <h3>Nadine</h3>
-          </div>
-        </article>
-
-        <article class="cast-member">
-          <div class="photo-slot">
-            <img src="mortededo.png" alt="">
-            <span class="photo-cross" aria-hidden="true">＋</span>
-          </div>
-          <div class="cast-caption">
-            <h3>Morte</h3>
-          </div>
-        </article>
-
-        <article class="cast-member">
-          <div class="photo-slot">
-            <img src="foto-americoriso.jpg" alt="">
-            <span class="photo-cross" aria-hidden="true">＋</span>
-          </div>
-          <div class="cast-caption">
-            <h3>Américo</h3>
-          </div>
-        </article>
-
-        <article class="cast-member">
-          <div class="photo-slot">
-            <img src="foto-maia.jpg" alt="">
-            <span class="photo-cross" aria-hidden="true">＋</span>
-          </div>
-          <div class="cast-caption">
-            <h3>Maia</h3>
-          </div>
-        </article>
-
-        <article class="cast-member">
-          <div class="photo-slot">
-            <img src="foto-vergueiro.jpg" alt="">
-            <span class="photo-cross" aria-hidden="true">＋</span>
-          </div>
-          <div class="cast-caption">
-            <h3>Vergueiro</h3>
-          </div>
-        </article>
-
-        <article class="cast-member">
-          <div class="photo-slot">
-            <img src="foto-jorgejr.jpg" alt="">
-            <span class="photo-cross" aria-hidden="true">＋</span>
-          </div>
-          <div class="cast-caption">
-            <h3>Jorge Jr.</h3>
-          </div>
-        </article>
-      </div>
-
-      <p class="cast-instruction">ESPAÇO RESERVADO PARA AS FOTOS DO ELENCO</p>
-    </section>
-
-    <!-- ====================================================================
-         06 / JOGO DA MORTE
-         ==================================================================== -->
-    <section class="death-game" id="morte-game" aria-labelledby="game-title">
-      <div class="game-heading">
-        <span>06 / ARQUIVO 004 — INTERFERÊNCIA</span>
-        <span class="game-warning">NÃO DESVIE O OLHAR</span>
-      </div>
-
-      <div class="game-intro" id="game-intro">
-        <p class="game-kicker">UM JOGO DE ATENÇÃO</p>
-
-        <h2 class="game-title" id="game-title">
-          A MORTE ESTÁ<br>
-          <span>OBSERVANDO.</span>
-        </h2>
-
-        <p class="game-text">
-          Ela vai aparecer. Você terá poucos segundos para encontrá-la.
-          Não confie no que seus olhos deixam de ver.
-        </p>
-
-        <button class="btn" id="game-start" type="button">INICIAR VIGÍLIA ↗</button>
-      </div>
-
-      <div class="game-arena" id="game-arena" aria-label="Área do jogo">
-        <span class="arena-label">OBSERVAÇÃO Nº 001</span>
-        <span class="arena-coordinate">O QUARTO DE NADINE</span>
-
-        <button id="death-target" type="button" aria-label="Encontrar a Morte" hidden>†</button>
-
-        <p id="game-message" aria-live="polite">AGUARDANDO O INÍCIO...</p>
-      </div>
-
-      <div class="game-scoreboard">
-        <div>
-          <span class="score-label">TEMPO RESTANTE</span>
-          <strong id="game-time">20</strong>
-          <span class="score-unit">SEGUNDOS</span>
-        </div>
-
-        <div>
-          <span class="score-label">APARIÇÕES ENCONTRADAS</span>
-          <strong id="game-score">00</strong>
-        </div>
-
-        <div>
-          <span class="score-label">SEU RECORDE</span>
-          <strong id="game-record">00</strong>
-        </div>
-      </div>
-
-      <div class="game-result" id="game-result" hidden>
-        <span class="game-kicker">FIM DA VIGÍLIA</span>
-        <h3 id="result-title">ELA VIU VOCÊ.</h3>
-        <p id="result-description"></p>
-        <button class="btn" id="game-restart" type="button">TENTAR NOVAMENTE ↗</button>
-      </div>
-
-      <p class="game-footnote">
-        <span>20 SEGUNDOS. NENHUMA SEGUNDA CHANCE.</span>
-        <span>VOCÊ FOI AVISADO.</span>
-      </p>
     </section>
 
     <!-- ====================================================================
