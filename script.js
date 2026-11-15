@@ -5,14 +5,13 @@
    01. Toast
    02. Menu mobile
    03. Overlay secreto
-   04. Easter eggs
-   05. Emissora (troca de canais)
-   06. Jogo da Morte
-   07. O Julgamento (motor narrativo + pistas)
-   08. Acesso ao Arquivo 017 (senha)
-   09. Minigame do Américo (Edição da Emissora)
-   10. O Templo de Nadine (Interação do Altar)
-   11. Minigame da Nadine (O Peso da Fé)
+   04. Easter eggs (Frases e segredos de texto)
+   05. Emissora (troca de canais + contagem regressiva)
+   06. Minigame 01: Américo (Edição da Emissora)
+   07. Minigame 02: Jogo da Morte (Vigília)
+   08. Minigame 03: Nadine (O Peso da Fé)
+   09. O Julgamento (motor narrativo + pistas)
+   10. Acesso ao Arquivo 017 (senha)
    ========================================================================== */
 'use strict';
 
@@ -126,7 +125,7 @@
   })();
 
   /* ------------------------------------------------------------------------
-     04. EASTER EGGS
+     04. EASTER EGGS (APENAS FRASES E PISTAS ESCONDIDAS)
      ------------------------------------------------------------------------ */
   function initEasterEggs() {
     onMultiClick($('.main-logo'), 5, () => {
@@ -168,7 +167,7 @@
     if (!body || !channelLabel || !kicker || !headline || !text || !buttons.length) return;
 
     const targetDate = new Date(2026, 11, 3, 7, 30, 0).getTime();
-    const dateFormatted = '03 DE DEZEMBRO DE 2026 ÀS 07:30H · AUDITORIO NILO PEÇANHA';
+    const dateFormatted = '03 DE DEZEMBRO DE 2026 ÀS 07:30H · AUDITÓRIO NILO PEÇANHA';
 
     const channels = [
       {
@@ -192,7 +191,7 @@
         kicker: 'SINAL INTERROMPIDO',
         headline: '[ERRO 0x004E4144]P_O_R_ O_N_D_E A_N_D_A N_A_D_I_N_E?',
         text: 'A s@lv@ç#0 f@lh0... N0 C#R3$ P0R_T_4_L_1_S_T_0... ' +
-          '[ERRO DE LEITURA DO SETOR 404] [DADOS PERDIDOS] [CHECKSUM FALHOU]' + ' Mensagem Corrompida'
+          '[ERRO DE LEITURA DO SETOR 404] [DADOS PERDIDOS] [CHECKSUM FALHOU] Mensagem Corrompida'
       },
       {
         isCountdown: true,
@@ -242,8 +241,6 @@
       clearInterval(countdownInterval);
 
       channelLabel.textContent = `CANAL ${pad(index + 1)}`;
-      kicker.textContent = data.kicker;
-      headline.textContent = data.headline;
 
       if (data.isCountdown) {
         body.innerHTML = `
@@ -291,7 +288,147 @@
   }
 
   /* ------------------------------------------------------------------------
-     06. JOGO DA MORTE
+     06. MINIGAME 01: AMÉRICO (EDIÇÃO DA EMISSORA)
+     ------------------------------------------------------------------------ */
+  function initAmericoGame() {
+    const root = $('#americo-game');
+    if (!root) return;
+
+    const startBtn = $('#americo-start', root);
+    const restartBtn = $('#americo-restart', root);
+    const intro = $('#americo-intro', root);
+    const arena = $('#americo-arena', root);
+    const result = $('#americo-result', root);
+    const headlineText = $('#americo-headline-text', root);
+    const headlineKicker = $('#americo-headline-kicker', root);
+    const timerLabel = $('#americo-timer-label', root);
+    const msg = $('#americo-message', root);
+    const btnCensor = $('#btn-censor', root);
+    const btnBroadcast = $('#btn-broadcast', root);
+    const resultTitle = $('#americo-result-title', root);
+    const resultDesc = $('#americo-result-desc', root);
+
+    const headlines = [
+      { kicker: 'URGENTE', text: 'Protestos pacíficos começam na praça central.', safe: false },
+      { kicker: 'EXCLUSIVO', text: 'Nadine traz uma mensagem de paz ao vivo.', safe: true },
+      { kicker: 'ECONOMIA', text: 'Estoques de alimentos chegam ao fim na capital.', safe: false },
+      { kicker: 'BOATOS', text: 'Dizem que o governo abandonou os setores baixos.', safe: false },
+      { kicker: 'HOMENAGEM', text: 'A nação agradece a generosidade de Américo.', safe: true },
+      { kicker: 'PLANTÃO', text: 'Sinal misterioso interfere nas transmissões da Íris.', safe: false },
+      { kicker: 'SEGURANÇA', text: 'Toque de recolher decretado para manter a ordem.', safe: true }
+    ];
+
+    let currentIdx = 0;
+    let score = 0;
+    let timeLeft = 15;
+    let timer = null;
+    let playing = false;
+
+    function nextHeadline() {
+      if (currentIdx >= headlines.length) {
+        endGame();
+        return;
+      }
+      const item = headlines[currentIdx];
+      if (headlineKicker) headlineKicker.textContent = `${item.kicker} (${currentIdx + 1}/${headlines.length})`;
+      if (headlineText) headlineText.textContent = item.text;
+    }
+
+    function handleChoice(userChoiceSafe) {
+      if (!playing) return;
+      const item = headlines[currentIdx];
+
+      if (userChoiceSafe === item.safe) {
+        score += 10;
+        if (msg) msg.textContent = 'EXCELENTE. OPINIÃO PÚBLICA A SALVO.';
+      } else {
+        score -= 5;
+        if (msg) msg.textContent = 'ERRO GRAVE. O POVO ESTÁ COMENTANDO!';
+      }
+
+      currentIdx++;
+      nextHeadline();
+    }
+
+    function endGame() {
+      playing = false;
+      clearInterval(timer);
+
+      if (arena) arena.hidden = true;
+      if (result) result.hidden = false;
+
+      const reactionBox = $('#americo-reaction', root);
+      const videoEl = $('#americo-gif', root);
+
+      if (score >= 30) {
+        if (resultTitle) resultTitle.textContent = 'AMÉRICO ESTÁ ORGULHOSO.';
+        if (reactionBox && videoEl) {
+          videoEl.src = 'gif-americo.mp4';
+          reactionBox.hidden = false;
+          videoEl.play().catch(() => { });
+        }
+      } else {
+        if (resultTitle) resultTitle.textContent = 'O CONTROLE FOI PERDIDO.';
+        if (reactionBox) {
+          reactionBox.hidden = true;
+          if (videoEl) videoEl.pause();
+        }
+      }
+
+      if (resultDesc) {
+        resultDesc.textContent = `Você pontuou ${score} pontos gerenciando a emissora. ` +
+          (score >= 30 ? 'Você sabe manipular o que o povo vê.' : 'A verdade escapou pelas suas mãos.');
+      }
+    }
+
+    function startGame() {
+      currentIdx = 0;
+      score = 0;
+      timeLeft = 15;
+      playing = true;
+
+      const reactionBox = $('#americo-reaction', root);
+      const videoEl = $('#americo-gif', root);
+      if (reactionBox) reactionBox.hidden = true;
+      if (videoEl) {
+        videoEl.pause();
+        videoEl.currentTime = 0;
+      }
+
+      if (intro) intro.hidden = true;
+      if (result) result.hidden = true;
+      if (arena) arena.hidden = false;
+      if (timerLabel) timerLabel.textContent = `TEMPO: ${timeLeft}s`;
+      if (msg) msg.textContent = 'ESCOLHA RÁPIDO...';
+
+      nextHeadline();
+
+      clearInterval(timer);
+      timer = setInterval(() => {
+        timeLeft--;
+        if (timerLabel) timerLabel.textContent = `TEMPO: ${timeLeft}s`;
+        if (timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    btnCensor?.addEventListener('click', (e) => {
+      e.preventDefault();
+      handleChoice(false);
+    });
+
+    btnBroadcast?.addEventListener('click', (e) => {
+      e.preventDefault();
+      handleChoice(true);
+    });
+
+    startBtn?.addEventListener('click', startGame);
+    restartBtn?.addEventListener('click', startGame);
+  }
+
+  /* ------------------------------------------------------------------------
+     07. MINIGAME 02: JOGO DA MORTE
      ------------------------------------------------------------------------ */
   function initDeathGame() {
     const root = $('#morte-game');
@@ -309,6 +446,9 @@
     const recordDisplay = $('#game-record', root);
     const resultTitle = $('#result-title', root);
     const resultDescription = $('#result-description', root);
+    const reactionBox = $('#morte-reaction', root);
+    const videoEl = $('#morte-gif', root);
+
 
     const RECORD_KEY = 'misantropia-morte-recorde';
     const DURATION = 20;
@@ -324,30 +464,30 @@
     let appearance = null;
     let appearanceId = 0;
 
-    const say = (text) => { message.textContent = text; };
+    const say = (text) => { if (message) message.textContent = text; };
 
     const render = {
-      time: () => { timeDisplay.textContent = pad(timeLeft); },
-      score: () => { scoreDisplay.textContent = pad(score); },
-      record: () => { recordDisplay.textContent = pad(record); }
+      time: () => { if (timeDisplay) timeDisplay.textContent = pad(timeLeft); },
+      score: () => { if (scoreDisplay) scoreDisplay.textContent = pad(score); },
+      record: () => { if (recordDisplay) recordDisplay.textContent = pad(record); }
     };
     render.record();
 
     function hideTarget() {
       appearanceId++;
       clearTimeout(appearance);
-      target.hidden = true;
+      if (target) target.hidden = true;
     }
 
     function showTarget() {
-      if (!active) return;
+      if (!active || !arena || !target) return;
       hideTarget();
 
       const id = appearanceId;
-      const padding = 38;
-      const topOffset = 35;
+      const padding = 34;
+      const topOffset = 42;
       const maxX = Math.max(padding, arena.clientWidth - padding);
-      const maxY = Math.max(padding + topOffset, arena.clientHeight - padding - 20);
+      const maxY = Math.max(padding + topOffset, arena.clientHeight - padding - 24);
 
       target.style.left = `${padding + Math.random() * (maxX - padding)}px`;
       target.style.top = `${padding + topOffset + Math.random() * (maxY - padding - topOffset)}px`;
@@ -362,29 +502,64 @@
       }, VISIBLE_MS);
     }
 
+
     function finishGame() {
       active = false;
       clearInterval(countdown);
       hideTarget();
 
-      resultTitle.textContent =
-        score >= 15 ? 'VOCÊ VIU DEMAIS.' :
-          score >= 7 ? 'ELA AINDA ESTÁ AQUI.' :
-            'ELA VIU VOCÊ.';
+      if (arena) arena.hidden = true;
+      if (result) result.hidden = false;
 
-      resultDescription.textContent =
-        `Você encontrou a Morte ${score} ${score === 1 ? 'vez' : 'vezes'}. ` +
-        (score >= 15
-          ? 'Ela mesma avisou: você sempre a encontra. Será que ela deixou você vencer?'
-          : 'Talvez seja melhor não olhar para trás.');
+      if (resultTitle) {
+        resultTitle.textContent =
+          score >= 15 ? 'VOCÊ VIU DEMAIS.' :
+            score >= 7 ? 'ELA AINDA ESTÁ AQUI.' :
+              'ELA VIU VOCÊ.';
+      }
 
-      result.hidden = false;
-      say('VIGÍLIA ENCERRADA.');
+      if (resultDescription) {
+        resultDescription.textContent =
+          `Você encontrou a Morte ${score} ${score === 1 ? 'vez' : 'vezes'} (Recorde: ${record}). ` +
+          (score >= 15
+            ? 'Será que ela deixou você vencer?'
+            : 'Talvez seja melhor não olhar para trás.');
+      }
+
+      // Exibe o vídeo somente ao atingir 15 acertos.
+      if (score >= 15) {
+        if (reactionBox && videoEl) {
+          videoEl.src = 'gif-morte.mp4';
+          reactionBox.hidden = false;
+          videoEl.currentTime = 0;
+          videoEl.play().catch(() => { });
+        }
+      } else {
+        if (reactionBox) {
+          reactionBox.hidden = true;
+        }
+
+        if (videoEl) {
+          videoEl.pause();
+          videoEl.currentTime = 0;
+        }
+      }
     }
+
 
     function startGame() {
       clearInterval(countdown);
       clearTimeout(appearance);
+
+      if (reactionBox) {
+        reactionBox.hidden = true;
+      }
+
+      if (videoEl) {
+        videoEl.pause();
+        videoEl.currentTime = 0;
+      }
+
 
       timeLeft = DURATION;
       score = 0;
@@ -392,8 +567,9 @@
 
       render.time();
       render.score();
-      result.hidden = true;
-      intro.hidden = true;
+      if (result) result.hidden = true;
+      if (intro) intro.hidden = true;
+      if (arena) arena.hidden = false;
       say('PROCURANDO SINAL...');
 
       showTarget();
@@ -405,7 +581,7 @@
       }, 1000);
     }
 
-    target.addEventListener('click', () => {
+    target?.addEventListener('click', () => {
       if (!active || target.hidden) return;
 
       score++;
@@ -422,18 +598,582 @@
       appearance = setTimeout(showTarget, HIT_DELAY_MS);
     });
 
-    startButton.addEventListener('click', startGame);
-    restartButton.addEventListener('click', startGame);
-
-    onMultiClick($('#death-easter-egg'), 3, () => {
-      root.classList.add('is-active');
-      root.scrollIntoView({ behavior: 'smooth' });
-      if (!active) say('VOCÊ ENCONTROU O QUE ESTAVA ESCONDIDO.');
-    });
+    startButton?.addEventListener('click', startGame);
+    restartButton?.addEventListener('click', startGame);
   }
 
   /* ------------------------------------------------------------------------
-     07. O JULGAMENTO
+     08. MINIGAME 03: NADINE (O PESO DA FÉ)
+     ------------------------------------------------------------------------ */
+  function initNadineGame() {
+    const root = $('#nadine-game-card');
+    if (!root) return;
+
+    const startBtn = $('#nadine-game-start', root);
+    const restartBtn = $('#nadine-game-restart', root);
+    const intro = $('#nadine-game-intro', root);
+    const arena = $('#nadine-game-arena', root);
+    const resultBox = $('#nadine-game-result', root);
+    const player = $('#nadine-player', root);
+    const mentalFill = $('#nadine-mental-fill', root);
+    const timerLabel = $('#nadine-timer-label', root);
+    const resultTitle = $('#nadine-result-title', root);
+    const resultDesc = $('#nadine-result-desc', root);
+    const btnLeft = $('#nadine-btn-left', root);
+    const btnRight = $('#nadine-btn-right', root);
+    const reactionBox = $('#nadine-reaction', root);
+    const videoEl = $('#nadine-gif', root);
+
+
+    let gameActive = false;
+    let mentalEnergy = 100;
+    let playerX = 50;
+    let gameTimer = null;
+    let spawnTimer = null;
+    let clockTimer = null;
+    let timeRemaining = 30;
+    let spawnIntervalMs = 850;
+    let fallSpeed = 2.2;
+    let activeWords = [];
+    let keysPressed = {};
+
+    const badWords = ['Crítica', 'Culpa', 'Peso', 'Medo', 'Dúvida', 'Censura', 'Julgamento'];
+    const goodWords = ['Esperança', 'Luz', 'Paz', 'Verdade', 'Fé', 'Alívio'];
+
+    startBtn?.addEventListener('click', startGame);
+    restartBtn?.addEventListener('click', startGame);
+
+    window.addEventListener('keydown', (e) => {
+      if (!gameActive) return;
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keysPressed['left'] = true;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keysPressed['right'] = true;
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keysPressed['left'] = false;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keysPressed['right'] = false;
+    });
+
+    let touchInterval = null;
+    const moveTouch = (dir) => {
+      if (!gameActive || !player) return;
+      if (dir === 'left') playerX = Math.max(8, playerX - 4.5);
+      if (dir === 'right') playerX = Math.min(92, playerX + 4.5);
+      player.style.left = `${playerX}%`;
+    };
+
+    if (btnLeft && btnRight) {
+      btnLeft.addEventListener('mousedown', () => { clearInterval(touchInterval); touchInterval = setInterval(() => moveTouch('left'), 40); });
+      btnLeft.addEventListener('mouseup', () => clearInterval(touchInterval));
+      btnLeft.addEventListener('mouseleave', () => clearInterval(touchInterval));
+      btnLeft.addEventListener('touchstart', (e) => { e.preventDefault(); clearInterval(touchInterval); touchInterval = setInterval(() => moveTouch('left'), 40); });
+      btnLeft.addEventListener('touchend', () => clearInterval(touchInterval));
+
+      btnRight.addEventListener('mousedown', () => { clearInterval(touchInterval); touchInterval = setInterval(() => moveTouch('right'), 40); });
+      btnRight.addEventListener('mouseup', () => clearInterval(touchInterval));
+      btnRight.addEventListener('mouseleave', () => clearInterval(touchInterval));
+      btnRight.addEventListener('touchstart', (e) => { e.preventDefault(); clearInterval(touchInterval); touchInterval = setInterval(() => moveTouch('right'), 40); });
+      btnRight.addEventListener('touchend', () => clearInterval(touchInterval));
+    }
+
+    function startGame() {
+      stopGame();
+
+      if (reactionBox) {
+        reactionBox.hidden = true;
+      }
+
+      if (videoEl) {
+        videoEl.pause();
+        videoEl.currentTime = 0;
+      }
+
+      if (intro) intro.hidden = true;
+      if (resultBox) resultBox.hidden = true;
+      if (arena) arena.hidden = false;
+
+      gameActive = true;
+      mentalEnergy = 100;
+      playerX = 50;
+      timeRemaining = 30;
+      spawnIntervalMs = 850;
+      fallSpeed = 2.2;
+
+      if (player) player.style.left = '50%';
+      if (timerLabel) timerLabel.textContent = `${timeRemaining}s`;
+      updateMentalBar();
+
+      gameTimer = setInterval(updateGameLoop, 20);
+      spawnTimer = setInterval(spawnWord, spawnIntervalMs);
+
+      clockTimer = setInterval(() => {
+        timeRemaining--;
+        if (timerLabel) timerLabel.textContent = `${timeRemaining}s`;
+
+        if (timeRemaining % 5 === 0 && timeRemaining > 0) {
+          fallSpeed += 0.35;
+        }
+
+        if (timeRemaining <= 0) {
+          endGame(true);
+        }
+      }, 1000);
+    }
+
+    function stopGame() {
+      gameActive = false;
+      clearInterval(gameTimer);
+      clearInterval(spawnTimer);
+      clearInterval(clockTimer);
+      clearInterval(touchInterval);
+      activeWords.forEach(w => w.element.remove());
+      activeWords = [];
+    }
+
+    function spawnWord() {
+      if (!gameActive || !arena) return;
+      const isGood = Math.random() > 0.58;
+      const list = isGood ? goodWords : badWords;
+      const text = list[Math.floor(Math.random() * list.length)];
+
+      const el = document.createElement('div');
+      el.className = `nadine-falling-word ${isGood ? 'good' : 'bad'}`;
+      el.textContent = text;
+      arena.appendChild(el);
+
+      const posX = Math.random() * 76 + 12;
+      el.style.left = `${posX}%`;
+
+      activeWords.push({
+        element: el,
+        y: -25,
+        isGood
+      });
+    }
+
+    function updateGameLoop() {
+      if (!gameActive || !arena || !player) return;
+
+      if (keysPressed['left']) playerX = Math.max(8, playerX - 2.8);
+      if (keysPressed['right']) playerX = Math.min(92, playerX + 2.8);
+      player.style.left = `${playerX}%`;
+
+      const arenaHeight = arena.clientHeight;
+      const playerRect = player.getBoundingClientRect();
+
+      for (let i = activeWords.length - 1; i >= 0; i--) {
+        const w = activeWords[i];
+        w.y += fallSpeed;
+        w.element.style.top = `${w.y}px`;
+
+        const wordRect = w.element.getBoundingClientRect();
+        if (
+          wordRect.bottom >= playerRect.top &&
+          wordRect.top <= playerRect.bottom &&
+          wordRect.right >= playerRect.left &&
+          wordRect.left <= playerRect.right
+        ) {
+          if (w.isGood) {
+            mentalEnergy = Math.min(100, mentalEnergy + 15);
+          } else {
+            mentalEnergy = Math.max(0, mentalEnergy - 25);
+          }
+          updateMentalBar();
+          w.element.remove();
+          activeWords.splice(i, 1);
+          continue;
+        }
+
+        if (w.y > arenaHeight) {
+          w.element.remove();
+          activeWords.splice(i, 1);
+        }
+      }
+
+      if (mentalEnergy <= 0) {
+        endGame(false);
+      }
+    }
+
+    function updateMentalBar() {
+      if (mentalFill) mentalFill.style.width = `${mentalEnergy}%`;
+    }
+
+
+    function endGame(won) {
+      stopGame();
+
+      if (arena) arena.hidden = true;
+      if (resultBox) resultBox.hidden = false;
+
+      if (won) {
+        if (resultTitle) {
+          resultTitle.textContent = 'FÉ PRESERVADA.';
+        }
+
+        if (resultDesc) {
+          resultDesc.textContent =
+            'Você resistiu ao peso das críticas e manteve a mente firme por 30 segundos.';
+        }
+
+        // Exibe e reproduz o vídeo de Nadine na vitória.
+        if (reactionBox && videoEl) {
+          videoEl.src = 'gif-nadine.mp4';
+          reactionBox.hidden = false;
+          videoEl.currentTime = 0;
+          videoEl.play().catch(() => { });
+        }
+
+      } else {
+        if (resultTitle) {
+          resultTitle.textContent = 'MENTE COLAPSADA.';
+        }
+
+        if (resultDesc) {
+          resultDesc.textContent =
+            'O peso das cobranças foi insuportável e a energia mental se esgotou.';
+        }
+
+        // Esconde e interrompe o vídeo na derrota.
+        if (reactionBox) {
+          reactionBox.hidden = true;
+        }
+
+        if (videoEl) {
+          videoEl.pause();
+          videoEl.currentTime = 0;
+        }
+      }
+    }
+
+  }
+
+  /* ------------------------------------------------------------------------
+     MINIGAME 04: MAIA — FRAGMENTOS DA VERDADE
+     ------------------------------------------------------------------------ */
+
+  function initMaiaGame() {
+    const root = $('#maia-game');
+    if (!root) return;
+
+    const startBtn = $('#maia-start', root);
+    const restartBtn = $('#maia-restart', root);
+    const confirmBtn = $('#maia-confirm', root);
+
+    const intro = $('#maia-intro', root);
+    const arena = $('#maia-arena', root);
+    const result = $('#maia-result', root);
+
+    const roundLabel = $('#maia-round', root);
+    const timerLabel = $('#maia-timer', root);
+    const memoryText = $('#maia-memory-text', root);
+    const answerBox = $('#maia-answer', root);
+    const fragmentsBox = $('#maia-fragments', root);
+    const placeholder = $('#maia-placeholder', root);
+    const message = $('#maia-message', root);
+
+    const resultTitle = $('#maia-result-title', root);
+    const resultDesc = $('#maia-result-desc', root);
+
+    const reactionBox = $('#maia-reaction', root);
+    const videoEl = $('#maia-gif', root);
+
+    const DURATION = 45;
+
+    // Memórias a serem reconstruídas.
+    const memories = [
+      {
+        clue: 'MAIA TENTA LEMBRAR O QUE NADINE PRECISAVA OUVIR.',
+        words: [
+          'NADINE',
+          'NÃO',
+          'PRECISA',
+          'SALVAR',
+          'TODOS'
+        ]
+      },
+      {
+        clue: 'UMA LEMBRANÇA SOBRE A VERDADE.',
+        words: [
+          'A',
+          'VERDADE',
+          'NÃO',
+          'PODE',
+          'SER',
+          'SILENCIADA'
+        ]
+      },
+      {
+        clue: 'AS ÚLTIMAS PALAVRAS QUE MAIA CONSEGUE RECORDAR.',
+        words: [
+          'ATÉ',
+          'A',
+          'ESPERANÇA',
+          'PRECISA',
+          'DE',
+          'CUIDADO'
+        ]
+      }
+    ];
+
+    let currentRound = 0;
+    let timeLeft = DURATION;
+    let timer = null;
+    let playing = false;
+
+    let available = [];
+    let selected = [];
+
+    // Embaralha os índices das palavras.
+    function shuffle(items) {
+      const copy = [...items];
+
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+
+      return copy;
+    }
+
+    function stopVideo() {
+      if (reactionBox) {
+        reactionBox.hidden = true;
+      }
+
+      if (videoEl) {
+        videoEl.pause();
+        videoEl.currentTime = 0;
+      }
+    }
+
+    function playVideo() {
+      if (!reactionBox || !videoEl) return;
+
+      reactionBox.hidden = false;
+
+      videoEl.currentTime = 0;
+      videoEl.play().catch(() => { });
+    }
+
+    // Atualiza as palavras disponíveis e selecionadas.
+    function renderWords() {
+      const memory = memories[currentRound];
+
+      fragmentsBox.innerHTML = '';
+      answerBox.innerHTML = '';
+
+      // Palavras ainda disponíveis.
+      available.forEach((index) => {
+        const button = document.createElement('button');
+
+        button.type = 'button';
+        button.className = 'maia-word';
+        button.textContent = memory.words[index];
+
+        button.addEventListener('click', () => {
+          if (!playing) return;
+
+          available = available.filter(
+            (item) => item !== index
+          );
+
+          selected.push(index);
+
+          renderWords();
+        });
+
+        fragmentsBox.appendChild(button);
+      });
+
+      // Palavras já selecionadas.
+      selected.forEach((index, position) => {
+        const button = document.createElement('button');
+
+        button.type = 'button';
+        button.className = 'maia-word selected';
+        button.textContent = memory.words[index];
+
+        button.setAttribute(
+          'aria-label',
+          `Remover ${memory.words[index]} da posição ${position + 1}`
+        );
+
+        button.addEventListener('click', () => {
+          if (!playing) return;
+
+          selected.splice(position, 1);
+          available.push(index);
+
+          renderWords();
+        });
+
+        answerBox.appendChild(button);
+      });
+
+      // Mostra a instrução quando nada foi selecionado.
+      if (placeholder) {
+        placeholder.hidden = selected.length > 0;
+      }
+
+      // Só permite confirmar quando todas as palavras
+      // estiverem selecionadas.
+      if (confirmBtn) {
+        confirmBtn.disabled =
+          selected.length !== memory.words.length;
+      }
+    }
+
+    // Prepara a rodada atual.
+    function loadRound() {
+      if (!playing) return;
+
+      const memory = memories[currentRound];
+
+      selected = [];
+
+      available = shuffle(
+        memory.words.map((_, index) => index)
+      );
+
+      if (roundLabel) {
+        roundLabel.textContent =
+          `${pad(currentRound + 1)}/${pad(memories.length)}`;
+      }
+
+      if (memoryText) {
+        memoryText.textContent = memory.clue;
+      }
+
+      if (message) {
+        message.textContent =
+          'ORGANIZE OS FRAGMENTOS PARA RECUPERAR A MEMÓRIA.';
+      }
+
+      renderWords();
+    }
+
+    // Verifica se a frase foi reconstruída.
+    function checkAnswer() {
+      if (!playing) return;
+
+      const memory = memories[currentRound];
+
+      if (selected.length !== memory.words.length) {
+        return;
+      }
+
+      const correct = selected.every(
+        (index, position) => index === position
+      );
+
+      if (correct) {
+        currentRound++;
+
+        if (currentRound >= memories.length) {
+          endGame(true);
+        } else {
+          loadRound();
+
+          if (message) {
+            message.textContent =
+              'MEMÓRIA RECUPERADA. UM NOVO FRAGMENTO FOI ENCONTRADO.';
+          }
+        }
+
+      } else {
+        if (message) {
+          message.textContent =
+            'A LEMBRANÇA AINDA ESTÁ CONFUSA. TENTE OUTRA ORDEM.';
+        }
+      }
+    }
+
+    // Finaliza o minigame.
+    function endGame(won) {
+      if (!playing) return;
+
+      playing = false;
+      clearInterval(timer);
+
+      if (arena) arena.hidden = true;
+      if (result) result.hidden = false;
+
+      if (won) {
+        if (resultTitle) {
+          resultTitle.textContent =
+            'MEMÓRIAS RECUPERADAS.';
+        }
+
+        if (resultDesc) {
+          resultDesc.textContent =
+            'Maia conseguiu reconstruir as três lembranças. ' +
+            'Mesmo em meio ao caos, algumas palavras não foram esquecidas.';
+        }
+
+        // Vídeo de vitória da Maia.
+        playVideo();
+
+      } else {
+        if (resultTitle) {
+          resultTitle.textContent =
+            'LEMBRANÇAS PERDIDAS.';
+        }
+
+        if (resultDesc) {
+          resultDesc.textContent =
+            `Você recuperou ${currentRound} de ${memories.length} memórias. ` +
+            'O tempo acabou antes que Maia conseguisse reunir todos os fragmentos.';
+        }
+
+        stopVideo();
+      }
+    }
+
+    // Inicia ou reinicia a partida.
+    function startGame() {
+      clearInterval(timer);
+      stopVideo();
+
+      currentRound = 0;
+      timeLeft = DURATION;
+      playing = true;
+
+      if (intro) intro.hidden = true;
+      if (result) result.hidden = true;
+      if (arena) arena.hidden = false;
+
+      if (timerLabel) {
+        timerLabel.textContent = timeLeft;
+      }
+
+      loadRound();
+
+      timer = setInterval(() => {
+        if (!playing) return;
+
+        timeLeft--;
+
+        if (timerLabel) {
+          timerLabel.textContent = timeLeft;
+        }
+
+        if (timeLeft <= 0) {
+          endGame(false);
+        }
+
+      }, 1000);
+    }
+
+    // Eventos.
+    startBtn?.addEventListener('click', startGame);
+    restartBtn?.addEventListener('click', startGame);
+    confirmBtn?.addEventListener('click', checkAnswer);
+  }
+
+  /* ------------------------------------------------------------------------
+     09. O JULGAMENTO
      ------------------------------------------------------------------------ */
   function initJudgment() {
     const content = $('#story-content');
@@ -1170,7 +1910,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     08. ACESSO AO ARQUIVO 017 (SENHA)
+     10. ACESSO AO ARQUIVO 017 (SENHA)
      ------------------------------------------------------------------------ */
   function initAccessLock() {
     const navLink = $('#nav-julgamento');
@@ -1215,400 +1955,15 @@
   }
 
   /* ------------------------------------------------------------------------
-     09. MINIGAME DO AMÉRICO (REVISADO E CORRIGIDO)
-     ------------------------------------------------------------------------ */
-  function initAmericoGame() {
-    const root = $('#americo-game');
-    if (!root) return;
-
-    const startBtn = $('#americo-start', root);
-    const restartBtn = $('#americo-restart', root);
-    const intro = $('#americo-intro', root);
-    const arena = $('#americo-arena', root);
-    const result = $('#americo-result', root);
-    const headlineText = $('#americo-headline-text', root);
-    const headlineKicker = $('#americo-headline-kicker', root);
-    const timerLabel = $('#americo-timer-label', root);
-    const msg = $('#americo-message', root);
-    const btnCensor = $('#btn-censor', root);
-    const btnBroadcast = $('#btn-broadcast', root);
-    const resultTitle = $('#americo-result-title', root);
-    const resultDesc = $('#americo-result-desc', root);
-
-    const headlines = [
-      { kicker: 'URGENTE', text: 'Protestos pacíficos começam na praça central.', safe: false },
-      { kicker: 'EXCLUSIVO', text: 'Nadine traz uma mensagem de paz ao vivo.', safe: true },
-      { kicker: 'ECONOMIA', text: 'Estoques de alimentos chegam ao fim na capital.', safe: false },
-      { kicker: 'BOATOS', text: 'Dizem que o governo abandonou os setores baixos.', safe: false },
-      { kicker: 'HOMENAGEM', text: 'A nação agradece a generosidade de Américo.', safe: true },
-      { kicker: 'PLANTÃO', text: 'Sinal misterioso interfere nas transmissões da Íris.', safe: false },
-      { kicker: 'SEGURANÇA', text: 'Toque de recolher decretado para manter a ordem.', safe: true }
-    ];
-
-    let currentIdx = 0;
-    let score = 0;
-    let timeLeft = 15;
-    let timer = null;
-    let playing = false;
-
-    function nextHeadline() {
-      if (currentIdx >= headlines.length) {
-        endGame(true);
-        return;
-      }
-      const item = headlines[currentIdx];
-      if (headlineKicker) headlineKicker.textContent = `${item.kicker} (${currentIdx + 1}/${headlines.length})`;
-      if (headlineText) headlineText.textContent = item.text;
-    }
-
-    function handleChoice(userChoiceSafe) {
-      if (!playing) return;
-      const item = headlines[currentIdx];
-
-      if (userChoiceSafe === item.safe) {
-        score += 10;
-        if (msg) msg.textContent = 'EXCELENTE. A OPINIÃO PÚBLICA ESTÁ A SALVO.';
-      } else {
-        score -= 5;
-        if (msg) msg.textContent = 'ERRO GRAVE. O POVO ESTÁ COMENTANDO DEMAIS!';
-      }
-
-      currentIdx++;
-      nextHeadline();
-    }
-
-    function endGame(completed) {
-      playing = false;
-      clearInterval(timer);
-      
-      if (arena) {
-        arena.hidden = true;
-        arena.style.display = 'none';
-      }
-      if (result) {
-        result.hidden = false;
-        result.style.display = 'block';
-      }
-
-      const reactionBox = $('#americo-reaction', root);
-      const videoEl = $('#americo-gif', root);
-
-      if (score >= 30) {
-        if (resultTitle) resultTitle.textContent = 'AMÉRICO ESTÁ ORGULHOSO.';
-        
-        // Exibe e reproduz o vídeo/GIF do Américo
-        if (reactionBox && videoEl) {
-          videoEl.src = 'gif-americo.mp4';
-          reactionBox.hidden = false;
-          videoEl.play().catch(() => {});
-        }
-      } else {
-        if (resultTitle) resultTitle.textContent = 'O CONTROLE FOI PERDIDO.';
-        
-        // Oculta a reação se não atingir a pontuação
-        if (reactionBox) {
-          reactionBox.hidden = true;
-          if (videoEl) videoEl.pause();
-        }
-      }
-
-      if (resultDesc) {
-        resultDesc.textContent = `Você pontuou ${score} pontos gerenciando a emissora. ` +
-          (score >= 30 ? 'Você sabe como manipular o que o povo vê.' : 'A verdade escapou pelas suas mãos.');
-      }
-    }
-
-    function startGame() {
-      currentIdx = 0;
-      score = 0;
-      timeLeft = 15;
-      playing = true;
-
-      const reactionBox = $('#americo-reaction', root);
-      const videoEl = $('#americo-gif', root);
-      if (reactionBox) reactionBox.hidden = true;
-      if (videoEl) {
-        videoEl.pause();
-        videoEl.currentTime = 0;
-      }
-
-      if (intro) intro.hidden = true;
-      if (result) {
-        result.hidden = true;
-        result.style.display = 'none';
-      }
-      if (arena) {
-        arena.hidden = false;
-        arena.style.display = 'flex';
-      }
-
-      nextHeadline();
-
-      clearInterval(timer);
-      timer = setInterval(() => {
-        timeLeft--;
-        if (timerLabel) timerLabel.textContent = `TEMPO: ${timeLeft}s`;
-        if (timeLeft <= 0) {
-          endGame(false);
-        }
-      }, 1000);
-    }
-
-    btnCensor?.addEventListener('click', (e) => {
-      e.preventDefault();
-      handleChoice(false);
-    });
-    
-    btnBroadcast?.addEventListener('click', (e) => {
-      e.preventDefault();
-      handleChoice(true);
-    });
-
-    startBtn?.addEventListener('click', startGame);
-    restartBtn?.addEventListener('click', startGame);
-
-    onMultiClick($('#broadcast-title'), 4, () => {
-      root.classList.add('is-active');
-      root.scrollIntoView({ behavior: 'smooth' });
-      showToast('SALA DE CONTROLE SECRETA DESBLOQUEADA.');
-    });
-  }
-
-  /* ------------------------------------------------------------------------
-     10. O TEMPLO DE NADINE
-     ------------------------------------------------------------------------ */
-  function initNadineTemple() {
-    const btn = $('#nadine-blessing-btn');
-    const msg = $('#nadine-blessing-msg');
-    if (!btn || !msg) return;
-
-    const phrases = [
-      '“Ninguém sobrevive sozinho quando todos decidem que você é a resposta.”',
-      '“A transmissão foi cortada. Restou apenas o eco da sua voz.”',
-      '“Eles acreditam porque é mais fácil do que carregar o próprio medo.”',
-      '“A salvação não tem rosto. Tem preço.”'
-    ];
-
-    btn.addEventListener('click', () => {
-      const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
-      msg.textContent = randomPhrase;
-      showToast('UMA VERDADE FOI REVELADA NO ALTAR.');
-    });
-  }
-
-  /* ------------------------------------------------------------------------
-     11. MINIGAME DA NADINE (O PESO DA FÉ)
-     ------------------------------------------------------------------------ */
-  function initNadineGame() {
-    const trigger = $('#nadine-game-trigger');
-    const modal = $('#nadine-game-modal');
-    const closeBtn = $('#nadine-game-close');
-    const startBtn = $('#nadine-game-start');
-    const restartBtn = $('#nadine-game-restart');
-    const intro = $('#nadine-game-intro');
-    const arena = $('#nadine-game-arena');
-    const resultBox = $('#nadine-game-result');
-    const player = $('#nadine-player');
-    const mentalFill = $('#nadine-mental-fill');
-    const resultTitle = $('#nadine-result-title');
-    const resultDesc = $('#nadine-result-desc');
-    const btnLeft = $('#nadine-btn-left');
-    const btnRight = $('#nadine-btn-right');
-
-    if (!trigger || !modal) return;
-
-    let gameActive = false;
-    let mentalEnergy = 100;
-    let playerX = 50;
-    let gameTimer = null;
-    let spawnTimer = null;
-    let difficultyTimer = null;
-    let secondsElapsed = 0;
-    let spawnIntervalMs = 900;
-    let fallSpeed = 2;
-    let activeWords = [];
-    let keysPressed = {};
-
-    const badWords = ['Crítica', 'Culpa', 'Peso', 'Medo', 'Dúvida', 'Censura', 'Julgamento', 'Exigência'];
-    const goodWords = ['Esperança', 'Luz', 'Paz', 'Verdade', 'Fé', 'Alívio'];
-
-    onMultiClick(trigger, 4, () => {
-      modal.hidden = false;
-      showToast('SANTUÁRIO MENTAL DE NADINE ACESSADO.');
-    });
-
-    closeBtn?.addEventListener('click', () => {
-      modal.hidden = true;
-      stopGame();
-    });
-
-    startBtn?.addEventListener('click', startGame);
-    restartBtn?.addEventListener('click', startGame);
-
-    window.addEventListener('keydown', (e) => {
-      if (!gameActive) return;
-      if (e.key === 'ArrowLeft' || e.key === 'a') keysPressed['left'] = true;
-      if (e.key === 'ArrowRight' || e.key === 'd') keysPressed['right'] = true;
-    });
-
-    window.addEventListener('keyup', (e) => {
-      if (e.key === 'ArrowLeft' || e.key === 'a') keysPressed['left'] = false;
-      if (e.key === 'ArrowRight' || e.key === 'd') keysPressed['right'] = false;
-    });
-
-    let touchInterval = null;
-    const moveTouch = (dir) => {
-      if (!gameActive) return;
-      if (dir === 'left') playerX = Math.max(5, playerX - 4);
-      if (dir === 'right') playerX = Math.min(95, playerX + 4);
-      player.style.left = `${playerX}%`;
-    };
-
-    if (btnLeft && btnRight) {
-      btnLeft.addEventListener('mousedown', () => { touchInterval = setInterval(() => moveTouch('left'), 50); });
-      btnLeft.addEventListener('mouseup', () => clearInterval(touchInterval));
-      btnLeft.addEventListener('touchstart', (e) => { e.preventDefault(); touchInterval = setInterval(() => moveTouch('left'), 50); });
-      btnLeft.addEventListener('touchend', () => clearInterval(touchInterval));
-
-      btnRight.addEventListener('mousedown', () => { touchInterval = setInterval(() => moveTouch('right'), 50); });
-      btnRight.addEventListener('mouseup', () => clearInterval(touchInterval));
-      btnRight.addEventListener('touchstart', (e) => { e.preventDefault(); touchInterval = setInterval(() => moveTouch('right'), 50); });
-      btnRight.addEventListener('touchend', () => clearInterval(touchInterval));
-    }
-
-    function startGame() {
-      intro.hidden = true;
-      resultBox.hidden = true;
-      arena.hidden = false;
-      gameActive = true;
-      mentalEnergy = 100;
-      playerX = 50;
-      secondsElapsed = 0;
-      spawnIntervalMs = 900;
-      fallSpeed = 2;
-      activeWords.forEach(w => w.element.remove());
-      activeWords = [];
-
-      updateMentalBar();
-
-      gameTimer = setInterval(updateGameLoop, 20);
-      spawnTimer = setInterval(spawnWord, spawnIntervalMs);
-
-      difficultyTimer = setInterval(() => {
-        secondsElapsed += 5;
-        if (spawnIntervalMs > 300) spawnIntervalMs -= 100;
-        fallSpeed += 0.4;
-      }, 5000);
-    }
-
-    function stopGame() {
-      gameActive = false;
-      clearInterval(gameTimer);
-      clearInterval(spawnTimer);
-      clearInterval(difficultyTimer);
-      activeWords.forEach(w => w.element.remove());
-      activeWords = [];
-    }
-
-    function spawnWord() {
-      if (!gameActive) return;
-      const isGood = Math.random() > 0.55;
-      const list = isGood ? goodWords : badWords;
-      const text = list[Math.floor(Math.random() * list.length)];
-
-      const el = document.createElement('div');
-      el.className = `nadine-falling-word ${isGood ? 'good' : 'bad'}`;
-      el.textContent = text;
-      arena.appendChild(el);
-
-      const posX = Math.random() * 80 + 10;
-      el.style.left = `${posX}%`;
-
-      activeWords.push({
-        element: el,
-        x: posX,
-        y: -25,
-        isGood: isGood
-      });
-    }
-
-    function updateGameLoop() {
-      if (!gameActive) return;
-
-      if (keysPressed['left']) playerX = Math.max(5, playerX - 2.5);
-      if (keysPressed['right']) playerX = Math.min(95, playerX + 2.5);
-      player.style.left = `${playerX}%`;
-
-      const arenaHeight = arena.clientHeight;
-      const playerRect = player.getBoundingClientRect();
-
-      for (let i = activeWords.length - 1; i >= 0; i--) {
-        let w = activeWords[i];
-        w.y += fallSpeed;
-        w.element.style.top = `${w.y}px`;
-
-        const wordRect = w.element.getBoundingClientRect();
-        if (
-          wordRect.bottom >= playerRect.top &&
-          wordRect.top <= playerRect.bottom &&
-          wordRect.right >= playerRect.left &&
-          wordRect.left <= playerRect.right
-        ) {
-          if (w.isGood) {
-            mentalEnergy = Math.min(100, mentalEnergy + 15);
-          } else {
-            mentalEnergy = Math.max(0, mentalEnergy - 25);
-          }
-          updateMentalBar();
-          w.element.remove();
-          activeWords.splice(i, 1);
-          continue;
-        }
-
-        if (w.y > arenaHeight) {
-          w.element.remove();
-          activeWords.splice(i, 1);
-        }
-      }
-
-      if (mentalEnergy <= 0) {
-        endGame(false);
-      }
-
-      if (secondsElapsed >= 30) {
-        endGame(true);
-      }
-    }
-
-    function updateMentalBar() {
-      mentalFill.style.width = `${mentalEnergy}%`;
-    }
-
-    function endGame(won) {
-      stopGame();
-      arena.hidden = true;
-      resultBox.hidden = false;
-
-      if (won) {
-        resultTitle.textContent = 'FÉ PRESERVADA.';
-        resultDesc.textContent = 'Você resistiu ao peso das críticas e manteve a mente firme por 30 segundos.';
-      } else {
-        resultTitle.textContent = 'MENTE COLAPSADA.';
-        resultDesc.textContent = 'O peso das cobranças foi insuportável e a energia mental se esgotou.';
-      }
-    }
-  }
-
-  /* ------------------------------------------------------------------------
      INICIALIZAÇÃO
      ------------------------------------------------------------------------ */
   initMenu();
   initEasterEggs();
   initBroadcast();
+  initAmericoGame();
   initDeathGame();
+  initNadineGame();
+  initMaiaGame();
   initJudgment();
   initAccessLock();
-  initAmericoGame();
-  initNadineTemple();
-  initNadineGame();
 })();
