@@ -121,7 +121,7 @@ body {
   color: #fff8ec;
   font: 700 11px/1.7 var(--mono);
   letter-spacing: 0.06em;
-  text-align: left;
+  text-align: center;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
@@ -136,16 +136,14 @@ body {
 }
 
 .intro h2,
-.section-heading h2,
-.cast-heading h2 {
+.section-heading h2 {
   margin: 24px 0;
   font: 800 clamp(48px, 6vw, 88px) / 0.85 var(--display);
   letter-spacing: -0.025em;
 }
 
 .intro h2 span,
-.section-heading h2 span,
-.cast-heading h2 span {
+.section-heading h2 span {
   color: var(--red);
 }
 
@@ -213,7 +211,7 @@ body {
 
 .topbar nav {
   display: flex;
-  gap: 32px;
+  gap: 28px;
 }
 
 .topbar nav a,
@@ -414,13 +412,6 @@ body {
   text-transform: uppercase;
 }
 
-.intro cite {
-  display: block;
-  color: var(--muted);
-  font: normal 9px var(--mono);
-  letter-spacing: 0.08em;
-}
-
 /* ==========================================================================
    06. MANIFESTO
    ========================================================================== */
@@ -499,83 +490,6 @@ body {
   color: var(--text-soft);
   font-size: 13px;
   line-height: 1.8;
-}
-
-.character-list {
-  border-top: 2px solid var(--ink);
-}
-
-.character {
-  display: grid;
-  grid-template-columns: 50px 90px minmax(200px, 1fr) 140px;
-  gap: 22px;
-  align-items: center;
-  padding: 23px 0;
-  border-bottom: 1px solid var(--line);
-  transition: background 0.2s, padding 0.2s;
-}
-
-.character:hover {
-  padding-right: 12px;
-  padding-left: 12px;
-  background: rgba(200, 23, 23, 0.055);
-}
-
-.char-no {
-  color: var(--muted);
-  font: 11px var(--mono);
-}
-
-.char-symbol {
-  display: grid;
-  place-items: center;
-  width: 68px;
-  height: 68px;
-  border: 1px solid var(--red);
-  color: var(--red);
-  font: 700 35px var(--display);
-  transform: rotate(-4deg);
-}
-
-.character:nth-child(even) .char-symbol {
-  border-color: var(--ink);
-  color: var(--ink);
-  transform: rotate(4deg);
-}
-
-.char-symbol.is-secret {
-  cursor: pointer;
-}
-
-.char-info h3 {
-  margin: 0 0 8px;
-  font: 800 32px / 0.9 var(--display);
-}
-
-.char-info p {
-  max-width: 550px;
-  margin: 0;
-  color: #5d554b;
-  font-size: 11px;
-  line-height: 1.6;
-}
-
-.char-tag {
-  justify-self: end;
-  color: var(--red);
-  font: 9px var(--mono);
-  letter-spacing: 0.08em;
-}
-
-.character-note {
-  margin: 20px 0 0;
-  color: var(--muted);
-  font: 10px var(--mono);
-  text-align: right;
-}
-
-.character-note span {
-  color: var(--red);
 }
 
 /* ==========================================================================
@@ -897,287 +811,193 @@ body {
 }
 
 /* ==========================================================================
-   MINIGAME DO AMÉRICO (CORREÇÕES DE LAYOUT)
+   CANAL 05 — CONTAGEM REGRESSIVA
    ========================================================================== */
-.americo-game {
-  display: none;
-  margin-top: 50px;
-  padding: 40px;
-  border: 1px solid var(--ink-line);
-  background: #11100e;
-  color: var(--paper);
+.tv-countdown {
+  margin-top: 15px;
 }
 
-.americo-game.is-active {
+.tv-countdown-timer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+  font-family: var(--mono);
+}
+
+.tv-countdown-timer div {
+  text-align: center;
+}
+
+.tv-countdown-timer strong {
   display: block;
+  color: var(--red);
+  font-size: clamp(24px, 4vw, 36px);
+  line-height: 1;
 }
 
-.americo-game .game-arena {
-  position: relative;
-  height: auto;
-  min-height: 280px;
-  padding: 40px 20px 20px;
+.tv-countdown-timer span:not(:last-child) {
+  font-size: 9px;
+  color: var(--paper-mute);
+}
+
+.tv-countdown-timer > span {
+  font-size: 20px;
+  color: var(--red);
+  font-weight: bold;
+}
+
+/* ==========================================================================
+   09. CENTRAL DE MINIGAMES (ABA UNIFICADA)
+   ========================================================================== */
+.minigames-hub {
+  border-top: 1px solid var(--line);
+  background: var(--paper2);
+}
+
+.minigames-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-top: 40px;
+  align-items: stretch;
+}
+
+.minigame-card {
   display: flex;
   flex-direction: column;
-  overflow: visible;
+  justify-content: space-between;
+  border: 1px solid var(--line);
+  background: var(--ink);
+  color: var(--paper);
+  padding: 28px 24px;
+  min-height: 460px;
+  position: relative;
 }
 
-/* Quando estiver oculto com a propriedade hidden, garante que ele suma */
-.americo-game .game-arena[hidden] {
+.minigame-card .btn {
+  --btn-hover: var(--paper);
+  width: 100%;
+}
+
+.minigame-card-top .card-tag {
+  display: block;
+  color: var(--red);
+  font: 9px var(--mono);
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+.minigame-card-top h3 {
+  margin: 0 0 12px;
+  font: 800 32px / 0.95 var(--display);
+  text-transform: uppercase;
+}
+
+.minigame-card-top .card-desc {
+  margin: 0 0 20px;
+  color: var(--paper-dim);
+  font: 11px / 1.7 var(--mono);
+}
+
+.game-intro-box {
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.game-arena-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 270px;
+  padding: 16px;
+  border: 1px solid var(--ink-line);
+  background: #0d0c0a;
+  overflow: hidden;
+  margin-top: auto;
+}
+
+.game-arena-box[hidden],
+.game-result-box[hidden],
+.game-intro-box[hidden] {
   display: none !important;
 }
 
+.arena-hud {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font: 9px var(--mono);
+  color: var(--paper-mute);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+  z-index: 2;
+}
+
+.hud-highlight,
+.arena-hud strong {
+  color: var(--red);
+}
+
+.arena-feedback {
+  margin: 10px 0 0;
+  font: 10px var(--mono);
+  color: var(--paper-dim);
+  text-align: center;
+  z-index: 2;
+}
+
+/* Minigame 01: Américo */
 .americo-prompt-box {
-  margin: 20px 0;
-  padding: 24px 16px;
+  margin: 14px 0;
+  padding: 16px 12px;
   border: 1px dashed var(--ink-line);
   background: rgba(255, 255, 255, 0.02);
   text-align: center;
 }
 
-.americo-prompt-box h3 {
-  margin: 10px 0 0;
-  font: 800 clamp(20px, 4vw, 32px) / 1.1 var(--display);
+.americo-prompt-box h4 {
+  margin: 8px 0 0;
+  font: 800 20px / 1.15 var(--display);
   text-transform: uppercase;
 }
 
 .americo-choices {
-  display: flex !important;
-  justify-content: center !important;
-  gap: 16px !important;
-  margin: 15px 0 !important;
-  width: 100% !important;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .americo-choices .btn {
-  flex: 1 1 auto;
-  text-align: center;
+  padding: 12px 14px;
+  font-size: 10px;
 }
 
-/* ==========================================================================
-   09. ELENCO
-   ========================================================================== */
-.cast {
-  padding-bottom: 115px;
-  background: var(--paper2);
-}
-
-.cast-heading {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr 1fr;
-  gap: 3vw;
-  align-items: end;
-  margin-bottom: 45px;
-}
-
-.cast-heading h2 {
-  margin: 0;
-  font-size: clamp(55px, 7vw, 100px);
-}
-
-.cast-heading > p {
-  margin: 0 0 7px;
-  color: #51493f;
-  font-size: 12px;
-  line-height: 1.7;
-}
-
-.cast-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 34px 20px;
-}
-
-.photo-slot {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
-  border: 1px solid rgba(23, 21, 18, 0.15);
-  background: #c9bead;
-  transition: background 0.3s;
-}
-
-.photo-slot::before,
-.photo-slot::after {
-  content: "";
-  position: absolute;
-  width: 140%;
-  height: 1px;
-  background: rgba(23, 21, 18, 0.18);
-}
-
-.photo-slot::before {
-  transform: rotate(-42deg);
-}
-
-.photo-slot::after {
-  transform: rotate(42deg);
-}
-
-.photo-slot > span:first-child {
-  position: relative;
-  z-index: 1;
-  padding: 8px 10px;
-  background: var(--paper2);
-  font: 10px var(--mono);
-  letter-spacing: 0.1em;
-}
-
-.photo-cross {
-  position: absolute;
-  top: 9px;
-  right: 13px;
-  z-index: 1;
-  color: var(--red);
-  font: 22px var(--mono);
-}
-
-.photo-slot img {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.cast-member:hover .photo-slot {
-  background: #b9aa96;
-}
-
-.cast-caption {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.cast-caption h3 {
-  margin: 0;
-  font: 700 20px var(--display);
-}
-
-.cast-caption p {
-  margin: 0;
-  color: var(--red);
-  font: 9px var(--mono);
-  text-align: right;
-}
-
-.cast-instruction {
-  margin-top: 28px;
-  color: var(--muted);
-  font: 9px var(--mono);
-}
-
-/* ==========================================================================
-   10. JOGO DA MORTE
-   ========================================================================== */
-.death-game {
-  display: none;
-  padding: 80px 5%;
-  border-top: 1px solid rgba(23, 21, 18, 0.35);
-  background: var(--paper);
-  color: var(--ink);
-}
-
-.death-game.is-active {
-  display: block;
-}
-
-.game-heading {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 20px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid rgba(23, 21, 18, 0.35);
-  font: 11px var(--mono);
-  letter-spacing: 1px;
-}
-
-.game-warning,
-.game-kicker {
-  color: var(--red);
-}
-
-.game-intro {
-  max-width: 680px;
-  margin: 65px auto 45px;
-  text-align: center;
-}
-
-.game-kicker {
-  font: 11px var(--mono);
-  letter-spacing: 2px;
-}
-
-.game-title {
-  margin: 25px 0;
-  font: 900 clamp(56px, 11vw, 120px) / 0.86 var(--display);
-  letter-spacing: -0.02em;
-}
-
-.game-title span {
-  color: var(--red);
-}
-
-.game-text {
-  max-width: 420px;
-  margin: 25px auto;
-  font-size: 14px;
-  line-height: 1.8;
-}
-
-.game-arena {
-  position: relative;
-  height: 330px;
-  overflow: hidden;
-  border: 1px solid var(--ink);
-  background: var(--ink);
-  color: var(--paper);
-}
-
-.arena-label,
-.arena-coordinate {
-  position: absolute;
-  top: 16px;
-  color: #b6ad9c;
-  font: 10px var(--mono);
-  letter-spacing: 1px;
-}
-
-.arena-label {
-  left: 16px;
-}
-
-.arena-coordinate {
-  right: 16px;
+/* Minigame 02: Morte */
+.death-arena-box {
+  min-height: 270px;
+  cursor: crosshair;
 }
 
 #death-target {
   position: absolute;
-  width: 54px;
-  height: 64px;
+  width: 48px;
+  height: 56px;
   padding: 0;
   border: 1px solid var(--red);
   background: var(--red);
   color: var(--paper);
-  font: 52px / 1 Georgia, serif;
+  font: 42px / 1 Georgia, serif;
   cursor: pointer;
   transform: translate(-50%, -50%);
-  animation: death-appearance 0.22s ease-out;
+  animation: death-appearance 0.2s ease-out;
   touch-action: manipulation;
+  z-index: 5;
 }
 
 #death-target[hidden] {
-  display: none;
+  display: none !important;
 }
 
 @keyframes death-appearance {
@@ -1185,81 +1005,218 @@ body {
   to   { opacity: 1; scale: 1; }
 }
 
-#game-message {
+/* Minigame 03: Nadine */
+.nadine-arena-box {
+  min-height: 290px;
+  padding: 12px;
+}
+
+.nadine-mental-bar-wrap {
+  position: relative;
+  z-index: 10;
+  font: 9px var(--mono);
+  color: var(--paper);
+}
+
+.nadine-hud-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.nadine-mental-bar {
+  width: 100%;
+  height: 7px;
+  background: #332f2a;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+#nadine-mental-fill {
+  height: 100%;
+  background: var(--red);
+  transition: width 0.1s linear;
+}
+
+.nadine-player-avatar {
   position: absolute;
-  right: 16px;
-  bottom: 12px;
-  left: 16px;
-  margin: 0;
-  color: #b6ad9c;
-  font: 10px var(--mono);
-  letter-spacing: 1px;
-}
-
-.game-scoreboard {
+  bottom: 52px;
+  left: 50%;
+  width: 38px;
+  height: 38px;
+  background: var(--red);
+  color: var(--paper);
+  font: 700 18px var(--display);
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  border-bottom: 1px solid rgba(23, 21, 18, 0.4);
+  place-items: center;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  box-shadow: 0 0 12px rgba(200, 23, 23, 0.7);
 }
 
-.game-scoreboard > div {
-  padding: 22px 12px;
-  border-right: 1px solid rgba(23, 21, 18, 0.25);
+.nadine-falling-word {
+  position: absolute;
+  top: -30px;
+  font: 700 10px var(--mono);
+  padding: 3px 7px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 4;
+  transform: translateX(-50%);
 }
 
-.game-scoreboard > div:first-child {
-  padding-left: 0;
+.nadine-falling-word.bad {
+  background: rgba(200, 23, 23, 0.25);
+  color: #ff8b8b;
+  border: 1px solid var(--red);
 }
 
-.game-scoreboard > div:last-child {
-  border-right: 0;
+.nadine-falling-word.good {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffe68b;
+  border: 1px solid #ffd700;
 }
 
-.score-label,
-.score-unit {
-  display: block;
-  font: 9px / 1.6 var(--mono);
-  letter-spacing: 0.7px;
+.nadine-touch-controls {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
 }
 
-.game-scoreboard strong {
-  display: inline-block;
-  margin-top: 8px;
-  font: 700 clamp(26px, 4vw, 40px) / 1 var(--mono);
+.nadine-touch-controls button {
+  flex: 1;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--paper-mute);
+  color: var(--paper);
+  font-size: 16px;
+  cursor: pointer;
 }
 
-.score-unit {
-  display: inline-block;
-  margin-left: 5px;
+.nadine-touch-controls button:active {
+  background: var(--red);
+  border-color: var(--red);
 }
 
-.game-result {
-  padding: 35px 0 10px;
+/* Resultados dos Cards */
+.game-result-box {
+  margin-top: auto;
+  padding: 20px 14px;
+  border: 1px solid var(--ink-line);
+  background: #0d0c0a;
   text-align: center;
 }
 
-.game-result h3 {
-  margin: 15px 0;
-  font: 800 clamp(40px, 6vw, 64px) / 0.95 var(--display);
-}
-
-.game-result p {
-  font-size: 14px;
-  line-height: 1.7;
-}
-
-.game-footnote {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 10px;
-  margin: 22px 0 0;
-  font: 9px var(--mono);
-  letter-spacing: 0.6px;
-}
-
-.game-footnote span {
+.game-kicker {
+  display: block;
   color: var(--red);
+  font: 9px var(--mono);
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+
+.game-result-box h4 {
+  margin: 0 0 10px;
+  font: 800 26px / 1 var(--display);
+  text-transform: uppercase;
+}
+
+.game-result-box p {
+  margin: 0 0 18px;
+  color: var(--paper-dim);
+  font: 11px / 1.6 var(--mono);
+}
+
+.americo-reaction {
+  margin: 14px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.americo-reaction video,
+.americo-reaction img {
+  width: 120px;
+  height: auto;
+  border: 1px solid var(--red);
+  box-shadow: 0 0 18px rgba(200, 23, 23, 0.45);
+  image-rendering: pixelated;
+}
+
+/* ==========================================================================
+   10. SEÇÃO DE PÔSTERES
+   ========================================================================== */
+.posters {
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.posters-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.poster-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  background: var(--paper2);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.poster-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--red);
+}
+
+.poster-image-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: #171512;
+}
+
+.poster-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.poster-card:hover .poster-image-wrap img {
+  transform: scale(1.05);
+}
+
+.poster-info {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.poster-tag {
+  color: var(--red);
+  font: 9px var(--mono);
+  letter-spacing: 0.1em;
+}
+
+.poster-info h3 {
+  margin: 4px 0 0;
+  font: 800 24px / 0.95 var(--display);
+  text-transform: uppercase;
+}
+
+.poster-info p {
+  margin: 0;
+  color: var(--text-soft);
+  font: 11px / 1.6 var(--mono);
 }
 
 /* ==========================================================================
@@ -1804,304 +1761,27 @@ footer button {
 }
 
 /* ==========================================================================
-   14. TEMPLO DE NADINE
+   14. RESPONSIVO
    ========================================================================== */
-.nadine-temple {
-  border-top: 1px solid var(--line);
-  background: var(--paper2);
+@media (max-width: 1050px) {
+  .minigames-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .minigame-card {
+    min-height: auto;
+  }
 }
 
-.temple-heading {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 10vw;
-  align-items: end;
-  margin-bottom: 45px;
-}
-
-.temple-heading h2 {
-  margin: 24px 0 0;
-  font: 800 clamp(48px, 6vw, 88px) / 0.85 var(--display);
-  letter-spacing: -0.025em;
-}
-
-.temple-heading h2 span {
-  color: var(--red);
-}
-
-.temple-heading > p:last-child {
-  max-width: 390px;
-  margin-bottom: 8px;
-  color: var(--text-soft);
-  font-size: 13px;
-  line-height: 1.8;
-}
-
-.temple-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-  align-items: stretch;
-}
-
-.temple-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 40px;
-  border: 1px solid rgba(23, 21, 18, 0.2);
-  background: var(--paper);
-}
-
-.temple-card h3 {
-  margin: 15px 0 15px;
-  font: 800 32px / 0.95 var(--display);
-  text-transform: uppercase;
-}
-
-.temple-card p {
-  margin: 0;
-  color: var(--text-soft);
-  font-size: 13px;
-  line-height: 1.8;
-}
-
-.shrine-box {
-  align-items: center;
-  text-align: center;
-  border-color: var(--red);
-  background: var(--ink);
-  color: var(--paper);
-}
-
-.shrine-box .file-label {
-  color: var(--paper-mute);
-}
-
-.shrine-symbol {
-  display: grid;
-  place-items: center;
-  width: 75px;
-  height: 75px;
-  margin: 20px auto;
-  border: 1px solid var(--red);
-  color: var(--red);
-  overflow: hidden;
-}
-
-.shrine-symbol img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.shrine-quote {
-  max-width: 400px;
-  margin: 10px 0 25px !important;
-  color: var(--paper-dim) !important;
-  font: italic 13px/1.6 var(--mono);
-}
-
-.shrine-feedback {
-  margin-top: 15px !important;
-  color: var(--red) !important;
-  font: 10px var(--mono);
-  letter-spacing: 0.08em;
-}
-
-/* ==========================================================================
-   MINIGAME DA NADINE
-   ========================================================================== */
-.nadine-game-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  background: rgba(13, 12, 10, 0.95);
-}
-
-.nadine-game-overlay[hidden] {
-  display: none;
-}
-
-.nadine-game-box {
-  position: relative;
-  width: min(550px, 100%);
-  padding: 30px;
-  border-top: 7px solid var(--red);
-  background: var(--paper);
-  color: var(--ink);
-  text-align: center;
-}
-
-.nadine-game-intro {
-  padding: 20px 0;
-}
-
-.nadine-game-intro h3 {
-  font: 800 32px var(--display);
-  margin-bottom: 15px;
-}
-
-.nadine-game-arena {
-  position: relative;
-  width: 100%;
-  height: 380px;
-  margin-top: 15px;
-  background: var(--ink);
-  overflow: hidden;
-  border: 1px solid var(--ink-line);
-}
-
-.nadine-mental-bar-wrap {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  right: 10px;
-  z-index: 10;
-  color: var(--paper);
-  font: 9px var(--mono);
-  text-align: left;
-}
-
-.nadine-mental-bar {
-  width: 100%;
-  height: 8px;
-  margin-top: 4px;
-  background: #332f2a;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-#nadine-mental-fill {
-  height: 100%;
-  background: var(--red);
-  transition: width 0.1s linear;
-}
-
-.nadine-player-avatar {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  width: 45px;
-  height: 45px;
-  background: var(--red);
-  color: var(--paper);
-  font: 700 20px var(--display);
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  transform: translateX(-50%);
-  z-index: 5;
-  box-shadow: 0 0 15px rgba(200, 23, 23, 0.6);
-}
-
-.nadine-falling-word {
-  position: absolute;
-  top: -30px;
-  font: 700 11px var(--mono);
-  padding: 4px 8px;
-  white-space: nowrap;
-  pointer-events: none;
-  z-index: 4;
-}
-
-.nadine-falling-word.bad {
-  background: rgba(200, 23, 23, 0.2);
-  color: #ff8b8b;
-  border: 1px solid var(--red);
-}
-
-.nadine-falling-word.good {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffe68b;
-  border: 1px solid #ffd700;
-  box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
-}
-
-.nadine-touch-controls {
-  position: absolute;
-  bottom: 10px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 15px;
-  z-index: 10;
-  pointer-events: auto;
-}
-
-.nadine-touch-controls button {
-  width: 50px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid var(--paper);
-  color: var(--paper);
-  font-size: 18px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.nadine-touch-controls button:active {
-  background: var(--red);
-}
-
-.nadine-game-result {
-  padding: 20px 0;
-}
-
-.nadine-game-result h3 {
-  font: 800 28px var(--display);
-  margin-bottom: 10px;
-}
-
-/* ==========================================================================
-   CANAL 05 — CONTAGEM REGRESSIVA
-   ========================================================================== */
-.tv-countdown {
-  margin-top: 15px;
-}
-
-.tv-countdown-timer {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 8px;
-  font-family: var(--mono);
-}
-
-.tv-countdown-timer div {
-  text-align: center;
-}
-
-.tv-countdown-timer strong {
-  display: block;
-  color: var(--red);
-  font-size: clamp(24px, 4vw, 36px);
-  line-height: 1;
-}
-
-.tv-countdown-timer span:not(:last-child) {
-  font-size: 9px;
-  color: var(--paper-mute);
-}
-
-.tv-countdown-timer > span {
-  font-size: 20px;
-  color: var(--red);
-  font-weight: bold;
-}
-
-/* ==========================================================================
-   15. RESPONSIVO
-   ========================================================================== */
 @media (max-width: 900px) {
   .broadcast-layout {
     grid-template-columns: 1fr;
+  }
+
+  .posters-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
   }
 }
 
@@ -2255,32 +1935,6 @@ footer button {
     font-size: clamp(65px, 16vw, 100px);
   }
 
-  .character {
-    grid-template-columns: 25px 55px 1fr;
-    gap: 12px;
-    padding: 17px 0;
-  }
-
-  .char-symbol {
-    width: 50px;
-    height: 55px;
-    font-size: 28px;
-  }
-
-  .char-info h3 {
-    font-size: 27px;
-  }
-
-  .char-info p {
-    font-size: 10px;
-  }
-
-  .char-tag {
-    grid-column: 3;
-    justify-self: start;
-    margin-top: -7px;
-  }
-
   .broadcast {
     padding: 60px 6vw 55px;
   }
@@ -2312,32 +1966,6 @@ footer button {
   .schedule-tag {
     grid-column: 2;
     justify-self: start;
-  }
-
-  .cast-heading {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .cast-heading h2 {
-    font-size: clamp(65px, 15vw, 95px);
-  }
-
-  .cast-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 25px 12px;
-  }
-
-  .cast-caption {
-    display: block;
-  }
-
-  .cast-caption h3 {
-    font-size: 18px;
-  }
-
-  .cast-caption p {
-    text-align: left;
   }
 
   .judgment-heading {
@@ -2410,82 +2038,17 @@ footer button {
   .secret-paper {
     padding: 35px 25px;
   }
-
-  .temple-heading {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-  
-  .temple-grid {
-    grid-template-columns: 1fr;
-  }
-
-  /* CORREÇÃO FORÇADA E DEFINITIVA DOS BOTÕES NO CELULAR */
-  .americo-game {
-    padding: 20px 12px !important;
-  }
-
-  .americo-choices {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 12px !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 15px 0 0 0 !important;
-    padding: 0 !important;
-    box-sizing: border-box !important;
-  }
-
-  .americo-choices button,
-  .americo-choices .btn {
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    flex: unset !important;
-    margin: 0 !important;
-    padding: 14px 10px !important;
-    text-align: center !important;
-    white-space: normal !important;
-    box-sizing: border-box !important;
-  }
 }
 
 @media (max-width: 600px) {
-  .death-game {
-    padding: 50px 5%;
-  }
-
-  .game-intro {
-    margin: 45px auto 35px;
-  }
-
-  .game-arena {
-    height: 280px;
-  }
-
-  #death-target {
-    width: 36px;
-    height: 44px;
-    font-size: 32px;
-  }
-
-  .game-scoreboard > div {
-    padding: 16px 7px;
-  }
-
-  .score-label {
-    font-size: 8px;
-  }
-
-  .score-unit {
-    display: block;
-    margin-left: 0;
+  .posters-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
 }
 
 /* ==========================================================================
-   16. MOVIMENTO REDUZIDO
+   15. MOVIMENTO REDUZIDO
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -2499,112 +2062,1163 @@ footer button {
     transition: none !important;
   }
 }
+
+
 /* ==========================================================================
-   17. SEÇÃO DE PÔSTERES
+   16. RESPONSIVIDADE COMPLEMENTAR — MISANTROPIA
+   Celulares, tablets, notebooks e desktops
+
+   Mantém a identidade visual e as funcionalidades originais.
    ========================================================================== */
-.posters {
-  border-top: 1px solid var(--line);
-  background: var(--paper);
-}
 
-.posters-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  margin-top: 40px;
-}
+/* --------------------------------------------------------------------------
+   01. AJUSTES GERAIS
+   -------------------------------------------------------------------------- */
 
-.poster-card {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--line);
-  background: var(--paper2);
-  transition: transform 0.3s ease, border-color 0.3s ease;
-}
-
-.poster-card:hover {
-  transform: translateY(-6px);
-  border-color: var(--red);
-}
-
-.poster-image-wrap {
-  position: relative;
+html {
   width: 100%;
-  aspect-ratio: 3 / 4;
-  overflow: hidden;
-  background: #171512;
 }
 
-.poster-image-wrap img {
+body {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease, filter 0.4s ease;
+  min-width: 0;
 }
 
-.poster-card:hover .poster-image-wrap img {
-  transform: scale(1.05);
+img,
+video,
+svg {
+  max-width: 100%;
 }
 
-.poster-info {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+img,
+video {
+  height: auto;
 }
 
-.poster-tag {
-  color: var(--red);
-  font: 9px var(--mono);
-  letter-spacing: 0.1em;
+main,
+section,
+footer {
+  min-width: 0;
 }
 
-.poster-info h3 {
-  margin: 4px 0 0;
-  font: 800 24px / 0.95 var(--display);
-  text-transform: uppercase;
+.section-pad,
+.broadcast,
+.manifesto,
+.finale,
+.judgment {
+  min-width: 0;
 }
 
-.poster-info p {
-  margin: 0;
-  color: var(--text-soft);
-  font: 11px / 1.6 var(--mono);
+.intro > *,
+.section-heading > *,
+.broadcast-heading > *,
+.broadcast-layout > *,
+.judgment-layout > *,
+.minigames-grid > *,
+.posters-grid > * {
+  min-width: 0;
 }
 
-@media (max-width: 900px) {
-  .posters-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+.tv-body,
+.judgment-console,
+#story-content,
+.minigame-card {
+  min-width: 0;
+}
+
+.tv-body h3,
+#story-content h3,
+.story-choice,
+.game-result-box p {
+  overflow-wrap: break-word;
+}
+
+/* --------------------------------------------------------------------------
+   02. NOTEBOOKS E TABLETS HORIZONTAIS
+   Até 1200px
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 1200px) {
+
+  .topbar {
+    gap: 18px;
+    padding-inline: 4vw;
   }
+
+  .topbar nav {
+    gap: clamp(10px, 1.6vw, 24px);
+  }
+
+  .section-pad {
+    padding: 85px 6vw;
+  }
+
+  .intro {
+    grid-template-columns: 1fr 1.5fr;
+    gap: 3vw;
+  }
+
+  .intro > .section-index {
+    grid-column: 1 / -1;
+  }
+
+  .intro h2 {
+    font-size: clamp(48px, 6.5vw, 78px);
+  }
+
+  .intro-text {
+    max-width: 100%;
+  }
+
+  .manifesto {
+    padding-inline: 6vw;
+  }
+
+  .manifesto-line {
+    font-size: clamp(80px, 15vw, 180px);
+  }
+
+  .section-heading {
+    gap: 5vw;
+  }
+
+  .broadcast {
+    padding-inline: 6vw;
+  }
+
+  .broadcast-heading h2 {
+    font-size: clamp(54px, 8vw, 105px);
+  }
+
+  .minigames-grid {
+    gap: 22px;
+  }
+
+  .judgment-layout {
+    gap: 18px;
+  }
+
+  .file-stamp {
+    font-size: 9px;
+  }
+
 }
 
-@media (max-width: 600px) {
-  .posters-grid {
-    grid-template-columns: 1fr;
+/* --------------------------------------------------------------------------
+   03. TABLETS — 761px A 1050px
+   -------------------------------------------------------------------------- */
+
+@media (min-width: 761px) and (max-width: 1050px) {
+
+  .hero {
+    min-height: auto;
+    padding-bottom: 35px;
+  }
+
+  .hero h1 {
+    font-size: clamp(90px, 14vw, 155px);
+  }
+
+  .logo-band {
     gap: 24px;
   }
+
+  .main-logo {
+    width: min(35vw, 360px);
+  }
+
+  .logo-band p {
+    font-size: clamp(11px, 1.2vw, 15px);
+  }
+
+  .intro {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  .section-heading h2 {
+    font-size: clamp(65px, 8vw, 100px);
+  }
+
+  .broadcast-heading {
+    gap: 30px;
+  }
+
+  .broadcast-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .station-file {
+    padding: 28px;
+  }
+
+  .station-data {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 28px;
+  }
+
+  .minigames-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .minigame-card {
+    min-height: 450px;
+  }
+
+  .posters-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  .judgment-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .judgment-file {
+    min-height: auto;
+  }
+
+  .file-number {
+    font-size: 110px;
+  }
+
+  .file-inventory {
+    margin-top: 24px;
+  }
+
+  .finale h2 {
+    font-size: clamp(100px, 15vw, 170px);
+  }
+
 }
+
+/* --------------------------------------------------------------------------
+   04. MENU PARA TABLETS E TELAS INTERMEDIÁRIAS
+   -------------------------------------------------------------------------- */
+
+@media (min-width: 761px) and (max-width: 1100px) {
+
+  .topbar nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 30;
+
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+
+    padding: 14px 5vw 24px;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+  }
+
+  .topbar nav.open {
+    display: flex;
+  }
+
+  .topbar nav a {
+    display: block;
+    padding: 14px 0;
+  }
+
+  .topbar nav a[hidden] {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: block;
+    flex-shrink: 0;
+  }
+
+  .ticket-link {
+    margin-left: auto;
+  }
+
+}
+
+/* --------------------------------------------------------------------------
+   05. CELULARES E TABLETS PEQUENOS
+   Até 760px
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 760px) {
+
+  .section-pad {
+    padding: 65px 6vw;
+  }
+
+  /* Navegação */
+
+  .topbar {
+    gap: 12px;
+  }
+
+  .wordmark {
+    flex-shrink: 0;
+  }
+
+  .wordmark i {
+    font-size: 9px;
+  }
+
+  .topbar nav {
+    z-index: 30;
+    max-height: calc(100dvh - 64px);
+    overflow-y: auto;
+  }
+
+  .topbar nav a {
+    padding: 7px 0;
+  }
+
+  .topbar nav a[hidden] {
+    display: none;
+  }
+
+  .menu-toggle {
+    flex-shrink: 0;
+    min-width: 36px;
+    min-height: 40px;
+  }
+
+  /* Abertura */
+
+  .hero {
+    min-height: calc(100svh - 64px);
+    height: auto;
+  }
+
+  .hero-title-wrap {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .hero h1 {
+    max-width: 100%;
+    font-size: clamp(58px, 15vw, 110px);
+    line-height: 0.8;
+    letter-spacing: -0.045em;
+  }
+
+  .hero h1 em {
+    padding-left: 4vw;
+  }
+
+  .logo-band {
+    width: 100%;
+  }
+
+  .logo-band-left {
+    min-width: 0;
+    gap: 16px;
+  }
+
+  .hero-stamp {
+    flex-shrink: 0;
+  }
+
+  .main-logo {
+    width: min(65vw, 320px);
+    max-width: 100%;
+  }
+
+  .hero-bottom {
+    gap: 12px;
+  }
+
+  /* Contexto */
+
+  .intro {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 15px;
+  }
+
+  .intro h2 {
+    font-size: clamp(46px, 11vw, 65px);
+    line-height: 0.95;
+  }
+
+  .intro-text {
+    max-width: 100%;
+  }
+
+  /* Manifesto */
+
+  .manifesto-line {
+    font-size: clamp(55px, 17vw, 125px);
+    line-height: 0.8;
+  }
+
+  .manifesto-line.indent {
+    margin-left: 6vw;
+  }
+
+  .manifesto-foot p {
+    max-width: 100%;
+  }
+
+  /* Títulos das seções */
+
+  .section-heading {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .section-heading h2 {
+    font-size: clamp(50px, 13vw, 90px);
+    line-height: 0.9;
+  }
+
+  .section-heading > p {
+    max-width: 100%;
+  }
+
+  /* Emissora */
+
+  .broadcast-heading {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .broadcast-heading h2 {
+    font-size: clamp(48px, 11vw, 85px);
+    line-height: 0.9;
+  }
+
+  .broadcast-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tv-screen {
+    min-width: 0;
+  }
+
+  .tv-body {
+    padding: 20px;
+  }
+
+  .tv-body h3 {
+    font-size: clamp(30px, 7vw, 52px);
+  }
+
+  .tv-controls {
+    flex-wrap: wrap;
+  }
+
+  .tv-channel-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .station-file {
+    padding: 22px;
+  }
+
+  .schedule-list li {
+    grid-template-columns: 62px minmax(0, 1fr);
+  }
+
+  /* Minigames */
+
+  .minigames-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .minigame-card {
+    width: 100%;
+    min-height: auto;
+    padding: 24px 20px;
+  }
+
+  .game-arena-box {
+    min-width: 0;
+  }
+
+  .americo-choices .btn {
+    min-height: 44px;
+  }
+
+  .nadine-touch-controls button {
+    min-height: 44px;
+    touch-action: none;
+  }
+
+  /* Pôsteres */
+
+  .posters-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .poster-info {
+    padding: 16px;
+  }
+
+  /* Julgamento */
+
+  .judgment-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .judgment-file {
+    min-width: 0;
+  }
+
+  .judgment-console {
+    width: 100%;
+  }
+
+  #story-content {
+    min-width: 0;
+  }
+
+  .story-choice {
+    overflow-wrap: anywhere;
+  }
+
+  .judgment-lock-card {
+    max-width: 100%;
+  }
+
+  /* Encerramento */
+
+  .finale {
+    min-height: 500px;
+  }
+
+  .finale h2 {
+    font-size: clamp(65px, 17vw, 125px);
+    line-height: 0.8;
+  }
+
+}
+
+/* --------------------------------------------------------------------------
+   06. CELULARES — ATÉ 600px
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 600px) {
+
+  .posters-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .poster-card {
+    width: 100%;
+    max-width: 450px;
+    margin-inline: auto;
+  }
+
+  .tv-countdown-timer {
+    gap: clamp(4px, 2vw, 12px);
+  }
+
+  .tv-countdown-timer strong {
+    font-size: clamp(20px, 6vw, 32px);
+  }
+
+  .tv-countdown-timer > span {
+    font-size: 16px;
+  }
+
+  .station-data {
+    display: block;
+  }
+
+  #julgamento-form {
+    flex-direction: column;
+  }
+
+  #julgamento-input {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  #julgamento-form .btn {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .story-dialog {
+    width: calc(100% - 24px);
+    max-height: 85dvh;
+    padding: 20px;
+  }
+
+  .secret-paper {
+    max-height: 90dvh;
+    overflow-y: auto;
+  }
+
+}
+
+/* --------------------------------------------------------------------------
+   07. CELULARES PEQUENOS — ATÉ 400px
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 400px) {
+
+  .topbar {
+    padding-inline: 4vw;
+  }
+
+  .wordmark {
+    font-size: 20px;
+  }
+
+  .wordmark i {
+    font-size: 8px;
+    margin-left: 4px;
+  }
+
+  .ticket-link {
+    font-size: 9px;
+    margin-right: 4px;
+  }
+
+  .hero {
+    padding: 18px 5vw 16px;
+  }
+
+  .hero-meta {
+    gap: 10px;
+    font-size: 7px;
+  }
+
+  .hero h1 {
+    font-size: clamp(49px, 14.5vw, 65px);
+    letter-spacing: -0.05em;
+  }
+
+  .hero h1 em {
+    padding-left: 2vw;
+  }
+
+  .logo-band-left {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 14px;
+  }
+
+  .hero-stamp {
+    padding: 9px 11px;
+    font-size: 9px;
+  }
+
+  .main-logo {
+    width: min(70vw, 245px);
+  }
+
+  .intro h2 {
+    font-size: clamp(42px, 11vw, 50px);
+  }
+
+  .manifesto-line {
+    font-size: 17vw;
+  }
+
+  .manifesto-line.indent {
+    margin-left: 4vw;
+  }
+
+  .manifesto-foot {
+    gap: 8px;
+  }
+
+  .section-heading h2 {
+    font-size: clamp(43px, 12vw, 60px);
+  }
+
+  .broadcast-heading h2 {
+    font-size: clamp(42px, 10.5vw, 55px);
+  }
+
+  .tv-screen {
+    min-height: 310px;
+    border-width: 5px;
+  }
+
+  .tv-body {
+    padding: 14px;
+  }
+
+  .tv-body h3 {
+    font-size: 30px;
+  }
+
+  .tv-body p:not(.tv-kicker) {
+    font-size: 10px;
+    line-height: 1.6;
+  }
+
+  .tv-hud {
+    padding: 12px;
+  }
+
+  .tv-channel-btn {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .schedule-list li {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .schedule-tag {
+    grid-column: 1;
+  }
+
+  .minigame-card {
+    padding: 20px 15px;
+  }
+
+  .minigame-card-top h3 {
+    font-size: 29px;
+  }
+
+  .game-arena-box {
+    padding: 12px;
+  }
+
+  .arena-hud {
+    flex-wrap: wrap;
+  }
+
+  .judgment-heading h2 {
+    font-size: clamp(45px, 12vw, 65px);
+  }
+
+  .judgment-file {
+    padding: 20px;
+  }
+
+  .file-number {
+    font-size: 85px;
+  }
+
+  .file-stamp {
+    top: 64px;
+    right: 12px;
+    font-size: 8px;
+  }
+
+  #story-content {
+    padding: 22px 14px;
+  }
+
+  .story-choice {
+    padding: 13px 10px;
+    font-size: 10px;
+  }
+
+  .finale h2 {
+    font-size: clamp(58px, 16vw, 80px);
+  }
+
+  .finale-bottom {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .secret-paper {
+    padding: 30px 18px;
+  }
+
+}
+
+/* --------------------------------------------------------------------------
+   08. TELAS MUITO ESTREITAS
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 340px) {
+
+  .wordmark i {
+    display: none;
+  }
+
+  .hero h1 {
+    font-size: 14vw;
+  }
+
+  .hero-meta {
+    flex-wrap: wrap;
+  }
+
+  .hero-stamp {
+    font-size: 8px;
+  }
+
+  .intro h2 {
+    font-size: 40px;
+  }
+
+  .section-heading h2 {
+    font-size: 42px;
+  }
+
+  .tv-countdown-timer {
+    gap: 3px;
+  }
+
+  .tv-countdown-timer strong {
+    font-size: 19px;
+  }
+
+}
+
+/* --------------------------------------------------------------------------
+   09. TABLETS E CELULARES EM MODO PAISAGEM
+   -------------------------------------------------------------------------- */
+
+@media (max-height: 500px) and (orientation: landscape) {
+
+  .hero {
+    min-height: auto;
+    padding-bottom: 30px;
+  }
+
+  .hero-title-wrap {
+    padding-top: 15px;
+  }
+
+  .hero h1 {
+    font-size: clamp(55px, 10vw, 115px);
+  }
+
+  .logo-band {
+    margin-top: 25px;
+  }
+
+  .finale {
+    min-height: auto;
+    padding-block: 50px 30px;
+  }
+
+  .finale h2 {
+    margin: 35px 0;
+  }
+
+  .secret-overlay {
+    overflow-y: auto;
+  }
+
+  .secret-paper {
+    max-height: 90dvh;
+    overflow-y: auto;
+  }
+
+}
+
+/* --------------------------------------------------------------------------
+   10. DISPOSITIVOS COM TOQUE
+   -------------------------------------------------------------------------- */
+
+@media (hover: none) and (pointer: coarse) {
+
+  .btn,
+  .tv-channel-btn,
+  .menu-toggle,
+  .story-choice,
+  .story-restart {
+    touch-action: manipulation;
+  }
+
+  .tv-channel-btn,
+  .story-choice,
+  .menu-toggle {
+    min-height: 44px;
+  }
+
+  .nadine-touch-controls button {
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+}
+
+/* --------------------------------------------------------------------------
+   11. AJUSTES PARA MOVIMENTO REDUZIDO
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+}
+
+
 /* ==========================================================================
-   REAÇÃO DO AMÉRICO NO MINIGAME
+   GIF DE REAÇÃO — NADINE
    ========================================================================== */
-.americo-reaction {
-  margin: 20px auto;
+
+.nadine-reaction {
+  margin: 14px auto;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.americo-reaction img {
-  width: 140px;
+.nadine-reaction[hidden] {
+  display: none !important;
+}
+
+.nadine-reaction video {
+  width: 120px;
+  max-width: 100%;
   height: auto;
   border: 1px solid var(--red);
-  box-shadow: 0 0 20px rgba(200, 23, 23, 0.4);
-  image-rendering: pixelated; /* Mantém os pixels nítidos */
+  box-shadow: 0 0 18px rgba(200, 23, 23, 0.45);
+  image-rendering: pixelated;
 }
-/* OCULTAR ABAS SEGUNDO ESPECIFICAÇÕES DO PROJETO */
-.cast {
+
+
+/* ==========================================================================
+   GIF DE REAÇÃO — MORTE
+   ========================================================================== */
+
+.morte-reaction {
+  margin: 14px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.morte-reaction[hidden] {
   display: none !important;
 }
-.nadine-temple {
+
+.morte-reaction video {
+  width: 120px;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--red);
+  box-shadow: 0 0 18px rgba(200, 23, 23, 0.45);
+  image-rendering: pixelated;
+}
+
+/* ==========================================================================
+   17. MINIGAME 04 — MAIA: FRAGMENTOS DA VERDADE
+   ========================================================================== */
+
+/* Quatro minigames em duas colunas */
+
+.minigames-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+  align-items: stretch;
+}
+
+/* Área do minigame */
+
+.maia-arena-box {
+  min-height: 370px;
+  gap: 16px;
+}
+
+.maia-label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--red);
+  font: 9px var(--mono);
+  letter-spacing: 0.1em;
+}
+
+/* Mensagem recuperada */
+
+.maia-memory {
+  padding: 16px 14px;
+  border-left: 2px solid var(--red);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.maia-memory p {
+  margin: 0;
+  color: var(--paper);
+  font: 700 17px / 1.3 var(--display);
+  text-transform: uppercase;
+}
+
+/* Área de reconstrução */
+
+.maia-answer-area {
+  min-height: 105px;
+  padding: 14px;
+  border: 1px dashed var(--ink-line);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.maia-answer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.maia-placeholder {
+  margin: 0;
+  color: var(--paper-mute);
+  font: 10px / 1.7 var(--mono);
+}
+
+/* Fragmentos disponíveis */
+
+.maia-fragments-area {
+  padding: 4px 0;
+}
+
+.maia-fragments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Botões das palavras */
+
+.maia-word {
+  min-height: 40px;
+  padding: 9px 12px;
+  border: 1px solid var(--ink-line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--paper);
+  font: 700 11px var(--mono);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.maia-word:hover,
+.maia-word:focus-visible {
+  border-color: var(--red);
+  background: rgba(200, 23, 23, 0.15);
+}
+
+/* Palavras selecionadas */
+
+.maia-word.selected {
+  border-color: var(--red);
+  background: var(--red);
+  color: #fff8ec;
+}
+
+.maia-word.selected:hover {
+  background: #a81111;
+}
+
+/* Botão de confirmação */
+
+.maia-confirm-btn {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.maia-confirm-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Feedback */
+
+#maia-message {
+  min-height: 20px;
+  margin: 0;
+}
+
+/* Reação em vídeo */
+
+.maia-reaction {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 14px auto;
+}
+
+.maia-reaction[hidden] {
   display: none !important;
+}
+
+.maia-reaction video {
+  display: block;
+  width: 120px;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--red);
+  box-shadow: 0 0 18px rgba(200, 23, 23, 0.45);
+  image-rendering: pixelated;
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE DA CENTRAL DE MINIGAMES
+   ========================================================================== */
+
+/* Tablets e celulares */
+
+@media (max-width: 760px) {
+
+  .minigames-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
+
+  .minigame-card {
+    min-width: 0;
+  }
+
+  .maia-arena-box {
+    min-height: 370px;
+    padding: 14px;
+  }
+
+  .maia-memory p {
+    font-size: 16px;
+  }
+
+  .maia-word {
+    min-height: 44px;
+    padding: 10px 12px;
+  }
+
+}
+
+/* Celulares pequenos */
+
+@media (max-width: 400px) {
+
+  .maia-arena-box {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .maia-memory {
+    padding: 12px;
+  }
+
+  .maia-answer-area {
+    padding: 12px;
+  }
+
+  .maia-word {
+    font-size: 10px;
+    padding: 9px 10px;
+  }
+
+  .maia-label {
+    font-size: 8px;
+  }
+
 }
