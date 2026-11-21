@@ -22,17 +22,10 @@
     rel="stylesheet" />
 
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="word-games.css" />
   <link rel="icon" type="image/png" href="favicon.png" />
 
   <!-- Contador de Acessos GoatCounter -->
-  <script>
-  window.goatcounter = {
-    path: function(p) {
-      // Adiciona um número aleatório a cada F5/acesso para o GoatCounter achar que é uma visita nova
-      return p + '?v=' + Date.now();
-    }
-  };
-</script>
   <script data-goatcounter="https://misantropia-site.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 
@@ -431,10 +424,8 @@
 
 
         <p>
-          Assuma o controle da emissora, encare a vigilância da Morte,
-          proteja a mente de Nadine contra o peso da fé ou ajude Maia
-          a reconstruir memórias fragmentadas.
-          Escolha um desafio abaixo.
+          Assuma o controle da emissora, encare a Morte, ajude Nadine e Maia
+          ou decifre as palavras do universo de Misantropia.
         </p>
       </div>
 
@@ -691,6 +682,60 @@
 
         </article>
 
+        <article class="minigame-card word-game" id="caca-palavras" aria-labelledby="caca-title">
+          <div class="minigame-card-top">
+            <h3 id="caca-title">CAÇA-PALAVRAS</h3>
+            <p class="card-desc">Encontre nomes e palavras que atravessam a peça.</p>
+          </div>
+          <button class="btn word-game-start" type="button">ABRIR O CAÇA-PALAVRAS</button>
+          <div class="game-arena-box" hidden>
+            <p>Selecione a primeira e a última letra. Vale horizontal, vertical e diagonal, nos dois sentidos.</p>
+            <div class="word-grid search-grid" role="group" aria-label="Grade do caça-palavras"></div>
+            <ul class="search-words" aria-label="Palavras para encontrar"></ul>
+            <p class="word-feedback" role="status"></p>
+            <button class="btn word-game-reset" type="button">NOVO TABULEIRO</button>
+          </div>
+        </article>
+
+        <article class="minigame-card word-game" id="palavras-cruzadas" aria-labelledby="cruzadas-title">
+          <div class="minigame-card-top">
+            <h3 id="cruzadas-title">PALAVRAS CRUZADAS</h3>
+            <p class="card-desc">Use as pistas para preencher os nomes e temas da peça.</p>
+          </div>
+          <button class="btn word-game-start" type="button">ABRIR AS CRUZADAS</button>
+          <div class="game-arena-box" hidden>
+            <p>Toque em uma casa ou pista e digite com seu teclado. Toque de novo em um cruzamento para trocar a direção.</p>
+            <div class="word-grid crossword-grid" role="group" aria-label="Grade das palavras cruzadas">
+              <input class="crossword-entry" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" enterkeyhint="next" spellcheck="false" aria-label="Letra da casa selecionada" hidden />
+            </div>
+            <ul class="crossword-clues" aria-label="Pistas"></ul>
+            <p class="word-feedback" role="status"></p>
+            <div class="word-actions">
+              <button class="btn crossword-check" type="button">CONFERIR</button>
+              <button class="btn word-game-reset" type="button">RECOMEÇAR</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="minigame-card word-game" id="termo-tematico" aria-labelledby="termo-title">
+          <div class="minigame-card-top">
+            <h3 id="termo-title">TERMO TEMÁTICO</h3>
+            <p class="card-desc">Descubra uma palavra de cinco letras ligada a Misantropia em até seis tentativas.</p>
+          </div>
+          <button class="btn word-game-start" type="button">ABRIR O TERMO</button>
+          <div class="game-arena-box" hidden>
+            <p class="term-legend"><span data-mark="exact">✓ Casa certa</span><span data-mark="present">↔ Outra casa</span><span data-mark="absent">× Letra ausente</span></p>
+            <form class="term-form" novalidate>
+              <div class="term-board">
+                <ol class="term-history" aria-label="Seis tentativas de cinco letras"></ol>
+                <input id="term-guess" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" enterkeyhint="send" spellcheck="false" aria-label="Palpite de cinco letras, tentativa 1 de 6" />
+              </div>
+              <button class="btn" type="submit">ENVIAR PALPITE</button>
+            </form>
+            <p class="word-feedback" role="status"></p>
+            <button class="btn word-game-reset" type="button">NOVA PALAVRA</button>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -943,6 +988,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="script.js"></script>
+  <script src="word-games.js"></script>
 </body>
 
 </html>
