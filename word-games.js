@@ -16,31 +16,60 @@
 
   function makeSearchPuzzle(words, size) {
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const directions = [[0, 1], [1, 0], [1, 1], [-1, 1], [0, -1], [-1, 0], [-1, -1], [1, -1]];
+    const axes = [[[0, 1], [0, -1]], [[1, 0], [-1, 0]], [[1, 1], [-1, 1], [-1, -1], [1, -1]]];
+    const directions = axes.flat();
+    const longestFirst = [...words].sort((left, right) => right.length - left.length);
     const letters = Array(size * size).fill('');
-    for (const [index, word] of words.entries()) {
+
+    function placeWord(word, allowedDirections) {
       const paths = [];
-      const [dr, dc] = directions[index % directions.length];
-      for (let row = 0; row < size; row += 1) {
-        for (let col = 0; col < size; col += 1) {
-          const endRow = row + dr * (word.length - 1);
-          const endCol = col + dc * (word.length - 1);
-          if (endRow < 0 || endCol < 0 || endRow >= size || endCol >= size) continue;
-          const path = Array.from(word, (_, step) => (row + dr * step) * size + col + dc * step);
-          if (path.every((cell, step) => !letters[cell] || letters[cell] === word[step])) paths.push(path);
+      for (const [dr, dc] of allowedDirections) {
+        for (let row = 0; row < size; row += 1) {
+          for (let col = 0; col < size; col += 1) {
+            const endRow = row + dr * (word.length - 1);
+            const endCol = col + dc * (word.length - 1);
+            if (endRow < 0 || endCol < 0 || endRow >= size || endCol >= size) continue;
+            const path = Array.from(word, (_, step) => (row + dr * step) * size + col + dc * step);
+            if (path.every((cell, step) => !letters[cell] || letters[cell] === word[step])) paths.push(path);
+          }
         }
       }
-      if (!paths.length) {
-        letters.fill('');
-        words.forEach((entry, row) => [...entry].forEach((letter, col) => {
-          letters[row * size + col] = letter;
-        }));
-        break;
-      }
+      if (!paths.length) return false;
       paths[Math.floor(Math.random() * paths.length)].forEach((cell, step) => {
         letters[cell] = word[step];
       });
+      return true;
     }
+
+    let complete = false;
+    for (let attempt = 0; attempt < 24 && !complete; attempt += 1) {
+      letters.fill('');
+      const firstAxis = Math.floor(Math.random() * axes.length);
+      complete = longestFirst.every((word, index) => {
+        const allowed = index < axes.length ? axes[(firstAxis + index) % axes.length] : directions;
+        return placeWord(word, allowed);
+      });
+    }
+
+    if (!complete) {
+      // All words in the vocabulary fit in the columns next to a reserved vertical word.
+      letters.fill('');
+      const edge = Math.random() < 0.5 ? 0 : size - 1;
+      const vertical = [...longestFirst[0]];
+      if (Math.random() < 0.5) vertical.reverse();
+      const top = Math.floor(Math.random() * (size - vertical.length + 1));
+      vertical.forEach((letter, row) => { letters[(top + row) * size + edge] = letter; });
+      const firstCol = edge === 0 ? 1 : 0;
+      const rowOffset = Math.floor(Math.random() * size);
+      longestFirst.slice(1).forEach((word, index) => {
+        const row = (rowOffset + index) % size;
+        const start = firstCol + Math.floor(Math.random() * (size - word.length));
+        const characters = [...word];
+        if (Math.random() < 0.5) characters.reverse();
+        characters.forEach((letter, col) => { letters[row * size + start + col] = letter; });
+      });
+    }
+
     return letters.map((letter) => letter || alphabet[Math.floor(Math.random() * alphabet.length)]);
   }
 
